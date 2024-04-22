@@ -12,4 +12,4 @@ function App() {
 
 export default App;
 
-const Hello = () => <div>helo</div>;
+const Hello = () => <div>e-Biddi</div>;
