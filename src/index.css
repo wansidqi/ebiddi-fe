@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  @apply bg-slate-900 text-white flexcenter min-h-screen;
+}
+
+.flexcenter {
+  @apply flex justify-center items-center;
+}
