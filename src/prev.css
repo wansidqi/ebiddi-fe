@@ -1,0 +1,17 @@
+.neo-primary {
+  /* blur:12px, intensity:0.12px, radius & distance lowest */
+  border-radius: 0px;
+  background: #e5e7eb;
+  box-shadow:
+    5px 5px 12px #cacbcf,
+    -5px -5px 12px #ffffff;
+  @apply rounded-md py-3 w-40 font-bold;
+}
+
+.neo-primary:active {
+  background: #e5e7eb;
+  box-shadow:
+    inset 5px 5px 12px #cacbcf,
+    inset -5px -5px 12px #ffffff;
+  @apply rounded-md py-3 w-40 font-bold;
+}
