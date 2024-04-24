@@ -1,18 +1,16 @@
 import { Route, Routes } from "react-router-dom";
-import { Home } from "./pages";
-import { ModeToggle } from "./Theme/ModeToggle";
+import { Events, Home } from "./pages";
+import { Header, Items } from "./sections";
+import "./custom.css";
 
 function App() {
   return (
     <>
-      <ModeToggle />
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/events" element={<Home />} />
-        <Route path="/event/detail/:id" element={<Home />} />
-        <Route path="/bidding/event/:id" element={<Home />} />
-        
-        <Route path="/event/:id/items" element={<Home />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/items/:eventId" element={<Items />} />
       </Routes>
     </>
   );

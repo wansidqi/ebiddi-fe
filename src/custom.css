@@ -3,24 +3,27 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: "firasans";
-    src: url("src/assets/fonts/FiraSans.otf") format("opentype");
-  }
-  
-  @font-face {
-    font-family: "droidsans";
-    src: url("src/assets/fonts/DroidSans.ttf") format("truetype");
-  }
-  
-  :root {
-    font-family: "droidsans";
-    @apply m-5;
-  }
-  
-  .flexcenter {
-    @apply flex justify-center items-center m-4;
-  }
-  
-  .flexcenter-col {
-    @apply flex flex-col justify-center items-center;
-  }
+  font-family: "firasans";
+  src: url("src/assets/fonts/FiraSans.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "baloo";
+  src: url("src/assets/fonts/Baloo.ttf") format("truetype");
+}
+
+:root {
+  font-family: "baloo", "firasans", calibri, sans-serif;
+}
+
+.test {
+  @apply border border-primary;
+}
+
+.flexcenter {
+  @apply flex justify-center items-center;
+}
+
+.flexcenter-col {
+  @apply flex flex-col justify-center items-center;
+}
