@@ -1,6 +1,7 @@
 export * from "./Events";
 export * from "./Events/EventDetail";
 export * from "./Events/EventCountdown";
+export * from "./Events/EventLoading";
 
 export * from "./Items";
 export * from "./Items/ItemsHeader";

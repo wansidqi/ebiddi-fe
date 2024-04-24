@@ -1,6 +1,6 @@
 import { Container } from "@/components/Container";
 import { mockEvents } from "@/data";
-import { EventCard } from "@/sections";
+import { EventCard, EventLoading } from "@/sections";
 
 export function Events() {
   return (
@@ -11,6 +11,12 @@ export function Events() {
         <p>List of auction events that you can participate</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-10">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div key={index}>
+            <EventLoading />
+          </div>
+        ))}
+
         {mockEvents.map((item, i) => (
           <EventCard key={i} {...item} />
         ))}
