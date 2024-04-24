@@ -6,7 +6,7 @@ import { ItemDetail } from "./ItemDetail";
 export function ItemsGrid({ events }: { events: null | EventsInterface }) {
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         {events?.auctionItems.map((item: ItemsInterface, i: number) => (
           <div key={i} className="border-2 border-secondary rounded-sm pb-4">
             <div className="relative h-[280px] w-full">
@@ -17,7 +17,7 @@ export function ItemsGrid({ events }: { events: null | EventsInterface }) {
               <div className="absolute top-1 bg-cyan-500 left-0 px-2 py-1 rounded-sm">
                 {item.lot}
               </div>
-              <div className="absolute bottom-1 bg-green-500 left-0 px-2 py-1 rounded-sm">
+              <div className="absolute bottom-1 bg-green-600 left-0 px-2 py-1 rounded-sm">
                 {item.registrationNo}
               </div>
             </div>

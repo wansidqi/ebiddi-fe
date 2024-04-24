@@ -3,14 +3,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function ItemGridLoading() {
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="border-2 border-secondary rounded-sm pb-4">
             <div className="relative h-[280px] w-full">
-              {/* <img
-                src={""}
-                className="w-full h-full card-img-top rounded-0 object-cover"
-              /> */}
               <div className="absolute top-1 left-0 px-2 py-1 rounded-sm">
                 <Skeleton className="py-3 w-14 my-1 rounded-md" />
               </div>

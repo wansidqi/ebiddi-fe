@@ -25,7 +25,7 @@ export function Events() {
       {loading ? (
         <EventLoading />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-10">
           {mockEvents.map((item, i) => (
             <EventCard key={i} {...item} />
           ))}
