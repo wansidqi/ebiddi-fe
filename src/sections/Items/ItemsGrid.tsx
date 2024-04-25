@@ -2,14 +2,35 @@ import { Button } from "@/components/ui/button";
 import { EventsInterface, InventoryInterface } from "@/interfaces";
 import { StepBack, StepForward } from "lucide-react";
 import { ItemDetail } from "./ItemDetail";
+import { useState } from "react";
 
 export const gridCSS = "grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3";
 
 export function ItemsGrid({ events }: { events: undefined | EventsInterface }) {
+  const itemsPerPage = 12;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  const currentItems = events?.inventories.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const nextPage = () => {
+    setCurrentPage(currentPage + 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const prevPage = () => {
+    setCurrentPage(currentPage - 1);
+  };
+
   return (
     <>
       <div className={gridCSS}>
-        {events?.inventories.map((item: InventoryInterface, i: number) => (
+        {currentItems?.map((item: InventoryInterface, i: number) => (
           <div key={i} className="border-2 border-secondary rounded-sm pb-4">
             <div className="relative h-[280px] w-full">
               <img
@@ -51,12 +72,22 @@ export function ItemsGrid({ events }: { events: undefined | EventsInterface }) {
           </div>
         ))}
       </div>
-      <div className="flex justify-between mx-5 my-10">
-        <button>
+      <div className="flexcenter gap-7 my-10">
+        <button onClick={prevPage} disabled={currentPage === 1}>
           <StepBack />
         </button>
-        Page 1 of 1
-        <button>
+        <div className="flexcenter gap-3">
+          <span>Page</span>
+          <span className="text-xl">{currentPage}</span>
+          <span className="">of</span>
+          <span className="text-xl">
+            {Math.ceil((events?.inventories.length as number) / itemsPerPage)}
+          </span>
+        </div>
+        <button
+          onClick={nextPage}
+          disabled={indexOfLastItem >= (events?.inventories.length as number)}
+        >
           <StepForward />
         </button>
       </div>
