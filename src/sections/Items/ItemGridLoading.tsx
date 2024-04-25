@@ -1,9 +1,10 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { gridCSS } from "..";
 
 export function ItemGridLoading() {
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div className={gridCSS}>
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="border-2 border-secondary rounded-sm pb-4">
             <div className="relative h-[280px] w-full">

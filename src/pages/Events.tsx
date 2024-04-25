@@ -22,15 +22,21 @@ export function Events() {
         <p>List of auction events that you can participate</p>
       </div>
 
-      {loading ? (
-        <EventLoading />
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-10">
-          {mockEvents.map((item, i) => (
-            <EventCard key={i} {...item} />
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-10">
+        {loading ? (
+          <>
+            <EventLoading />
+            <EventLoading />
+            <EventLoading />
+          </>
+        ) : (
+          <>
+            {mockEvents.map((item, i) => (
+              <EventCard key={i} {...item} />
+            ))}
+          </>
+        )}
+      </div>
     </Container>
   );
 }

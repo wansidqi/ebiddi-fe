@@ -29,7 +29,7 @@ export function ItemsList({ events }: { events: null | EventsInterface }) {
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 text-center text-xs sm:text-sm">
+        <tbody className="divide-y text-center text-xs sm:text-sm">
           {events?.auctionItems.map((item, index) => (
             <tr key={index}>
               <td className="px-6 py-4 whitespace-nowrap">{item.lot}</td>

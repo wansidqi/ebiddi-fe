@@ -3,14 +3,32 @@ import { Events, Home } from "./pages";
 import { Header, Items } from "./sections";
 import "./custom.css";
 
+const routes = [
+  {
+    status: "view",
+    path: "/",
+    component: <Home />,
+  },
+  {
+    status: "view",
+    path: "/events",
+    component: <Events />,
+  },
+  {
+    status: "view",
+    path: "/items/:eventId",
+    component: <Items />,
+  },
+];
+
 function App() {
   return (
     <>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/items/:eventId" element={<Items />} />
+        {routes.map((item, i) => (
+          <Route key={i} path={item.path} element={item.component} />
+        ))}
       </Routes>
     </>
   );

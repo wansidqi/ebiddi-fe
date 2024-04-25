@@ -3,10 +3,12 @@ import { EventsInterface, ItemsInterface } from "@/interfaces";
 import { StepBack, StepForward } from "lucide-react";
 import { ItemDetail } from "./ItemDetail";
 
+export const gridCSS = "grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3";
+
 export function ItemsGrid({ events }: { events: null | EventsInterface }) {
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div className={gridCSS}>
         {events?.auctionItems.map((item: ItemsInterface, i: number) => (
           <div key={i} className="border-2 border-secondary rounded-sm pb-4">
             <div className="relative h-[280px] w-full">
