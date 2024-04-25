@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { Events, Home } from "./pages";
+import { Events, Home, Live } from "./pages";
 import { Header, Items } from "./sections";
 import "./custom.css";
 
@@ -18,6 +18,11 @@ const routes = [
     status: "view",
     path: "/items/:eventId",
     component: <Items />,
+  },
+  {
+    status: "view",
+    path: "/live",
+    component: <Live />,
   },
 ];
 

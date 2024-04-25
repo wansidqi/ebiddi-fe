@@ -1,3 +1,4 @@
+import { useStoreContext } from "@/Context";
 import { Container } from "@/components/Container";
 import { Button } from "@/components/ui/button";
 import {
@@ -6,25 +7,25 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useAuctionStore } from "@/store";
 import { List, Grid3X3 } from "lucide-react";
 
 export function ItemsHeader() {
-  const { auctions: items, setAuctionState: setItemsState } = useAuctionStore();
+  const { auction } = useStoreContext();
+  const { setView, view } = auction;
 
   const buttons = [
     {
       name: "List",
       icon: <List />,
       callback: () => {
-        setItemsState({ ...items, view: "List" });
+        setView("List");
       },
     },
     {
       name: "Grid",
       icon: <Grid3X3 />,
       callback: () => {
-        setItemsState({ ...items, view: "Grid" });
+        setView("Grid");
       },
     },
   ];
@@ -40,7 +41,7 @@ export function ItemsHeader() {
             <TooltipTrigger asChild>
               <Button
                 onClick={button.callback}
-                variant={items.view === button.name ? "default" : "secondary"}
+                variant={view === button.name ? "default" : "secondary"}
               >
                 {button.icon}
               </Button>

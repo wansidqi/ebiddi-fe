@@ -1,18 +1,10 @@
 import { Container } from "@/components/Container";
-import { mockEvents } from "@/data";
 import { EventCard, EventLoading } from "@/sections";
-import { useState, useEffect } from "react";
+import { useAPIServices } from "@/services";
 
 export function Events() {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const { useGetAllEvents } = useAPIServices();
+  const { data, isLoading } = useGetAllEvents();
 
   return (
     <Container className="text-center">
@@ -23,18 +15,14 @@ export function Events() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-10">
-        {loading ? (
+        {isLoading ? (
           <>
             <EventLoading />
             <EventLoading />
             <EventLoading />
           </>
         ) : (
-          <>
-            {mockEvents.map((item, i) => (
-              <EventCard key={i} {...item} />
-            ))}
-          </>
+          <>{data?.map((item, i) => <EventCard key={i} {...item} />)}</>
         )}
       </div>
     </Container>

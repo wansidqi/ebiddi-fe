@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, getDate, getTime } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +27,6 @@ interface Props extends EventsInterface {
 }
 
 export function EventDetail(props: Props) {
-
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isDesktop) {
@@ -80,27 +79,27 @@ function Detail(props: Props) {
       <div className="flexcenter gap-5 py-2">
         <div className="flexcenter gap-2">
           <CalendarDaysIcon size="14px" />
-          <p>{props.date}</p>
+          <p>{getDate(props.event_date)}</p>
         </div>
         <div className="flexcenter gap-2">
           <Clock size="14px" />
-          <p>{props.time}</p>
+          <p>{getTime(props.event_date)}</p>
         </div>
       </div>
 
       <div>
         <p>Auction event hosted by:</p>
-        <p>{props.hoster}</p>
+        <p>{props.auction_house.name}</p>
       </div>
       <div>
         <p>Auctioneer:</p>
-        <p>{props.auctioner}</p>
+        <p>{props.auction_house.auctioneer.name}</p>
       </div>
       <p className="text-yellow-600 sm:my-3">
         Reminder: All Bidders are advised to turn off sleep mode / power saving
         mode and please do not answer phone calls while auctioning
       </p>
-      <Countdown targetDate={props.live} />
+      <Countdown targetDate={props.event_date} />
     </div>
   );
 }

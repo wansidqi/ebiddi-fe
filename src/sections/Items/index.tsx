@@ -1,39 +1,25 @@
-import { mockEvents } from "@/data";
-import { EventsInterface } from "@/interfaces";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { ItemGridLoading, ItemsGrid, ItemsHeader, ItemsList } from "..";
 import { useParams } from "react-router-dom";
-import { useAuctionStore } from "@/store";
+import { useStoreContext } from "@/Context";
+import { useAPIServices } from "@/services";
 
 export function Items() {
-  const [events, setEvents] = useState<null | EventsInterface>(null);
-  const [loading, setLoading] = useState(true);
-
+  const { auction } = useStoreContext();
   const { eventId } = useParams();
-  const { auctions } = useAuctionStore();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+  useEffect(() => {}, [eventId]);
 
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const findEventById = mockEvents.find((event) => event.id === eventId);
-    if (findEventById) {
-      setEvents(findEventById);
-    }
-  }, [eventId]);
+  const { useGetEventById } = useAPIServices();
+  const { data, isLoading } = useGetEventById(eventId as string);
 
   return (
-    <div className="m-2  sm:m-4">
+    <div className="m-2 sm:m-4">
       <ItemsHeader />
-      {auctions.view === "List" ? (
-        <ItemsList events={events} />
+      {auction.view === "List" ? (
+        <ItemsList events={data} />
       ) : (
-        <>{loading ? <ItemGridLoading /> : <ItemsGrid events={events} />}</>
+        <>{isLoading ? <ItemGridLoading /> : <ItemsGrid events={data} />}</>
       )}
     </div>
   );

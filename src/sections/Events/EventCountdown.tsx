@@ -1,7 +1,10 @@
 import { isCountdown } from "@/lib/utils";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-export const Countdown = ({ targetDate }: { targetDate: Date }) => {
+export const Countdown = ({ targetDate }: { targetDate: string }) => {
+  //TODO: fix live endpoint
+  const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(isCountdown(targetDate));
 
   useEffect(() => {
@@ -20,7 +23,10 @@ export const Countdown = ({ targetDate }: { targetDate: Date }) => {
     <>
       {!Object.keys(timeLeft).length ? (
         <div>
-          <button className="bg-green-500 px-3 py-2 my-3 rounded-md font-bold w-full">
+          <button
+            onClick={() => navigate("/live")}
+            className="bg-green-500 px-3 py-2 my-3 rounded-md font-bold w-full"
+          >
             JOIN BIDDING
           </button>
         </div>

@@ -10,7 +10,7 @@ import {
 import { CalendarDaysIcon, Clock, LucideNavigation } from "lucide-react";
 import { EventDetail } from "..";
 import { EventsInterface } from "@/interfaces";
-import { isCountdown } from "@/lib/utils";
+import { getDate, isCountdown, getTime } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -22,22 +22,23 @@ export function EventCard(props: EventsInterface) {
     {
       name: "date",
       icon: <CalendarDaysIcon size="15px" />,
-      value: props.date,
+      value: getDate(props.event_date),
     },
     {
       name: "time",
       icon: <Clock size="15px" />,
-      value: props.time,
+      value: getTime(props.event_date),
     },
     {
       name: "location",
       icon: <LucideNavigation size="15px" />,
-      value: props.location,
+      value: props.name,
     },
   ];
 
-  const redirectButton = (date: Date) => {
-    isCountdown(date) ? setOpenDetail(true) : navigate("/");
+  const redirectButton = (date: string) => {
+    //TODO: fix live endpoint
+    isCountdown(date) ? setOpenDetail(true) : navigate("/live");
   };
 
   const viewAuctionItems = (id: number) => {
@@ -78,7 +79,7 @@ export function EventCard(props: EventsInterface) {
           </Button>
         </div>
         <Button
-          onClick={() => redirectButton(props.live)}
+          onClick={() => redirectButton(props.event_date)}
           className="w-full my-4"
         >
           Live Biddings

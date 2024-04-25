@@ -17,35 +17,36 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { XCircleIcon } from "lucide-react";
-import { ItemsInterface } from "@/interfaces";
+import { InventoryInterface } from "@/interfaces";
 import { useState } from "react";
-import { useAuctionStore } from "@/store";
 import { Button } from "@/components/ui/button";
 import { ItemsCarousel } from "..";
+import { useStoreContext } from "@/Context";
 
-export function ItemDetail(props: ItemsInterface) {
+export function ItemDetail(props: InventoryInterface) {
   const [open, setOpen] = useState(false);
-  const { auctions } = useAuctionStore();
+  const { auction } = useStoreContext();
+  const { view } = auction;
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          {auctions.view === "Grid" ? (
+          {view === "Grid" ? (
             <button className="w-full bg-yellow-400 rounded-md text-black">
               Details
             </button>
           ) : (
             <Button className="underline" variant="link">
-              {props.yearManufacture}
+              {props.year}
             </Button>
           )}
         </DialogTrigger>
         <DialogContent className="">
           <DialogHeader>
             <DialogTitle className="text-center text-2xl">
-              LOT {props.lot}
+              LOT {props.lot_no}
             </DialogTitle>
           </DialogHeader>
           <Detail {...props} />
@@ -57,20 +58,20 @@ export function ItemDetail(props: ItemsInterface) {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        {auctions.view === "Grid" ? (
+        {view === "Grid" ? (
           <button className="w-full bg-yellow-400 rounded-md text-black">
             Details
           </button>
         ) : (
           <Button className="underline" variant="link">
-            {props.yearManufacture}
+            {props.year}
           </Button>
         )}
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle className="text-center text-2xl">
-            LOT {props.lot}
+            LOT {props.lot_no}
           </DrawerTitle>
         </DrawerHeader>
         <Detail {...props} />
@@ -86,7 +87,7 @@ export function ItemDetail(props: ItemsInterface) {
   );
 }
 
-function Detail(props: ItemsInterface) {
+function Detail(props: InventoryInterface) {
   return (
     <div
       className={cn(
@@ -94,46 +95,45 @@ function Detail(props: ItemsInterface) {
       )}
     >
       <div className="flex">
-        <ItemsCarousel images={props.img} />
+        <ItemsCarousel images={props.images} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 text-left sm:my-5 gap-1 text-sm">
         <p>
-          <span className="text-primary">LEGAL OWNER:</span> {props.legalOwner}
+          <span className="text-primary">LEGAL OWNER:</span> {props.legal_owner}
         </p>
         <p>
           <span className="text-primary">MODEL:</span> {props.model}
         </p>
         <p>
-          <span className="text-primary">RESERVED PRICE:</span>{" "}
-          {props.reservedPrice}
+          <span className="text-primary">RESERVED PRICE:</span>
+          {props.reserve_price}
         </p>
         <p>
-          <span className="text-primary">ENGINE NUMBER:</span>{" "}
-          {props.engineNumber}
+          <span className="text-primary">ENGINE NUMBER:</span>
+          {props.engine_number}
         </p>
         <p>
-          <span className="text-primary">TRANSMISSION TYPE:</span>{" "}
-          {props.transmissionType}
+          <span className="text-primary">TRANSMISSION TYPE:</span>
+          {props.transmission}
         </p>
         <p>
-          <span className="text-primary">REGISTRATION CARD:</span>{" "}
-          {props.registrationCard ? "Yes" : "No"}
+          <span className="text-primary">REGISTRATION CARD:</span>
+          {props.has_registration_card ? "Yes" : "No"}
         </p>
         <p>
-          <span className="text-primary">REGISTRATION NUMBER:</span>{" "}
-          {props.registrationNo}
+          <span className="text-primary">REGISTRATION NUMBER:</span>
+          {props.registration_number}
         </p>
         <p>
-          <span className="text-primary">YEAR MADE:</span>{" "}
-          {props.yearManufacture}
+          <span className="text-primary">YEAR MADE:</span> {props.year}
         </p>
         <p>
-          <span className="text-primary">KEY:</span>{" "}
-          {props.hasKey ? "Yes" : "No"}
+          <span className="text-primary">KEY:</span>
+          {props.has_key ? "Yes" : "No"}
         </p>
         <p>
-          <span className="text-primary">CHASIS NUMBER:</span>{" "}
-          {props.chasisNumber}
+          <span className="text-primary">CHASIS NUMBER:</span>
+          {props.chasis_number}
         </p>
         <p>
           <span className="text-primary">REMARKS:</span> {props.remarks}

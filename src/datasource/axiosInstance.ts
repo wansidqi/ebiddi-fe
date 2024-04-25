@@ -1,9 +1,9 @@
 import axios from "axios";
 // import { getToken } from "./localstorage.datasource";
 
-const axiosInstance = axios.create({
-  baseURL: import.meta.env.API,
-  timeout: 1000,
+const datasource = axios.create({
+  baseURL: import.meta.env.VITE_API,
+  timeout: 10000,
 });
 
 // axiosInstance.interceptors.request.use(
@@ -21,7 +21,7 @@ const axiosInstance = axios.create({
 //   }
 // );
 
-axiosInstance.interceptors.response.use(
+datasource.interceptors.response.use(
   (response) => {
     return Promise.resolve(response);
   },
@@ -30,4 +30,4 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export default axiosInstance;
+export default datasource;

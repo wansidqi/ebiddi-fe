@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { EventsInterface } from "@/interfaces";
 import { ItemDetail } from "..";
 
-export function ItemsList({ events }: { events: null | EventsInterface }) {
+export function ItemsList({ events }: { events: undefined | EventsInterface }) {
   const columns = [
     "Lot",
     "Legal Owner",
@@ -30,23 +30,30 @@ export function ItemsList({ events }: { events: null | EventsInterface }) {
           </tr>
         </thead>
         <tbody className="divide-y text-center text-xs sm:text-sm">
-          {events?.auctionItems.map((item, index) => (
+          {events?.inventories.map((item, index) => (
             <tr key={index}>
-              <td className="px-6 py-4 whitespace-nowrap">{item.lot}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{item.legalOwner}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{item.lot_no}</td>
               <td className="px-6 py-4 whitespace-nowrap">
-                {item.registrationNo}
+                {item.legal_owner}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {item.registration_number}
               </td>
               <td className="px-6 py-4 whitespace-nowrap">{item.model}</td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <ItemDetail {...item} />
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                {item.reservedPrice}
+                RM {item.reserve_price.toLocaleString("en-IN")}
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <Button className="underline" variant="link">
-                  Report
+                  <a
+                    target="_blank"
+                    href={`https://auction.e-biddi.com/auction/ireportcar/${item.vehicle_id}`}
+                  >
+                    Report
+                  </a>
                 </Button>
               </td>
             </tr>

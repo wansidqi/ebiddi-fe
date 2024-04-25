@@ -11,4 +11,6 @@ export * from "./Items/ItemDetail";
 export * from "./Items/ItemsCarousel";
 export * from "./Items/ItemGridLoading";
 
+export * from "./Live/CallAlert";
+
 export * from "./Layout/Header";

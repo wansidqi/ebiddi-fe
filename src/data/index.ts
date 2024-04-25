@@ -1,6 +1,6 @@
-import { EventsInterface, ItemsInterface } from "@/interfaces";
+import { EventsInterface, InventoryInterface } from "@/interfaces";
 
-const auctionItems: ItemsInterface[] = [
+const auctionItems: InventoryInterface[] = [
   {
     img: [
       "https://4kwallpapers.com/images/wallpapers/bmw-z4-ac-schnitzer-acs4-4-0i-2021-5k-8k-1280x1280-4780.jpg",
@@ -146,6 +146,7 @@ export const mockEvents: EventsInterface[] = [
     location: "Elmina",
     hoster: "Frenzy Corps",
     auctioner: "Maybank (NO36677)",
+    event_date: "2024-12-01T00:00:00",
     live: new Date("2024-12-01T00:00:00"),
     auctionItems,
   },
