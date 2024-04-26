@@ -19,7 +19,7 @@ export function Home() {
           For registered users, view auction units and participate into live
           auctions by clicking on “Sign In” tab.
         </p>
-        <Button>Sign In</Button>
+        <Button onClick={() => navigate("/login")}>Sign In</Button>
       </div>
     </Container>
   );
