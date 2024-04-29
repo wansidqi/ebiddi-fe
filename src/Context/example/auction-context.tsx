@@ -17,17 +17,34 @@ type Data = {
 
   selectEvent: EventsInterface | null;
   setSelectEvent: React.Dispatch<React.SetStateAction<EventsInterface | null>>;
+
+  countdown: number;
+  setCountdown: React.Dispatch<React.SetStateAction<number>>;
+
+  showDialog: boolean;
+  setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
+
+  dev: boolean;
 };
 
 function AuctionContext(props: React.PropsWithChildren<{}>) {
   const [view, setView] = useState<"Grid" | "List">("Grid");
   const [selectEvent, setSelectEvent] = useState<EventsInterface | null>(null);
+  const [countdown, setCountdown] = useState(9);
+  const [showDialog, setShowDialog] = useState(false);
+
+  const dev = true;
 
   const contextValue: Data = {
     view,
     setView,
     selectEvent,
     setSelectEvent,
+    countdown,
+    setCountdown,
+    showDialog,
+    setShowDialog,
+    dev,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;

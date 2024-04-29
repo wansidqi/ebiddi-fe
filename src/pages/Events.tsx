@@ -20,6 +20,9 @@ export function Events() {
             <EventLoading />
             <EventLoading />
             <EventLoading />
+            <EventLoading />
+            <EventLoading />
+            <EventLoading />
           </>
         ) : (
           <>{data?.map((item, i) => <EventCard key={i} {...item} />)}</>

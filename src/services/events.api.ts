@@ -24,7 +24,6 @@ const getEventById = async (id: string) => {
 };
 
 const useGetAllEvents = () => {
-  getAllEvents();
   return useQuery({
     queryKey: [KEY.events],
     queryFn: async () => getAllEvents(),
@@ -33,7 +32,6 @@ const useGetAllEvents = () => {
 };
 
 const useGetEventById = (id: string) => {
-  getAllEvents();
   return useQuery({
     queryKey: [KEY.event, id],
     queryFn: async () => getEventById(id),

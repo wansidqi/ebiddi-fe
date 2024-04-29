@@ -1,6 +1,6 @@
 import { ModeToggle } from "@/Theme/ModeToggle";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeftFromLine } from "lucide-react";
+import { ArrowLeftCircle } from "lucide-react";
 
 export function Header() {
   const navigate = useNavigate();
@@ -10,8 +10,8 @@ export function Header() {
 
   return (
     <div className="flex justify-between m-5">
-      <button onClick={back} className="border border-secondary rounded-md p-2">
-        <ArrowLeftFromLine strokeWidth={3} size={"22px"} />
+      <button onClick={back} className="border-secondary rounded-md p-2">
+        <ArrowLeftCircle strokeWidth={3} size={"28px"} />
       </button>
       <div className="">
         <ModeToggle />
