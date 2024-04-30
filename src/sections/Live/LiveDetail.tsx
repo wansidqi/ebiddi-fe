@@ -4,6 +4,7 @@ export function LiveDetail() {
       <div className="text-center text-2xl my-2">LOT 301</div>
       <div className="w-full mb-2 flexcenter">
         <img
+          loading="lazy"
           className="w-52"
           src="https://4kwallpapers.com/images/wallpapers/bmw-z4-ac-schnitzer-acs4-4-0i-2021-5k-8k-1280x1280-4780.jpg"
           alt=""

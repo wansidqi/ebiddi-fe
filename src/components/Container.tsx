@@ -1,3 +1,4 @@
+import { Header } from "@/sections";
 import React from "react";
 
 interface ContainerProps {
@@ -9,5 +10,12 @@ export const Container: React.FC<ContainerProps> = ({
   children,
   className,
 }) => {
-  return <div className={`my-5 mx-4 sm:mx-10  ${className}`}>{children}</div>;
+  return (
+    <>
+      <Header />
+      <div className={`my-5 mx-4 sm:mx-10  ${className}`}>{children}</div>
+    </>
+  );
 };
+
+

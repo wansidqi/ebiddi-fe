@@ -21,6 +21,10 @@
   font-family: "digital";
 }
 
+.arial {
+  font-family: arial;
+}
+
 :root {
   font-family: "baloo", "firasans", calibri, sans-serif;
 }
@@ -50,6 +54,12 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.report-layout {
+  width: 800px;
+  height: 1165px;
+  position: relative;
 }
 
 .custom-scrollbar::-webkit-scrollbar {

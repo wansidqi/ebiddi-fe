@@ -16,7 +16,7 @@ export function ItemGridLoading() {
               </div>
             </div>
             <div className="bg-primary text-xl p-2 text-center">
-              <Skeleton className="py-3 mx-auto w-40 my-1 rounded-sm" />
+              <div className="py-3 mx-auto w-40 my-1 rounded-sm" />
             </div>
             <div className="m-2 flex flex-col gap-2">
               <Skeleton className="py-2 w-40 my-1 rounded-sm" />
