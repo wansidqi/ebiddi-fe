@@ -3,6 +3,8 @@ import { EventsInterface, InventoryInterface } from "@/interfaces";
 import { StepBack, StepForward } from "lucide-react";
 import { ItemDetail } from "./ItemDetail";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { VEHICLE_TYPE } from "@/interfaces/enum";
 
 export const gridCSS = "grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3";
 
@@ -60,12 +62,16 @@ export function ItemsGrid({ events }: { events: undefined | EventsInterface }) {
               <div className="flex gap-3 my-0">
                 <ItemDetail {...item} />
                 <Button className="underline" variant="link">
-                  <a
+                  <Link
                     target="_blank"
-                    href={`https://auction.e-biddi.com/auction/ireportcar/${item.vehicle_id}`}
+                    to={
+                      item.vehicle_type === VEHICLE_TYPE.CAR
+                        ? `/ireportcar/${item.vehicle_id}`
+                        : `/ireportmotor/${item.vehicle_id}`
+                    }
                   >
                     Report
-                  </a>
+                  </Link>
                 </Button>
               </div>
             </div>

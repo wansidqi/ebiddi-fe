@@ -12,9 +12,9 @@ import { Items } from "./sections";
 import "./custom.css";
 
 const routes = [
-  { status: "public", component: <ReportMotor />, path: "/" },
-  { status: "public", component: <ReportCar />, path: "/" },
   { status: "public", component: <Home />, path: "/" },
+  { status: "public", component: <ReportMotor />, path: "/ireportmotor/:vehicle_id" },
+  { status: "public", component: <ReportCar />, path: "/ireportcar/:vehicle_id" },
   { status: "public", component: <Events />, path: "/events" },
   { status: "public", component: <Items />, path: "/items/:eventId" },
   { status: "public", component: <Live />, path: "/live" },

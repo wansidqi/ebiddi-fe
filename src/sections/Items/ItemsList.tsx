@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { EventsInterface } from "@/interfaces";
 import { ItemDetail } from "..";
+import { Link } from "react-router-dom";
+import { VEHICLE_TYPE } from "@/interfaces/enum";
 
 export function ItemsList({ events }: { events: undefined | EventsInterface }) {
   const columns = [
@@ -48,12 +50,16 @@ export function ItemsList({ events }: { events: undefined | EventsInterface }) {
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <Button className="underline" variant="link">
-                  <a
+                  <Link
                     target="_blank"
-                    href={`https://auction.e-biddi.com/auction/ireportcar/${item.vehicle_id}`}
+                    to={
+                      item.vehicle_type === VEHICLE_TYPE.CAR
+                        ? `/ireportcar/${item.vehicle_id}`
+                        : `/ireportmotor/${item.vehicle_id}`
+                    }
                   >
                     Report
-                  </a>
+                  </Link>
                 </Button>
               </td>
             </tr>
