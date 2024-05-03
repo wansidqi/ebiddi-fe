@@ -13,6 +13,8 @@ import { useAPIServices } from "@/services";
 import { LoaderCircle } from "lucide-react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { VehicleInspection } from ".";
+import { InvestigationReport } from "@/interfaces";
 
 export const tickbox = (checking: any) => {
   return checking ? "☑ " : "☐ ";
@@ -696,6 +698,47 @@ export function ReportCar() {
           value={["Remark", report?.extcomponentremarks ?? ""]}
         />
       </main>
+
+      <br />
+
+      <main className="my-20">
+        <p className={`text-[22px] font-bold`}>
+          Inspection Report -{" "}
+          <span className="text-[15px] font-bold">
+            {data?.auction_house.auctionhouse_name}{" "}
+          </span>
+          <span className="text-[9px] font-extralight">
+            {data?.auction_house.auctionhouse_address}
+          </span>
+        </p>
+        <div className="flex gap-1 text-[15px] font-bold">
+          <p className="w-[8%]">Reg. No</p>
+          <p>: {data?.registration_number}</p>
+        </div>
+        <div className="flex gap-1 text-[15px] font-bold">
+          <p className="w-[8%]">Model</p>
+          <p>: {data?.model}</p>
+        </div>
+        <div className="mt-6 pl-2 font-bold text-[13px]">
+          <p className="border-b w-full border-[#2C3E50]">Parts Grade</p>
+        </div>
+        <VehicleInspection report={report as InvestigationReport} />
+        <div className="ml-2">
+          <p className=" underline font-[17px]">Grading Remark</p>
+          <div className="ml-6 mt-3">
+            <li>S - Scratched</li>
+            <li>C - Cracked</li>
+            <li>D - Dented</li>
+            <li>R - Rusty</li>
+            <li>B - Broken</li>
+            <li>G - Gap</li>
+            <li>F - Fair</li>
+            <li>GD - Good</li>
+          </div>
+        </div>
+      </main>
+
+      <br />
     </div>
   );
 }

@@ -5,4 +5,4 @@ export * from "./Login";
 export * from "./TAC";
 export * from "./ReportCar";
 export * from "./ReportMotor";
-export * from "./ReportFromVue";
+export * from "./VehicleInspection";
