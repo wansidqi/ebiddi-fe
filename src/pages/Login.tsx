@@ -13,18 +13,14 @@ export function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const login =async () => {
+  const login = () => {
     const credentials = { username, password };
     const _credentials = {
       username: "012345678900",
       password: "12345",
     };
 
-    try {
-      await mutateAsync(_credentials);
-    } catch (error) {
-      console.log(error);
-    }
+    mutateAsync(_credentials);
   };
 
   return (
