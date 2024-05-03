@@ -5,7 +5,9 @@ export interface EventsInterface {
   event_date: string;
   reauction: any;
   auction_house: AuctionHouse;
-  downloadable: Downloadable;
+  downloadable: {
+    url: string;
+  };
   inventories: InventoryInterface[];
 }
 
@@ -48,10 +50,6 @@ interface Auctioneer {
   nric: string;
   license_no: string;
   license_expired: string;
-}
-
-interface Downloadable {
-  url: string;
 }
 
 export interface TimeLeft {

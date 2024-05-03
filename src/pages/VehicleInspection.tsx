@@ -2,7 +2,6 @@ import car from "@/assets/images/car.jpg";
 import { InvestigationReport } from "@/interfaces";
 
 export function VehicleInspection({ report }: { report: InvestigationReport }) {
-  console.log(report)
   return (
     <div className="">
       <div className="relative">
@@ -65,8 +64,8 @@ const Part = ({
   postion: string;
 }) => {
   return (
-    <div className={`absolute rounded-full font-bold text-[13px] ${postion}`}>
-      <p className="hidden">{part}</p>
+    <div key={part} className={`absolute rounded-full font-bold text-[13px] ${postion}`}>
+      {/* <p className="">{part}</p> */}
       <p className="">{item}</p>
     </div>
   );
