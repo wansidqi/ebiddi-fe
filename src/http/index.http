@@ -1,0 +1,16 @@
+###POST
+POST https://api.e-biddi.com/api/auth/login
+Content-Type: application/json
+
+{
+    "username":"012345678900",
+    "password" : "12345"
+}
+###POST
+POST https://api.e-biddi.com/api/auth/verify
+Content-Type: application/json
+
+{
+    "verification_token":"eyJpdiI6InBCSExJVEdBRDg5MDdGZjU3QzJlZ1E9PSIsInZhbHVlIjoiUlpMcnlSdEcrcGJFSnJkcjNWenpoUT09IiwibWFjIjoiOTA4NjY4YWQ5YmMyZTQzNTcwYmYxMTcwNWJmOTc2OTM1MzExMTk0ODllMDJhZTgyYTRjYmFiYmI4ODdkZGVlYyJ9",
+    "verification_pin" : "12345"
+}

@@ -2,9 +2,31 @@ import logo from "@/assets/images/e-biddi icon.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAPIServices } from "@/services";
 import { LogInIcon, Home } from "lucide-react";
+import { useState } from "react";
 
 export function Login() {
+  const { usePostLogin } = useAPIServices();
+  const { mutateAsync } = usePostLogin();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const login =async () => {
+    const credentials = { username, password };
+    const _credentials = {
+      username: "012345678900",
+      password: "12345",
+    };
+
+    try {
+      await mutateAsync(_credentials);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="flexcenter-col mx-8 my-8 gap-7">
       <img className="w-40" src={logo} alt="" />
@@ -12,18 +34,28 @@ export function Login() {
       <div className="flex flex-col w-full sm:w-1/3 gap-4">
         <div>
           <Label className="text-xl" htmlFor="email">
-            Email
+            Username
           </Label>
-          <Input type="email" className="py-4" placeholder="ebiddi@gmail.com" />
+          <Input
+            onChange={(e) => setUsername(e.target.value)}
+            type="username"
+            className="py-4"
+            placeholder="ebiddi"
+          />
         </div>
         <div>
           <Label className="text-xl" htmlFor="username">
             Password
           </Label>
-          <Input type="password" className="py-4" placeholder="password" />
+          <Input
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            className="py-4"
+            placeholder="password"
+          />
         </div>
       </div>
-      <Button className="w-full text-xl pt-2 pb-1 sm:w-1/3">
+      <Button onClick={login} className="w-full text-xl pt-2 pb-1 sm:w-1/3">
         <div className="relative w-full text-center">
           <p>Login</p>
           <div className="absolute top-0 right-10">

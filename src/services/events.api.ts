@@ -11,22 +11,14 @@ interface EventResponse {
   data: EventsInterface;
 }
 
-const getAllEvents = async () => {
-  const response = await datasource({ url: "/events", method: "get" });
-  const data = response.data as EventsResponse;
-  return data.data as EventsInterface[];
-};
-
-const getEventById = async (id: string) => {
-  const response = await datasource({ url: `/events/${id}`, method: "get" });
-  const data = response.data as EventResponse;
-  return data.data as EventsInterface;
-};
-
 const useGetAllEvents = () => {
   return useQuery({
     queryKey: [KEY.events],
-    queryFn: async () => getAllEvents(),
+    queryFn: async () => {
+      const response = await datasource({ url: "/events", method: "get" });
+      const data = response.data as EventsResponse;
+      return data.data as EventsInterface[];
+    },
     retry: false,
   });
 };
@@ -34,7 +26,14 @@ const useGetAllEvents = () => {
 const useGetEventById = (id: string) => {
   return useQuery({
     queryKey: [KEY.event, id],
-    queryFn: async () => getEventById(id),
+    queryFn: async () => {
+      const response = await datasource({
+        url: `/events/${id}`,
+        method: "get",
+      });
+      const data = response.data as EventResponse;
+      return data.data as EventsInterface;
+    },
     retry: false,
   });
 };
