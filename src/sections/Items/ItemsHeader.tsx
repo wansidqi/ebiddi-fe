@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useAPIServices } from "@/services";
 import { List, Grid3X3 } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export function ItemsHeader() {
   const { eventId } = useParams();
