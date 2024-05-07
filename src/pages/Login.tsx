@@ -13,14 +13,11 @@ export function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const login = () => {
-    const credentials = { username, password };
-    const _credentials = {
-      username: "012345678900",
-      password: "12345",
-    };
-
-    mutateAsync(_credentials);
+  const credentials = {
+    username,
+    password,
+    // username: "012345678900",
+    // password: "12345",
   };
 
   return (
@@ -51,7 +48,10 @@ export function Login() {
           />
         </div>
       </div>
-      <Button onClick={login} className="w-full text-xl pt-2 pb-1 sm:w-1/3">
+      <Button
+        onClick={() => mutateAsync(credentials)}
+        className="w-full text-xl pt-2 pb-1 sm:w-1/3"
+      >
         <div className="relative w-full text-center">
           <p>Login</p>
           <div className="absolute top-0 right-10">

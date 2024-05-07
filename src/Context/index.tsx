@@ -1,5 +1,5 @@
 import React from "react";
-import AuctionContext, { useAuctionContext } from "./example/auction-context";
+import AuctionContext, { useAuctionContext } from "./store/auction-context";
 
 export function useStoreContext() {
   const auction = useAuctionContext();

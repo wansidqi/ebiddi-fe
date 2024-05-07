@@ -10,34 +10,41 @@ import {
 } from "@/pages";
 import { Items } from "./sections";
 import "./custom.css";
-
-const routes = [
-  { status: "public", component: <Home />, path: "/" },
-  { status: "public", component: <ReportMotor />, path: "/ireportmotor/:vehicle_id" },
-  { status: "public", component: <ReportCar />, path: "/ireportcar/:vehicle_id" },
-  { status: "public", component: <Events />, path: "/events" },
-  { status: "public", component: <Items />, path: "/items/:eventId" },
-  { status: "public", component: <Live />, path: "/live" },
-  { status: "private", component: <Login />, path: "/login" },
-  { status: "private", component: <TAC />, path: "/tac" },
-];
+import { useEffect } from "react";
+import { TOKEN, getToken } from "./datasource/localstorage.datasource";
+import { useStoreContext } from "./Context";
 
 function App() {
+  const { auction } = useStoreContext();
+  const { SET_USER } = auction;
+
+  useEffect(() => {
+    const userAuth = JSON.parse(getToken(TOKEN.user) as string);
+    SET_USER(userAuth);
+  }, []);
+
   return (
     <Routes>
-      <Route element={<Authenticate />}>
-        {routes.map((item, i) => (
-          // item.status === "private" &&
-          <Route key={i} path={item.path} element={item.component} />
-        ))}
+      <Route path={"/"} element={<Home />} />
+      <Route path={"/ireportmotor/:vehicle_id"} element={<ReportMotor />} />
+      <Route path={"/ireportcar/:vehicle_id"} element={<ReportCar />} />
+      <Route path={"/events"} element={<Events />} />
+      <Route path={"/items/:eventId"} element={<Items />} />
+      <Route path={"/live"} element={<Live />} />
+
+      <Route element={<Authenticated />}>
+        <Route path={"/login"} element={<Login />} />
+        <Route path={"/tac"} element={<TAC />} />
       </Route>
     </Routes>
   );
 }
 
-function Authenticate() {
-  const isAuthenticate = true;
-  if (!isAuthenticate) return <Navigate to="/" />;
+function Authenticated() {
+  const { auction } = useStoreContext();
+  const { USER } = auction;
+
+  if (USER) return <Navigate to="/events" />;
   return <Outlet />;
 }
 

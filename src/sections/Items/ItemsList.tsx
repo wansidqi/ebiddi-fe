@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { EventsInterface } from "@/interfaces";
 import { ItemDetail } from "..";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { VEHICLE_TYPE } from "@/interfaces/enum";
 
 export function ItemsList({ events }: { events: undefined | EventsInterface }) {
+  const navigate = useNavigate();
   const columns = [
     "Lot",
     "Legal Owner",
@@ -15,8 +16,21 @@ export function ItemsList({ events }: { events: undefined | EventsInterface }) {
     "Report",
   ];
 
+  if (events?.inventories && events.inventories.length < 1)
+    return (
+      <div className="flexcenter-col mt-20">
+        <p className="sm:text-5xl text-4xl">NO ITEM LISTED</p>
+        <button
+          className="sm:text-3xl text-2xl text-primary"
+          onClick={() => navigate(-1)}
+        >
+          back
+        </button>
+      </div>
+    );
+
   return (
-    <div className="overflow-x-auto text-center sm:mx-10">
+    <div className="overflow-x-auto text-center sm:mx-10 overflow-y-hidden">
       <table className="min-w-full divide-y">
         <thead className="bg-secondary">
           <tr>

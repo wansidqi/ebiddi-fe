@@ -3,12 +3,13 @@ import { EventsInterface, InventoryInterface } from "@/interfaces";
 import { StepBack, StepForward } from "lucide-react";
 import { ItemDetail } from "./ItemDetail";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { VEHICLE_TYPE } from "@/interfaces/enum";
 
 export const gridCSS = "grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3";
 
 export function ItemsGrid({ events }: { events: undefined | EventsInterface }) {
+  const navigate = useNavigate();
   const itemsPerPage = 12;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -28,6 +29,19 @@ export function ItemsGrid({ events }: { events: undefined | EventsInterface }) {
   const prevPage = () => {
     setCurrentPage(currentPage - 1);
   };
+
+  if (events?.inventories && events.inventories.length < 1)
+    return (
+      <div className="flexcenter-col mt-20">
+        <p className="sm:text-5xl text-4xl">NO ITEM LISTED</p>
+        <button
+          className="sm:text-3xl text-2xl text-primary"
+          onClick={() => navigate(-1)}
+        >
+          back
+        </button>
+      </div>
+    );
 
   return (
     <>

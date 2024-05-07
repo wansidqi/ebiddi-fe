@@ -1,4 +1,5 @@
 import { EventsInterface } from "@/interfaces";
+import { User } from "@/interfaces/API";
 import React, { createContext, useContext, useState } from "react";
 
 const AppContext = createContext<Data | null>(null);
@@ -24,10 +25,15 @@ type Data = {
   showDialog: boolean;
   setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
 
+  USER: User | null;
+  SET_USER: React.Dispatch<React.SetStateAction<User | null>>;
+
   dev: boolean;
 };
 
 function AuctionContext(props: React.PropsWithChildren<{}>) {
+  const [USER, SET_USER] = useState<User | null>(null);
+
   const [view, setView] = useState<"Grid" | "List">("Grid");
   const [selectEvent, setSelectEvent] = useState<EventsInterface | null>(null);
   const [countdown, setCountdown] = useState(9);
@@ -45,6 +51,8 @@ function AuctionContext(props: React.PropsWithChildren<{}>) {
     showDialog,
     setShowDialog,
     dev,
+    USER,
+    SET_USER,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;

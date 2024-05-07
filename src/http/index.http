@@ -1,5 +1,6 @@
 ###POST
 POST https://api.e-biddi.com/api/auth/login
+# Content-Type: application/x-www-form-urlencoded
 Content-Type: application/json
 
 {
@@ -11,6 +12,14 @@ POST https://api.e-biddi.com/api/auth/verify
 Content-Type: application/json
 
 {
-    "verification_token":"eyJpdiI6InBCSExJVEdBRDg5MDdGZjU3QzJlZ1E9PSIsInZhbHVlIjoiUlpMcnlSdEcrcGJFSnJkcjNWenpoUT09IiwibWFjIjoiOTA4NjY4YWQ5YmMyZTQzNTcwYmYxMTcwNWJmOTc2OTM1MzExMTk0ODllMDJhZTgyYTRjYmFiYmI4ODdkZGVlYyJ9",
+    "verification_token":"",
     "verification_pin" : "12345"
+}
+
+###POST
+POST https://api.e-biddi.com/api/auth/pin/refresh
+Content-Type: application/json
+
+{
+    "verification_token":"eyJpdiI6IjRlVXRqRXF4TTJkazRISG0reFY2THc9PSIsInZhbHVlIjoiTmhyeVwvVjNMQ3J3UnlUQXR1T3A2OGc9PSIsIm1hYyI6ImQ0ODdkZDIzNDg4MzI5YWYzZTQwMDE1YzY3ODI5MDg4OWVjMTA3YzcxZTVmYWI3MGNiMGVjM2E4MDA0YzY0NzIifQ=="
 }

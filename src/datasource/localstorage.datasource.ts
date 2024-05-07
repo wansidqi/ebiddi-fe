@@ -1,5 +1,6 @@
 export enum TOKEN {
-  auth = "authentication",
+  auth = "e-biddi_authentication",
+  user = "e-biddi_USER",
 }
 
 export function getToken(key: TOKEN) {

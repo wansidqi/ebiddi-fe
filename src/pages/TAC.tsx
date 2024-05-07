@@ -10,17 +10,17 @@ import { LogInIcon } from "lucide-react";
 import { useState } from "react";
 
 export function TAC() {
-  const { usePostVerify } = useAPIServices();
+  const { usePostVerify, useResendTAC } = useAPIServices();
   const { mutateAsync } = usePostVerify();
+  const { mutateAsync: resendTAC } = useResendTAC();
 
   const [TAC, setTAC] = useState("");
+  const authToken = getToken(TOKEN.auth);
 
   const verify = () => {
-    const authToken = getToken(TOKEN.auth);
-
     const verification = {
       verification_token: authToken as string,
-      verification_pin: TAC as string,
+      verification_pin: TAC,
     };
 
     try {
@@ -58,9 +58,13 @@ export function TAC() {
         </div>
       </Button>
       <div className="flexcenter-col gap-1 mt-3">
-        <a className="text-lg text-primary" href="#">
+        <Button
+          onClick={() => resendTAC(authToken as string)}
+          variant={"link"}
+          className="text-lg text-primary"
+        >
           <div>Resend TAC code</div>
-        </a>
+        </Button>
         <a className="text-lg text-primary" href="/login">
           <div>Back</div>
         </a>

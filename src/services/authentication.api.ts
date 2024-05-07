@@ -1,7 +1,11 @@
 import datasource from "@/datasource/axiosInstance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { KEY } from ".";
-import { TOKEN, setToken } from "@/datasource/localstorage.datasource";
+import {
+  TOKEN,
+  removeToken,
+  setToken,
+} from "@/datasource/localstorage.datasource";
 import { LoginCredential, ResponseLogin, Verify } from "@/interfaces/API";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +18,11 @@ const usePostLogin = () => {
         method: "post",
         url: "/auth/login",
         data: body,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       });
+
       const data = response.data as ResponseLogin;
       return data.data;
     },
@@ -36,15 +44,41 @@ const usePostVerify = () => {
         url: "/auth/verify",
         data: body,
         method: "post",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       });
       const data = response.data;
-      return data;
+      return data.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries([KEY.user]);
-      navigate("/");
+    onSuccess: (data) => {
+      console.log(data);
+      setToken(TOKEN.user, JSON.stringify(data));
+      queryClient.setQueryData([KEY.user], JSON.stringify(data));
+      removeToken(TOKEN.auth);
+      navigate("/events");
     },
   });
 };
 
-export const AuthenticationService = { usePostLogin, usePostVerify };
+const useResendTAC = () => {
+  return useMutation({
+    mutationFn: async (data: string) => {
+      const response = await datasource({
+        method: "POST",
+        url: "auth/pin/refresh",
+        data: { verification_token: data },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      return response.data;
+    },
+  });
+};
+
+export const AuthenticationService = {
+  usePostLogin,
+  usePostVerify,
+  useResendTAC,
+};

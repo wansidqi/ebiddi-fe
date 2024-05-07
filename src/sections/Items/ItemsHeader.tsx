@@ -15,7 +15,7 @@ export function ItemsHeader() {
   const { eventId } = useParams();
   const { useGetEventById } = useAPIServices();
   const { data } = useGetEventById(eventId as string);
-  console.log(data?.downloadable.url);
+  // console.log(data?.downloadable.url);
 
   const { auction } = useStoreContext();
   const { setView, view } = auction;
