@@ -1,9 +1,12 @@
 import { Route, Routes, Navigate, Outlet } from "react-router-dom";
 import {
+  Contract,
   Events,
   Home,
   Live,
   Login,
+  Policies,
+  Profile,
   ReportCar,
   ReportMotor,
   TAC,
@@ -26,6 +29,9 @@ function App() {
   return (
     <Routes>
       <Route path={"/"} element={<Home />} />
+      <Route path={"/contract"} element={<Contract />} />
+      <Route path={"/policy"} element={<Policies />} />
+      <Route path={"/profile"} element={<Profile />} />
       <Route path={"/ireportmotor/:vehicle_id"} element={<ReportMotor />} />
       <Route path={"/ireportcar/:vehicle_id"} element={<ReportCar />} />
       <Route path={"/events"} element={<Events />} />

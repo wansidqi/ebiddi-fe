@@ -8,6 +8,7 @@ import {
 } from "@/datasource/localstorage.datasource";
 import { LoginCredential, ResponseLogin, Verify } from "@/interfaces/API";
 import { useNavigate } from "react-router-dom";
+import { useAuctionContext } from "@/Context/store/auction-context";
 
 const usePostLogin = () => {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ const usePostLogin = () => {
 };
 
 const usePostVerify = () => {
+  const { SET_USER } = useAuctionContext();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -52,7 +54,7 @@ const usePostVerify = () => {
       return data.data;
     },
     onSuccess: (data) => {
-      console.log(data);
+      SET_USER(data);
       setToken(TOKEN.user, JSON.stringify(data));
       queryClient.setQueryData([KEY.user], JSON.stringify(data));
       removeToken(TOKEN.auth);

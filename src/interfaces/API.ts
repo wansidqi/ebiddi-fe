@@ -52,5 +52,11 @@ export interface User {
       };
     },
   ];
-  companies: [];
+  companies: [
+    {
+      name: string;
+      registration_no: string;
+      address: string;
+    },
+  ];
 }

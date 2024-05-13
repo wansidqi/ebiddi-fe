@@ -40,6 +40,31 @@ export function getDate(dateString: string): string {
   return dayString;
 }
 
+export function convertDateTime(dateTimeString: string): string {
+  const date: Date = new Date(dateTimeString);
+
+  const day: number = date.getDate();
+  const month: number = date.getMonth() + 1;
+  const year: number = date.getFullYear();
+
+  const formattedDate: string =
+    (day < 10 ? "0" : "") +
+    day +
+    "/" +
+    (month < 10 ? "0" : "") +
+    month +
+    "/" +
+    year;
+
+  const hours: number = date.getHours();
+  const minutes: number = date.getMinutes();
+
+  const formattedTime: string =
+    (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+
+  return formattedDate + " " + formattedTime;
+}
+
 export const isCountdown = (dateTime: string) => {
   const targetDate = new Date(dateTime);
   const difference = targetDate.getTime() - new Date().getTime();
@@ -56,4 +81,8 @@ export const isCountdown = (dateTime: string) => {
 
   const response = Object.keys(timeLeft).length ? timeLeft : false;
   return response;
+};
+
+export const numWithComma = (num: number) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
