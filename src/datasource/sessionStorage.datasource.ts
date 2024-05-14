@@ -4,13 +4,13 @@ export enum TOKEN {
 }
 
 export function getToken(key: TOKEN) {
-  return localStorage.getItem(key);
+  return sessionStorage.getItem(key);
 }
 
 export function setToken(key: TOKEN, token: string) {
-  localStorage.setItem(key, token);
+  sessionStorage.setItem(key, token);
 }
 
 export function removeToken(key: TOKEN) {
-  localStorage.removeItem(key);
+  sessionStorage.removeItem(key);
 }

@@ -1,10 +1,11 @@
+import { AlertDialog } from "@/components";
 import { Button } from "@/components/ui/button";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { TOKEN, getToken } from "@/datasource/localstorage.datasource";
+import { TOKEN, getToken } from "@/datasource/sessionStorage.datasource";
 import { useAPIServices } from "@/services";
 import { LogInIcon } from "lucide-react";
 import { useState } from "react";
@@ -32,6 +33,7 @@ export function TAC() {
 
   return (
     <div className="flexcenter-col gap-4 mt-20">
+      <AlertDialog />
       <p className="text-4xl text-primary">TAC CODE</p>
 
       <InputOTP onChange={(e) => setTAC(e)} maxLength={6}>

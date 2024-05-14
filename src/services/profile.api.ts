@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { KEY } from ".";
 import datasource from "@/datasource/axiosInstance";
-import { TOKEN, getToken } from "@/datasource/localstorage.datasource";
+import { TOKEN, getToken } from "@/datasource/sessionStorage.datasource";
 import { User } from "@/interfaces/API";
 import { Transactions } from "@/interfaces";
 

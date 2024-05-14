@@ -5,13 +5,14 @@ import {
   TOKEN,
   removeToken,
   setToken,
-} from "@/datasource/localstorage.datasource";
+} from "@/datasource/sessionStorage.datasource";
 import { LoginCredential, ResponseLogin, Verify } from "@/interfaces/API";
 import { useNavigate } from "react-router-dom";
 import { useAuctionContext } from "@/Context/store/auction-context";
 
 const usePostLogin = () => {
   const navigate = useNavigate();
+  const { setAlert } = useAuctionContext();
 
   return useMutation({
     mutationFn: async (body: LoginCredential) => {
@@ -31,12 +32,18 @@ const usePostLogin = () => {
       setToken(TOKEN.auth, data.token);
       navigate("/tac");
     },
-    onError: (e) => console.log(e),
+    onError: (e) => {
+      setAlert({
+        messsage: "Incorrect Password, Please try again.",
+        showAlert: true,
+      });
+      console.log(e);
+    },
   });
 };
 
 const usePostVerify = () => {
-  const { SET_USER } = useAuctionContext();
+  const { SET_USER, setAlert } = useAuctionContext();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -59,6 +66,9 @@ const usePostVerify = () => {
       queryClient.setQueryData([KEY.user], JSON.stringify(data));
       removeToken(TOKEN.auth);
       navigate("/events");
+    },
+    onError: (_) => {
+      setAlert({ messsage: "Invalid TAC", showAlert: true });
     },
   });
 };

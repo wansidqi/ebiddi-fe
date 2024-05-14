@@ -1,4 +1,5 @@
 import logo from "@/assets/images/e-biddi icon.png";
+import { AlertDialog } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,6 +23,7 @@ export function Login() {
 
   return (
     <div className="flexcenter-col mx-8 my-8 gap-7">
+      <AlertDialog />
       <img className="w-40" src={logo} alt="" />
       <h1 className="text-3xl">LOGIN TO E-BIDDI</h1>
       <div className="flex flex-col w-full sm:w-1/3 gap-4">

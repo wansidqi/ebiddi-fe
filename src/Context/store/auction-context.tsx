@@ -1,6 +1,6 @@
 import { EventsInterface } from "@/interfaces";
 import { User } from "@/interfaces/API";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 const AppContext = createContext<Data | null>(null);
 
@@ -28,6 +28,17 @@ type Data = {
   USER: User | null;
   SET_USER: React.Dispatch<React.SetStateAction<User | null>>;
 
+  alert: {
+    showAlert: boolean;
+    messsage: string;
+  };
+  setAlert: React.Dispatch<
+    React.SetStateAction<{
+      showAlert: boolean;
+      messsage: string;
+    }>
+  >;
+
   dev: boolean;
 };
 
@@ -38,6 +49,10 @@ function AuctionContext(props: React.PropsWithChildren<{}>) {
   const [selectEvent, setSelectEvent] = useState<EventsInterface | null>(null);
   const [countdown, setCountdown] = useState(9);
   const [showDialog, setShowDialog] = useState(false);
+  const [alert, setAlert] = useState({
+    showAlert: false,
+    messsage: "",
+  });
 
   const dev = true;
 
@@ -53,7 +68,17 @@ function AuctionContext(props: React.PropsWithChildren<{}>) {
     dev,
     USER,
     SET_USER,
+    alert,
+    setAlert,
   };
+
+  useEffect(() => {
+    if (alert.showAlert === true) {
+      setTimeout(() => {
+        setAlert({ messsage: "", showAlert: false });
+      }, 3000);
+    }
+  }, [alert]);
 
   return <AppContext.Provider value={contextValue} {...props} />;
 }

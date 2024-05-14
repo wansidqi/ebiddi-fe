@@ -14,7 +14,7 @@ import {
 import { Items } from "./sections";
 import "./custom.css";
 import { useEffect } from "react";
-import { TOKEN, getToken } from "./datasource/localstorage.datasource";
+import { TOKEN, getToken } from "./datasource/sessionStorage.datasource";
 import { useStoreContext } from "./Context";
 
 function App() {
