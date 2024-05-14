@@ -1,5 +1,4 @@
-import { EventsInterface } from "@/interfaces";
-import { User } from "@/interfaces/API";
+import { EventsInterface, User } from "@/interfaces";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 const AppContext = createContext<Data | null>(null);

@@ -2,8 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { KEY } from ".";
 import datasource from "@/datasource/axiosInstance";
 import { TOKEN, getToken } from "@/datasource/sessionStorage.datasource";
-import { User } from "@/interfaces/API";
-import { Transactions } from "@/interfaces";
+import { Transactions, User } from "@/interfaces";
 
 const useGetDepositInfo = (id: string) => {
   return useQuery({
