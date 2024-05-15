@@ -17,8 +17,7 @@ export function ItemsHeader() {
   const { data } = useGetEventById(eventId as string);
   // console.log(data?.downloadable.url);
 
-  const { auction } = useStoreContext();
-  const { setView, view } = auction;
+  const { setView, view } = useStoreContext();
 
   const buttons = [
     {

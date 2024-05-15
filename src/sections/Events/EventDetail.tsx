@@ -22,8 +22,8 @@ import { Countdown } from "./EventCountdown";
 import { EventsInterface } from "@/interfaces";
 
 interface Props extends EventsInterface {
-  openDetail: boolean;
-  setOpenDetail: React.Dispatch<React.SetStateAction<boolean>>;
+  openDetail?: boolean;
+  setOpenDetail?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function EventDetail(props: Props) {
@@ -71,7 +71,7 @@ export function EventDetail(props: Props) {
   );
 }
 
-function Detail(props: Props) {
+export function Detail(props: Props) {
   return (
     <div className={cn("mx-5 text-center text-[14px] flex flex-col gap-3")}>
       <p>{props.name?.toUpperCase()}</p>
@@ -89,11 +89,11 @@ function Detail(props: Props) {
 
       <div>
         <p>Auction event hosted by:</p>
-        <p>{props.auction_house.name}</p>
+        <p>{props.auction_house?.name}</p>
       </div>
       <div>
         <p>Auctioneer:</p>
-        <p>{props.auction_house.auctioneer.name}</p>
+        <p>{props.auction_house?.auctioneer?.name}</p>
       </div>
       <p className="text-yellow-600 sm:my-3">
         Reminder: All Bidders are advised to turn off sleep mode / power saving

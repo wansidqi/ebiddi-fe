@@ -24,9 +24,11 @@ export const Countdown = ({
     return () => clearTimeout(timer);
   });
 
+  const isTimeEnd = Boolean(!Object.keys(timeLeft).length);
+
   return (
     <>
-      {!Object.keys(timeLeft).length ? (
+      {isTimeEnd ? (
         <div>
           <button
             onClick={() => navigate(`/live/${eventId}`)}

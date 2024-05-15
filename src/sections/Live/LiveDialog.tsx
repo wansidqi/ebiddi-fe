@@ -23,8 +23,7 @@ import { InfoIcon } from "lucide-react";
 // ];
 
 export function LiveDialog() {
-  const { auction } = useStoreContext();
-  const { showDialog, setShowDialog } = auction;
+  const { showDialog, setShowDialog } = useStoreContext();
 
   return (
     <div>

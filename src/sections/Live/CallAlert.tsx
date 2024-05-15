@@ -25,8 +25,7 @@ const callMessage: CallMessage[] = [
 ];
 
 export function CallAlert() {
-  const { auction } = useStoreContext();
-  const { countdown } = auction;
+  const { countdown } = useStoreContext();
   const { toast } = useToast();
 
   useEffect(() => {

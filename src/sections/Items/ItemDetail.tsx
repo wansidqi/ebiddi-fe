@@ -25,8 +25,7 @@ import { useStoreContext } from "@/Context";
 
 export function ItemDetail(props: InventoryInterface) {
   const [open, setOpen] = useState(false);
-  const { auction } = useStoreContext();
-  const { view } = auction;
+  const { view } = useStoreContext();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isDesktop) {

@@ -7,8 +7,7 @@ interface BidList {
 }
 
 export function BidList() {
-  const { auction } = useStoreContext();
-  const { dev } = auction;
+  const { dev } = useStoreContext();
   const [latestBidderIndex, setLatestBidderIndex] = useState(-1);
   const [bidders, setBidders] = useState<BidList[]>([
     { name: "Wan Ahmad Sidqi", price: "RM 888,888" },

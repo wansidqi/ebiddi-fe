@@ -1,17 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "@/components/Container";
 import {
   BidCountdown,
   BidList,
   CallAlert,
+  Detail,
   LiveDetail,
   LiveDialog,
   Participator,
 } from "@/sections";
 import waiting from "@/assets/images/waiting.png";
+import { useAPIServices } from "@/services";
+import { useParams } from "react-router-dom";
+import { EventsInterface } from "@/interfaces";
+import { isCountdown } from "@/lib/utils";
 
 export function Live() {
-  const [isWaiting, _] = useState(false);
+  const { eventId } = useParams();
+  const { useGetEventById } = useAPIServices();
+  const { data } = useGetEventById(eventId as string);
+
+  const [isWaiting, _] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(
+    isCountdown(data?.event_date as string)
+  );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const newTimeLeft = isCountdown(data?.event_date as string);
+      if (Object.keys(newTimeLeft).length === 0) {
+      } else {
+        setTimeLeft(newTimeLeft);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  });
+
+  const isTimeEnd = Boolean(!Object.keys(timeLeft).length);
+
+  if (!isTimeEnd)
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-100 flex items-center justify-center z-50">
+        <div className="p-8 relative overflow-y-auto bg-background custom-scrollbar sm:w-1/3 rounded-md">
+          <div className="text-left mx-auto text-[14px] flex flex-col gap-5 baloo">
+            <Detail {...(data as EventsInterface)} />
+          </div>
+        </div>
+      </div>
+    );
+
   return (
     <div>
       <CallAlert />

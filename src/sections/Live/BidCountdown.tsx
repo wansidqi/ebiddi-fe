@@ -2,8 +2,7 @@ import { useStoreContext } from "@/Context";
 import { useEffect, useState } from "react";
 
 export function BidCountdown() {
-  const { auction } = useStoreContext();
-  const { countdown, setCountdown, dev } = auction;
+  const { countdown, setCountdown, dev } = useStoreContext();
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {

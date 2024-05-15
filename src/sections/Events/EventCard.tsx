@@ -52,7 +52,7 @@ export function EventCard(props: EventsInterface) {
           event_id: Number(eventId),
           user_id: USER?.id as number,
         });
-        setOpenDetail(true);
+        isCountdown(date) ? setOpenDetail(true) : navigate(`/live/${eventId}`);
       } catch (error) {
         setTerm({ showTerm: true, eventId: eventId.toString() });
       }

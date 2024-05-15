@@ -5,7 +5,7 @@ import { useStoreContext } from "@/Context";
 import { useAPIServices } from "@/services";
 
 export function Items() {
-  const { auction } = useStoreContext();
+  const { view } = useStoreContext();
   const { eventId } = useParams();
 
   useEffect(() => {}, [eventId]);
@@ -16,7 +16,7 @@ export function Items() {
   return (
     <div className="m-2 sm:m-4">
       <ItemsHeader />
-      {auction.view === "List" ? (
+      {view === "List" ? (
         <ItemsList events={data} />
       ) : (
         <>{isLoading ? <ItemGridLoading /> : <ItemsGrid events={data} />}</>

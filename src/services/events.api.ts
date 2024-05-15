@@ -1,5 +1,5 @@
 import datasource from "@/datasource/axiosInstance";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { KEY } from ".";
 import { EventsInterface } from "@/interfaces";
 
@@ -60,9 +60,7 @@ const useGetAgreement = (eventId: string) => {
   });
 };
 
-const usePostConfirmAgreement = (eventId: string) => {
-  const queryClient = useQueryClient();
-
+const usePostConfirmAgreement = () => {
   type Param = {
     user_id: number;
     event_id: number;
@@ -79,9 +77,6 @@ const usePostConfirmAgreement = (eventId: string) => {
         },
       });
       return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries([KEY.agreement, eventId]);
     },
   });
 };
