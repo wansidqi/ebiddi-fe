@@ -21,6 +21,12 @@ export function Login() {
     // password: "12345",
   };
 
+  const onEnterClick = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      mutateAsync(credentials);
+    }
+  };
+
   return (
     <div className="flexcenter-col mx-8 my-8 gap-7">
       <AlertDialog />
@@ -32,6 +38,7 @@ export function Login() {
             Username
           </Label>
           <Input
+            onKeyDown={onEnterClick}
             onChange={(e) => setUsername(e.target.value)}
             type="username"
             className="py-4"
@@ -43,6 +50,7 @@ export function Login() {
             Password
           </Label>
           <Input
+            onKeyDown={onEnterClick}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             className="py-4"

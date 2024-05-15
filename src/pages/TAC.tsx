@@ -31,12 +31,22 @@ export function TAC() {
     }
   };
 
+  const onEnterClick = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      verify();
+    }
+  };
+
   return (
     <div className="flexcenter-col gap-4 mt-20">
       <AlertDialog />
       <p className="text-4xl text-primary">TAC CODE</p>
 
-      <InputOTP onChange={(e) => setTAC(e)} maxLength={6}>
+      <InputOTP
+        onKeyDown={onEnterClick}
+        onChange={(e) => setTAC(e)}
+        maxLength={6}
+      >
         <InputOTPGroup>
           <InputOTPSlot index={0} />
           <InputOTPSlot index={1} />
