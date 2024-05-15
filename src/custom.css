@@ -25,6 +25,10 @@
   font-family: arial;
 }
 
+.baloo {
+  font-family: "baloo";
+}
+
 :root {
   font-family: "baloo", "firasans", calibri, sans-serif;
 }

@@ -9,3 +9,4 @@ export * from "./VehicleInspection";
 export * from "./Contract";
 export * from "./Profile";
 export * from "./Policies";
+export * from "./Term";

@@ -1,5 +1,5 @@
 import datasource from "@/datasource/axiosInstance";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { KEY } from ".";
 import { EventsInterface } from "@/interfaces";
 
@@ -9,6 +9,13 @@ interface EventsResponse {
 
 interface EventResponse {
   data: EventsInterface;
+}
+
+interface AgreementResponse {
+  data: {
+    event_name: string;
+    agreement_content: string;
+  };
 }
 
 const useGetAllEvents = () => {
@@ -38,4 +45,74 @@ const useGetEventById = (id: string) => {
   });
 };
 
-export const EventService = { useGetAllEvents, useGetEventById };
+const useGetAgreement = (eventId: string) => {
+  return useQuery({
+    queryKey: [KEY.agreement],
+    queryFn: async () => {
+      const response = await datasource({
+        method: "get",
+        url: `/auction/${eventId}/agreement`,
+      });
+      const data = response.data as AgreementResponse;
+      return data.data;
+    },
+    enabled: !!eventId,
+  });
+};
+
+const usePostConfirmAgreement = (eventId: string) => {
+  const queryClient = useQueryClient();
+
+  type Param = {
+    user_id: number;
+    event_id: number;
+  };
+
+  return useMutation({
+    mutationFn: async (data: Param) => {
+      const response = await datasource({
+        method: "post",
+        url: "/auction/agreement/confirm",
+        data,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries([KEY.agreement, eventId]);
+    },
+  });
+};
+
+const usePostVerifyAgreement = () => {
+  type Param = {
+    user_id: number;
+    event_id: number;
+  };
+
+  return useMutation({
+    mutationFn: async (data: Param) => {
+      const response = await datasource({
+        method: "post",
+        url: "/auction/agreement/verify",
+        data,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      return response.data;
+    },
+  });
+};
+
+/* if !usePostVerifyAgreement -> useGetAgreement -> usePostConfirmAgreement  */
+
+export const EventService = {
+  useGetAllEvents,
+  useGetEventById,
+  useGetAgreement,
+  usePostConfirmAgreement,
+  usePostVerifyAgreement,
+};

@@ -7,6 +7,7 @@ import { ProfileServices } from "./profile.api";
 export enum KEY {
   events = "events",
   event = "event",
+  agreement = "agreement",
   item = "item",
   user = "user",
   depo_info = "depo info",

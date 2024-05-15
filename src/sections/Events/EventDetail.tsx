@@ -99,7 +99,7 @@ function Detail(props: Props) {
         Reminder: All Bidders are advised to turn off sleep mode / power saving
         mode and please do not answer phone calls while auctioning
       </p>
-      <Countdown targetDate={props.event_date} />
+      <Countdown targetDate={props.event_date} eventId={props.id as number} />
     </div>
   );
 }

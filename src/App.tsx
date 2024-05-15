@@ -1,3 +1,4 @@
+import "./custom.css";
 import { Route, Routes, Navigate, Outlet } from "react-router-dom";
 import {
   Contract,
@@ -12,7 +13,6 @@ import {
   TAC,
 } from "@/pages";
 import { Items } from "./sections";
-import "./custom.css";
 import { useEffect } from "react";
 import { TOKEN, getToken } from "./datasource/sessionStorage.datasource";
 import { useStoreContext } from "./Context";
@@ -36,7 +36,7 @@ function App() {
       <Route path={"/ireportcar/:vehicle_id"} element={<ReportCar />} />
       <Route path={"/events"} element={<Events />} />
       <Route path={"/items/:eventId"} element={<Items />} />
-      <Route path={"/live"} element={<Live />} />
+      <Route path={"/live/:eventId"} element={<Live />} />
 
       <Route element={<Authenticated />}>
         <Route path={"/login"} element={<Login />} />

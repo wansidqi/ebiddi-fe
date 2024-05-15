@@ -38,6 +38,17 @@ type Data = {
     }>
   >;
 
+  term: {
+    showTerm: boolean;
+    eventId: string;
+  };
+  setTerm: React.Dispatch<
+    React.SetStateAction<{
+      showTerm: boolean;
+      eventId: string;
+    }>
+  >;
+
   dev: boolean;
 };
 
@@ -48,10 +59,8 @@ function AuctionContext(props: React.PropsWithChildren<{}>) {
   const [selectEvent, setSelectEvent] = useState<EventsInterface | null>(null);
   const [countdown, setCountdown] = useState(9);
   const [showDialog, setShowDialog] = useState(false);
-  const [alert, setAlert] = useState({
-    showAlert: false,
-    messsage: "",
-  });
+  const [alert, setAlert] = useState({ showAlert: false, messsage: "" });
+  const [term, setTerm] = useState({ showTerm: false, eventId: "" });
 
   const dev = true;
 
@@ -69,6 +78,8 @@ function AuctionContext(props: React.PropsWithChildren<{}>) {
     SET_USER,
     alert,
     setAlert,
+    term,
+    setTerm,
   };
 
   useEffect(() => {

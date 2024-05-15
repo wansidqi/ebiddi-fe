@@ -1,4 +1,4 @@
-export * from "./Events";
+export * from "./Events/EventCard";
 export * from "./Events/EventDetail";
 export * from "./Events/EventCountdown";
 export * from "./Events/EventLoading";
