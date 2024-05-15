@@ -18,8 +18,7 @@ import { TOKEN, getToken } from "./datasource/sessionStorage.datasource";
 import { useStoreContext } from "./Context";
 
 function App() {
-  const { auction } = useStoreContext();
-  const { SET_USER } = auction;
+  const { SET_USER } = useStoreContext();
 
   useEffect(() => {
     const userAuth = JSON.parse(getToken(TOKEN.user) as string);
@@ -47,8 +46,7 @@ function App() {
 }
 
 function Authenticated() {
-  const { auction } = useStoreContext();
-  const { USER } = auction;
+  const { USER } = useStoreContext();
 
   if (USER) return <Navigate to="/events" />;
   return <Outlet />;

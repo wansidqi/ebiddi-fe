@@ -8,11 +8,11 @@ import {
 } from "@/datasource/sessionStorage.datasource";
 import { LoginCredential, ResponseLogin, Verify } from "@/interfaces/API";
 import { useNavigate } from "react-router-dom";
-import { useAuctionContext } from "@/Context/store/auction-context";
+import { useStoreContext } from "@/Context";
 
 const usePostLogin = () => {
   const navigate = useNavigate();
-  const { setAlert } = useAuctionContext();
+  const { setAlert } = useStoreContext();
 
   return useMutation({
     mutationFn: async (body: LoginCredential) => {
@@ -43,7 +43,7 @@ const usePostLogin = () => {
 };
 
 const usePostVerify = () => {
-  const { SET_USER, setAlert } = useAuctionContext();
+  const { SET_USER, setAlert } = useStoreContext();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 

@@ -1,7 +1,7 @@
-import { useAuctionContext } from "@/Context/store/auction-context";
+import { useStoreContext } from "@/Context";
 
 export function AlertDialog() {
-  const { alert } = useAuctionContext();
+  const { alert } = useStoreContext();
   const { messsage, showAlert } = alert;
 
   return (

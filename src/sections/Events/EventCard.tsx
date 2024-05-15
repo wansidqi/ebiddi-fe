@@ -13,14 +13,13 @@ import { EventsInterface } from "@/interfaces";
 import { getDate, isCountdown, getTime } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useAuctionContext } from "@/Context/store/auction-context";
 import { useAPIServices } from "@/services";
+import { useStoreContext } from "@/Context";
 
 export function EventCard(props: EventsInterface) {
-  const { setTerm } = useAuctionContext();
+  const { setTerm, USER } = useStoreContext();
   const [openDetail, setOpenDetail] = useState(false);
 
-  const { USER } = useAuctionContext();
   const navigate = useNavigate();
 
   const { usePostVerifyAgreement } = useAPIServices();

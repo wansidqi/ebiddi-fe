@@ -1,4 +1,4 @@
-import { useAuctionContext } from "@/Context/store/auction-context";
+import { useStoreContext } from "@/Context";
 import { DynamicDrawer } from "@/components";
 import { Container } from "@/components/Container";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ export function Profile() {
     "	Deposited Account",
   ];
 
-  const { USER } = useAuctionContext();
+  const { USER } = useStoreContext();
   const depoInfo = USER?.credits;
 
   const { useGetTx } = useAPIServices();

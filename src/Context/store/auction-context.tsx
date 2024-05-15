@@ -1,5 +1,5 @@
 import { EventsInterface, User } from "@/interfaces";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 const AppContext = createContext<Data | null>(null);
 
@@ -21,33 +21,8 @@ type Data = {
   countdown: number;
   setCountdown: React.Dispatch<React.SetStateAction<number>>;
 
-  showDialog: boolean;
-  setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
-
   USER: User | null;
   SET_USER: React.Dispatch<React.SetStateAction<User | null>>;
-
-  alert: {
-    showAlert: boolean;
-    messsage: string;
-  };
-  setAlert: React.Dispatch<
-    React.SetStateAction<{
-      showAlert: boolean;
-      messsage: string;
-    }>
-  >;
-
-  term: {
-    showTerm: boolean;
-    eventId: string;
-  };
-  setTerm: React.Dispatch<
-    React.SetStateAction<{
-      showTerm: boolean;
-      eventId: string;
-    }>
-  >;
 
   dev: boolean;
 };
@@ -58,9 +33,6 @@ function AuctionContext(props: React.PropsWithChildren<{}>) {
   const [view, setView] = useState<"Grid" | "List">("Grid");
   const [selectEvent, setSelectEvent] = useState<EventsInterface | null>(null);
   const [countdown, setCountdown] = useState(9);
-  const [showDialog, setShowDialog] = useState(false);
-  const [alert, setAlert] = useState({ showAlert: false, messsage: "" });
-  const [term, setTerm] = useState({ showTerm: false, eventId: "" });
 
   const dev = true;
 
@@ -71,24 +43,10 @@ function AuctionContext(props: React.PropsWithChildren<{}>) {
     setSelectEvent,
     countdown,
     setCountdown,
-    showDialog,
-    setShowDialog,
     dev,
     USER,
     SET_USER,
-    alert,
-    setAlert,
-    term,
-    setTerm,
   };
-
-  useEffect(() => {
-    if (alert.showAlert === true) {
-      setTimeout(() => {
-        setAlert({ messsage: "", showAlert: false });
-      }, 3000);
-    }
-  }, [alert]);
 
   return <AppContext.Provider value={contextValue} {...props} />;
 }

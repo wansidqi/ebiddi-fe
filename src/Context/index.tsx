@@ -1,16 +1,18 @@
 import React from "react";
 import AuctionContext, { useAuctionContext } from "./store/auction-context";
+import ModalContext, { useModalContext } from "./store/modal-context";
 
 export function useStoreContext() {
   const auction = useAuctionContext();
+  const modal = useModalContext();
 
-  return { auction };
+  return { ...auction, ...modal };
 }
 
 function StoreContext(props: React.PropsWithChildren<{}>) {
   return (
     <AuctionContext>
-      {props.children}
+      <ModalContext>{props.children}</ModalContext>
     </AuctionContext>
   );
 }
