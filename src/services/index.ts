@@ -3,6 +3,7 @@ import { EventService } from "./events.api";
 import { ItemService } from "./items.api";
 import { AuthenticationService } from "./authentication.api";
 import { ProfileServices } from "./profile.api";
+import { ContractService } from "./contract.api";
 
 export enum KEY {
   events = "events",
@@ -12,6 +13,7 @@ export enum KEY {
   user = "user",
   depo_info = "depo info",
   tx = "transactions",
+  contract = "contract",
 }
 
 export function useGetQueryData<T>(key: QueryKey): T {
@@ -23,4 +25,5 @@ export const useAPIServices = () => ({
   ...ItemService,
   ...AuthenticationService,
   ...ProfileServices,
+  ...ContractService,
 });

@@ -92,7 +92,7 @@ export function Navigation() {
   return (
     <Fragment>
       {USER ? (
-        <div className="flex justify-between py-3 px-5 sm:px-10 gap-2 sticky top-0 bg-[#011138] text-primary">
+        <div className="flex justify-between py-3 px-5 sm:px-10 gap-2 sticky top-0 z-50 bg-[#011138] text-primary">
           <div className="flex gap-4">
             <button onClick={() => setShowSidebar(true)} className="sm:hidden">
               <Hamburger />
@@ -122,7 +122,7 @@ export function Navigation() {
                         key={i}
                         onClick={() => navigateAndCloseSidebar(item.callback)}
                       >
-                        <div className="flex ml-6 gap-3">
+                        <div className="flex ml-4 gap-3">
                           <div>{item.icon}</div>
                           <p>{item.name}</p>
                         </div>

@@ -509,7 +509,7 @@ export interface User {
         name: string;
       };
     },
-  ];
+  ]; //TODO
   companies: [
     {
       name: string;
@@ -517,4 +517,15 @@ export interface User {
       address: string;
     },
   ];
+}
+
+export interface Contract {
+  //TODO
+  registration_no: number;
+  model: string;
+  bidder: string;
+  ownership: string;
+  date: string;
+  auction_house: string;
+  actions: string;
 }
