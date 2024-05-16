@@ -92,7 +92,7 @@ export function Navigation() {
   return (
     <Fragment>
       {USER ? (
-        <div className="flex justify-between py-3 px-5 sm:px-10 gap-2 sticky top-0 bg-primary-foreground text-primary">
+        <div className="flex justify-between py-3 px-5 sm:px-10 gap-2 sticky top-0 bg-[#011138] text-primary">
           <div className="flex gap-4">
             <button onClick={() => setShowSidebar(true)} className="sm:hidden">
               <Hamburger />
@@ -102,7 +102,7 @@ export function Navigation() {
             </button>
           </div>
 
-          <main>
+          <main id="sidebar">
             {showSidebar && (
               <div className="fixed inset-0 z-50 bg-black bg-opacity-50" />
             )}
@@ -114,7 +114,7 @@ export function Navigation() {
                   : "-translate-x-full transform transition-transform duration-300 ease-in-out"
               }`}
             >
-              <div className="z-50 min-h-screen w-3/4 overflow-auto border-x bg-primary-foreground text-[16px]">
+              <div className="z-50 min-h-screen w-3/4 overflow-auto border-x bg-[#011138] text-[16px]">
                 <div className="p-0">
                   <div className="flex flex-col justify-start gap-6 py-10 w-full sm:hidden">
                     {navMenu.map((item, i) => (
@@ -134,12 +134,12 @@ export function Navigation() {
             </div>
           </main>
 
-          <main className="sm:flex gap-5 justify-end w-full hidden">
+          <main id="navbar" className="sm:flex gap-5 justify-end w-full hidden">
             {navMenu.map((item, i) => (
               <button key={i} onClick={item.callback}>
                 <div className="flexcenter gap-2">
-                  <p className="mt-2">{item.name}</p>
                   <div>{item.icon}</div>
+                  <p className="mt-2">{item.name}</p>
                 </div>
               </button>
             ))}

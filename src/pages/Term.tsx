@@ -30,6 +30,7 @@ export function Term() {
         <div className="bg-white arial text-[#2c3e50] p-8 rounded- relative w-[88%] h-[95%] overflow-y-auto custom-scrollbar">
           <p className="text-5xl py-10">{data?.event_name}</p>
           <div
+            id="term"
             dangerouslySetInnerHTML={{
               __html: data?.agreement_content as string,
             }}
