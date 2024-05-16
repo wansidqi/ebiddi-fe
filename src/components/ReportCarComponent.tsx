@@ -54,7 +54,9 @@ export const SingleColStandalone = ({ value }: { value: string[] }) => {
       <div className="w-[12%] flex justify-between">
         {value[0]} <span>:</span>
       </div>
-      <div className={`ml-2 w-[82%] font-bold border-b border-[#2C3E50]`}>
+      <div
+        className={`ml-2 ${value[1].length < 1 ? "mt-3" : ""} w-[82%] font-bold border-b border-[#2C3E50]`}
+      >
         {value[1]}
       </div>
     </div>

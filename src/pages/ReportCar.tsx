@@ -695,7 +695,7 @@ export function ReportCar() {
           }
         />
         <SingleColStandalone
-          value={["Remark", report?.extcomponentremarks ?? ""]}
+          value={["Remark", report?.extcomponentremarks || ""]}
         />
       </main>
 
