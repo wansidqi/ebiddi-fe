@@ -23,7 +23,7 @@ export function Login() {
   };
 
   return (
-    <div className="flexcenter-col mx-8 my-8 gap-7">
+    <div className="flexcenter-col mx-8 my-auto h-screen gap-7">
       <AlertDialog />
       <img className="w-40" src={logo} alt="" />
       <h1 className="text-3xl">LOGIN TO E-BIDDI</h1>

@@ -17,7 +17,7 @@ export function Contract() {
         <p className="text-5xl sm:text-6xl text-primary my-4">CONTRACTS</p>
         <p className="my-8 text-xl">List of Contracts</p>
       </div>
-      <div className="overflow-x-auto text-center sm:mx-20 overflow-y-hidden sm:px-20">
+      <div className="sm:w-full overflow-x-auto sm:overflow-hidden text-center sm:px-10">
         <table className="min-w-full divide-y">
           <thead className="bg-secondary">
             <tr>

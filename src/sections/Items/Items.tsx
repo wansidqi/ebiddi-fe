@@ -3,6 +3,7 @@ import { ItemGridLoading, ItemsGrid, ItemsHeader, ItemsList } from "..";
 import { useParams } from "react-router-dom";
 import { useStoreContext } from "@/Context";
 import { useAPIServices } from "@/services";
+import { Container } from "@/components/Container";
 
 export function Items() {
   const { view } = useStoreContext();
@@ -14,13 +15,13 @@ export function Items() {
   const { data, isLoading } = useGetEventById(eventId as string);
 
   return (
-    <div className="m-2 sm:m-4">
+    <Container className="">
       <ItemsHeader />
       {view === "List" ? (
         <ItemsList events={data} />
       ) : (
         <>{isLoading ? <ItemGridLoading /> : <ItemsGrid events={data} />}</>
       )}
-    </div>
+    </Container>
   );
 }

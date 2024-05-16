@@ -18,4 +18,4 @@ export * from "./Live/BidCountdown";
 export * from "./Live/LiveDetail";
 export * from "./Live/LiveDialog";
 
-export * from "./Layout/Header";
+export * from "./Layout/Navigation";
