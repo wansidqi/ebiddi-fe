@@ -6,6 +6,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { TOKEN, getToken } from "@/datasource/sessionStorage.datasource";
+import { onEnterClick } from "@/lib/utils";
 import { useAPIServices } from "@/services";
 import { LogInIcon } from "lucide-react";
 import { useState } from "react";
@@ -31,19 +32,13 @@ export function TAC() {
     }
   };
 
-  const onEnterClick = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      verify();
-    }
-  };
-
   return (
     <div className="flexcenter-col gap-4 mt-20">
       <AlertDialog />
       <p className="text-4xl text-primary">TAC CODE</p>
 
       <InputOTP
-        onKeyDown={onEnterClick}
+        onKeyDown={(e) => onEnterClick(e, () => verify())}
         onChange={(e) => setTAC(e)}
         maxLength={6}
       >

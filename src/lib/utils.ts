@@ -86,3 +86,12 @@ export const isCountdown = (dateTime: string) => {
 export const numWithComma = (num: number) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+
+export const onEnterClick = (
+  e: React.KeyboardEvent<HTMLInputElement>,
+  callback: () => void
+) => {
+  if (e.key === "Enter") {
+    callback();
+  }
+};
