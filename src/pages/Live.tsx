@@ -20,7 +20,7 @@ export function Live() {
   const { useGetEventById } = useAPIServices();
   const { data } = useGetEventById(eventId as string);
 
-  const [isWaiting, _] = useState(true);
+  const [isWaiting, _] = useState(false);
   const [timeLeft, setTimeLeft] = useState(
     isCountdown(data?.event_date as string)
   );

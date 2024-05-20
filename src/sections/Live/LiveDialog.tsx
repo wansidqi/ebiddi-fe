@@ -10,27 +10,30 @@ import {
 } from "@/components/ui/dialog";
 import { InfoIcon } from "lucide-react";
 
-// const popupMsg = [
-//   { desc: "Bidding is starting", isWaiting: false },
-//   { desc: "Auction Start", isWaiting: false },
-//   { desc: "Name has won the auction", isWaiting: true },
-//   { desc: "No bid", isWaiting: true },
-//   { desc: "This auction is withdraw", isWaiting: true },
-//   {
-//     desc: "Auction has been closed, that's all for this event",
-//     isWaiting: true,
-//   },
-// ];
+const popupMsg = [
+  { desc: "Bidding is starting", isWaitingScreen: false },
+  { desc: "Auction Start", isWaitingScreen: false },
+  { desc: "Name has won the auction", isWaitingScreen: true },
+  { desc: "No bid", isWaitingScreen: true },
+  { desc: "This auction is withdraw", isWaitingScreen: true },
+  {
+    desc: "Auction has been closed, that's all for this event",
+    isWaitingScreen: true,
+  },
+];
 
 export function LiveDialog() {
-  const { showDialog, setShowDialog } = useStoreContext();
+  const { showLiveDialog, setShowLiveDialog } = useStoreContext();
 
   return (
     <div>
-      <Dialog open={showDialog} onOpenChange={() => setShowDialog(false)}>
+      <Dialog
+        open={showLiveDialog}
+        onOpenChange={() => setShowLiveDialog(false)}
+      >
         <Button
           className="hidden"
-          onClick={() => setShowDialog(true)}
+          onClick={() => setShowLiveDialog(true)}
           variant="outline"
         >
           Edit Profile
@@ -47,7 +50,7 @@ export function LiveDialog() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button onClick={() => setShowDialog(false)}>Okay</Button>
+            <Button onClick={() => setShowLiveDialog(false)}>Okay</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

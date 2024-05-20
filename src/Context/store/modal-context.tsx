@@ -11,8 +11,8 @@ export function useModalContext() {
 }
 
 type Data = {
-  showDialog: boolean;
-  setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  showLiveDialog: boolean;
+  setShowLiveDialog: React.Dispatch<React.SetStateAction<boolean>>;
 
   alert: {
     showAlert: boolean;
@@ -38,13 +38,13 @@ type Data = {
 };
 
 function ModalContext(props: React.PropsWithChildren<{}>) {
-  const [showDialog, setShowDialog] = useState(false);
+  const [showLiveDialog, setShowLiveDialog] = useState(false);
   const [alert, setAlert] = useState({ showAlert: false, messsage: "" });
   const [term, setTerm] = useState({ showTerm: false, eventId: "" });
 
   const contextValue: Data = {
-    showDialog,
-    setShowDialog,
+    showLiveDialog,
+    setShowLiveDialog,
     alert,
     setAlert,
     term,
