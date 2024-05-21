@@ -31,13 +31,39 @@ const usePostLogin = () => {
     onSuccess: (data) => {
       setToken(TOKEN.auth, data.token);
       navigate("/tac");
+      setAlert({
+        messsage: "Login Success",
+        showAlert: true,
+        isSuccess: true,
+      });
     },
     onError: (e) => {
       setAlert({
         messsage: "Incorrect Password, Please try again.",
         showAlert: true,
+        isSuccess: false,
       });
       console.log(e);
+    },
+  });
+};
+
+const usePostLogout = () => {
+  const { USER, SET_USER } = useStoreContext();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async () => {
+      const response = await datasource({
+        method: "post",
+        url: `/profile/${USER?.id}/logout`,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      SET_USER(null);
+      removeToken(TOKEN.user);
+      navigate("/login");
     },
   });
 };
@@ -68,7 +94,7 @@ const usePostVerify = () => {
       navigate("/events");
     },
     onError: (_) => {
-      setAlert({ messsage: "Invalid TAC", showAlert: true });
+      setAlert({ messsage: "Invalid TAC", showAlert: true, isSuccess: false });
     },
   });
 };
@@ -93,4 +119,5 @@ export const AuthenticationService = {
   usePostLogin,
   usePostVerify,
   useResendTAC,
+  usePostLogout,
 };

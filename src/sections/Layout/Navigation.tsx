@@ -13,6 +13,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import icon from "@/assets/images/e-biddi icon.png";
 import { useStoreContext } from "@/Context";
 import { Hamburger } from "@/components";
+import { useAPIServices } from "@/services";
 
 export function Navigation() {
   const navigate = useNavigate();
@@ -21,6 +22,9 @@ export function Navigation() {
 
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [showSidebar, setShowSidebar] = useState(false);
+
+  const { usePostLogout } = useAPIServices();
+  const { mutateAsync } = usePostLogout();
 
   const back = () => {
     navigate(-1);
@@ -58,7 +62,9 @@ export function Navigation() {
     },
     {
       name: "Logout",
-      callback: () => {},
+      callback: () => {
+        mutateAsync();
+      },
       icon: <LogOut color={iconAttribute.color} size={iconAttribute.size} />,
     },
   ];

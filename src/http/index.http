@@ -40,3 +40,12 @@ Content-Type: application/json
     "user_id": 232,
     "event_id": 1141
 }
+
+###POST
+POST https://api.e-biddi.com/api/profile/232/changeemail
+Content-Type: application/x-www-form-urlencoded
+
+email=dev@tes1t.com,
+
+
+

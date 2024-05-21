@@ -30,7 +30,6 @@ function App() {
       <Route path={"/"} element={<Home />} />
       <Route path={"/contract"} element={<Contract />} />
       <Route path={"/policy"} element={<Policies />} />
-      <Route path={"/profile"} element={<Profile />} />
       <Route path={"/ireportmotor/:vehicle_id"} element={<ReportMotor />} />
       <Route path={"/ireportcar/:vehicle_id"} element={<ReportCar />} />
       <Route path={"/events"} element={<Events />} />
@@ -41,6 +40,10 @@ function App() {
         <Route path={"/login"} element={<Login />} />
         <Route path={"/tac"} element={<TAC />} />
       </Route>
+
+      <Route element={<NotAuthenticated />}>
+        <Route path={"/profile"} element={<Profile />} />
+      </Route>
     </Routes>
   );
 }
@@ -49,6 +52,13 @@ function Authenticated() {
   const { USER } = useStoreContext();
 
   if (USER) return <Navigate to="/events" />;
+  return <Outlet />;
+}
+
+function NotAuthenticated() {
+  const { USER } = useStoreContext();
+
+  if (!USER) return <Navigate to="/" />;
   return <Outlet />;
 }
 

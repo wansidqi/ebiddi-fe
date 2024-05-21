@@ -17,11 +17,13 @@ type Data = {
   alert: {
     showAlert: boolean;
     messsage: string;
+    isSuccess: boolean;
   };
   setAlert: React.Dispatch<
     React.SetStateAction<{
       showAlert: boolean;
       messsage: string;
+      isSuccess: boolean;
     }>
   >;
 
@@ -39,7 +41,11 @@ type Data = {
 
 function ModalContext(props: React.PropsWithChildren<{}>) {
   const [showLiveDialog, setShowLiveDialog] = useState(false);
-  const [alert, setAlert] = useState({ showAlert: false, messsage: "" });
+  const [alert, setAlert] = useState({
+    showAlert: false,
+    messsage: "",
+    isSuccess: false,
+  });
   const [term, setTerm] = useState({ showTerm: false, eventId: "" });
 
   const contextValue: Data = {
@@ -54,7 +60,7 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
   useEffect(() => {
     if (alert.showAlert === true) {
       setTimeout(() => {
-        setAlert({ messsage: "", showAlert: false });
+        setAlert({ messsage: "", showAlert: false, isSuccess: false });
       }, 3000);
     }
   }, [alert]);

@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -26,6 +27,8 @@ interface Props {
   title?: string;
   description?: string;
   children: JSX.Element;
+  footerBtnTitle: string;
+  footerButtonCallback: () => any;
 }
 
 export function DynamicDrawer({
@@ -33,6 +36,8 @@ export function DynamicDrawer({
   title,
   description,
   children,
+  footerBtnTitle,
+  footerButtonCallback,
 }: Props) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -53,6 +58,16 @@ export function DynamicDrawer({
             </DialogDescription>
           </DialogHeader>
           <div>{children}</div>
+          <DialogFooter className="">
+            <Button
+              onClick={() => {
+                setOpen(false);
+                footerButtonCallback();
+              }}
+            >
+              {footerBtnTitle}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     );
@@ -71,7 +86,16 @@ export function DynamicDrawer({
         <div className="mx-4">{children}</div>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button
+              className="mt-4"
+              onClick={() => {
+                setOpen(false);
+                footerButtonCallback();
+              }}
+              variant="default"
+            >
+              {footerBtnTitle}
+            </Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

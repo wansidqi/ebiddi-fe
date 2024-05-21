@@ -1,11 +1,10 @@
 import { useStoreContext } from "@/Context";
-import { DynamicDrawer } from "@/components";
+import { AlertDialog, DynamicDrawer } from "@/components";
 import { Container } from "@/components/Container";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { convertDateTime, numWithComma } from "@/lib/utils";
 import { useAPIServices } from "@/services";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 export function Profile() {
   const columns = [
@@ -20,11 +19,26 @@ export function Profile() {
   const { USER } = useStoreContext();
   const depoInfo = USER?.credits;
 
-  const { useGetTx } = useAPIServices();
+  const { useGetTx, useChangeEmail } = useAPIServices();
   const { data: txs } = useGetTx();
+
+  const { mutateAsync: changeEmail } = useChangeEmail();
+
+  const onChangeEmail = () => {
+    changeEmail({ email: emailInput, id: USER?.id.toString() as string });
+  };
+
+  const [emailInput, setEmailInput] = useState("");
+
+  useEffect(() => {
+    if (USER && USER?.email) setEmailInput(USER?.email);
+  }, []);
 
   return (
     <Container className="">
+      <div className="relative flexcenter w-full">
+        <AlertDialog />
+      </div>
       <div className="text-center">
         <p className="text-5xl sm:text-6xl text-primary my-4">PROFILE</p>
       </div>
@@ -34,16 +48,21 @@ export function Profile() {
             Personal Information
           </p>
           <div className="m-4">
-            <KeyValue title="Username" value="0112345678900" />
-            <KeyValue title="Name" value="IQBAL" />
-            <KeyValue title="I/C" value="012345678900" />
-            <KeyValue title="Address" value="SELAMAT DATANG" />
-            <KeyValue title="Postcode" value="12345" />
+            <KeyValue title="Username" value={USER?.nric ?? ""} />
+            <KeyValue title="Name" value={USER?.name ?? ""} />
+            <KeyValue title="I/C" value={USER?.nric ?? ""} />
+            <KeyValue title="Address" value={USER?.address ?? ""} />
+            <KeyValue title="Postcode" value={USER?.postal_code ?? ""} />
             <KeyValue title="City" value="" />
-            <KeyValue title="Email" value="test@test.com" />
-            <KeyValue title="Mobile No" value="01139849635" />
+            <KeyValue title="Email" value={USER?.email ?? ""} />
+            <KeyValue title="Mobile No" value={USER?.mobile_no ?? ""} />
             <div className="flexcenter gap-3 my-5">
-              <DynamicDrawer btnName="Update Password" title="Change Password">
+              <DynamicDrawer
+                btnName="Update Password"
+                title="Change Password"
+                footerBtnTitle="Save Changes"
+                footerButtonCallback={() => {}}
+              >
                 <Fragment>
                   <div className="grid items-start gap-4 sm:px-4">
                     <div className="grid gap-2">
@@ -67,22 +86,27 @@ export function Profile() {
                         placeholder="Confirm Password"
                       />
                     </div>
-                    <Button>Save changes</Button>
                   </div>
                 </Fragment>
               </DynamicDrawer>
 
-              <DynamicDrawer btnName="Update Email" title="Change Password">
+              <DynamicDrawer
+                btnName="Update Email"
+                title="Change Email"
+                footerBtnTitle="Save changes"
+                footerButtonCallback={onChangeEmail}
+              >
                 <Fragment>
                   <div className="grid items-start gap-4 sm:px-4">
                     <div className="grid gap-2">
                       <Input
+                        onChange={(e) => setEmailInput(e.target.value)}
+                        value={emailInput}
                         className="sm:pr-36 sm:my-2"
-                        type="password"
-                        placeholder="ebiddi@email.com"
+                        type="email"
+                        placeholder={USER?.email}
                       />
                     </div>
-                    <Button>Save changes</Button>
                   </div>
                 </Fragment>
               </DynamicDrawer>
@@ -101,6 +125,8 @@ export function Profile() {
               </p>
               <div className="flexcenter gap-3 my-5">
                 <DynamicDrawer
+                  footerBtnTitle="Close"
+                  footerButtonCallback={() => {}}
                   btnName="View Transactions"
                   title="Transactions"
                   description="List of transaction histories"
@@ -228,7 +254,7 @@ export function Profile() {
                   </tr>
                 </thead>
                 <tbody className="divide-y text-center text-xs sm:text-sm">
-                  {USER?.companies.map((item, i) => (
+                  {USER?.companies?.map((item, i) => (
                     <tr key={i}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {item.name}
