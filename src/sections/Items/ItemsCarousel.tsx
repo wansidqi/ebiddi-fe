@@ -18,7 +18,7 @@ export function ItemsCarousel({ images }: { images: string[] }) {
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="w-56 h-56"
+      className="flexcenter sm:mx-32"
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
     >
@@ -26,10 +26,10 @@ export function ItemsCarousel({ images }: { images: string[] }) {
         {/*  {Array.from({ length: 5 }).map((_, index) => ())} */}
         {images.map((img, index) => (
           <CarouselItem key={index}>
-            <div className="p-1 h-52">
+            <div className="p-1 w-56 h-56 scale-[1.2] pt-4 sm:scale-[1.5] sm:pt-8 mx-auto">
               <Card>
                 <CardContent className="flex items-center justify-center p-0">
-                  <img className="w-full h-full" src={img} alt="" />
+                  <img className="w-full h-full " src={img} alt="" />
                 </CardContent>
               </Card>
             </div>

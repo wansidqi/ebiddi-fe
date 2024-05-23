@@ -93,48 +93,48 @@ function Detail(props: InventoryInterface) {
         "mx-5 text-center text-[14px] flex flex-col items-center gap-3"
       )}
     >
-      <div className="flex">
+      <div className="flex sm:grid sm:grid-cols-1">
         <ItemsCarousel images={props.images} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 text-left sm:my-5 gap-1 text-sm">
-        <p>
+        <p className="flex gap-2">
           <span className="text-primary">LEGAL OWNER:</span> {props.legal_owner}
         </p>
-        <p>
+        <p className="flex gap-2">
           <span className="text-primary">MODEL:</span> {props.model}
         </p>
-        <p>
+        <p className="flex gap-2">
           <span className="text-primary">RESERVED PRICE:</span>
           {props.reserve_price}
         </p>
-        <p>
+        <p className="flex gap-2">
           <span className="text-primary">ENGINE NUMBER:</span>
           {props.engine_number}
         </p>
-        <p>
+        <p className="flex gap-2">
           <span className="text-primary">TRANSMISSION TYPE:</span>
           {props.transmission}
         </p>
-        <p>
+        <p className="flex gap-2">
           <span className="text-primary">REGISTRATION CARD:</span>
           {props.has_registration_card ? "Yes" : "No"}
         </p>
-        <p>
+        <p className="flex gap-2">
           <span className="text-primary">REGISTRATION NUMBER:</span>
           {props.registration_number}
         </p>
-        <p>
+        <p className="flex gap-2">
           <span className="text-primary">YEAR MADE:</span> {props.year}
         </p>
-        <p>
+        <p className="flex gap-2">
           <span className="text-primary">KEY:</span>
           {props.has_key ? "Yes" : "No"}
         </p>
-        <p>
+        <p className="flex gap-2">
           <span className="text-primary">CHASIS NUMBER:</span>
           {props.chasis_number}
         </p>
-        <p>
+        <p className="flex gap-2">
           <span className="text-primary">REMARKS:</span> {props.remarks}
         </p>
       </div>
