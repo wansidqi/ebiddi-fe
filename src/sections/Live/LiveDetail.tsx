@@ -1,30 +1,36 @@
-export function LiveDetail() {
+import { AuctionLiveItem } from "@/interfaces";
+import { numWithComma } from "@/lib/utils";
+
+export function LiveDetail(data: AuctionLiveItem | undefined) {
   return (
     <div className="border flex flex-col gap-y-2 py-3 px-2 rounded-md h-[30em]">
       <div className="text-center text-2xl my-2">LOT 301</div>
       <div className="w-full mb-2 flexcenter">
         <img
           loading="lazy"
-          className="w-52"
-          src="https://4kwallpapers.com/images/wallpapers/bmw-z4-ac-schnitzer-acs4-4-0i-2021-5k-8k-1280x1280-4780.jpg"
+          className="w-52 h-52"
+          src={(data && data?.images?.length > 0 && data?.images[0]) || ""}
           alt=""
         />
       </div>
-      <div>
-        <span className="text-primary">REGISTRATION NO:</span> VGP3458534
-      </div>
-      <div>
-        <span className="text-primary">YEAR:</span>:2021
-      </div>
-      <div>
-        <span className="text-primary">RESERVED PRICE:</span> RM44,000
-      </div>
-      <div>
-        <span className="text-primary">TRANSMISSION TYPE:</span> Auto
-      </div>
-      <div>
-        <span className="text-primary">LEGAL OWNER:</span> Maybank Berhad
-      </div>
+      <p className="flex gap-2">
+        <span className="text-primary">REGISTRATION NO:</span>{" "}
+        {data?.registration_number}
+      </p>
+      <p className="flex gap-2">
+        <span className="text-primary">YEAR:</span> {data?.year}
+      </p>
+      <p className="flex gap-2">
+        <span className="text-primary">RESERVED PRICE:</span> RM
+        {numWithComma(data?.reserve_price as number)}
+      </p>
+      <p className="flex gap-2">
+        <span className="text-primary">TRANSMISSION TYPE:</span>{" "}
+        {data?.transmission}
+      </p>
+      <p className="flex gap-2">
+        <span className="text-primary">LEGAL OWNER:</span> {data?.legal_owner}
+      </p>
     </div>
   );
 }

@@ -27,7 +27,19 @@ function App() {
 
   return (
     <Routes>
-      <Route path={"/"} element={<Home />} />
+      <Route element={<RequireVerificationToken />}>
+        <Route path={"/tac"} element={<TAC />} />
+      </Route>
+
+      <Route element={<RequireNoAuth />}>
+        <Route path={"/"} element={<Home />} />
+        <Route path={"/login"} element={<Login />} />
+      </Route>
+
+      <Route element={<RequireAuth />}>
+        <Route path={"/profile"} element={<Profile />} />
+      </Route>
+
       <Route path={"/contract"} element={<Contract />} />
       <Route path={"/policy"} element={<Policies />} />
       <Route path={"/ireportmotor/:vehicle_id"} element={<ReportMotor />} />
@@ -35,31 +47,23 @@ function App() {
       <Route path={"/events"} element={<Events />} />
       <Route path={"/items/:eventId"} element={<Items />} />
       <Route path={"/live/:eventId"} element={<Live />} />
-
-      <Route element={<Authenticated />}>
-        <Route path={"/login"} element={<Login />} />
-        <Route path={"/tac"} element={<TAC />} />
-      </Route>
-
-      <Route element={<NotAuthenticated />}>
-        <Route path={"/profile"} element={<Profile />} />
-      </Route>
     </Routes>
   );
 }
 
-function Authenticated() {
+function RequireNoAuth() {
   const { USER } = useStoreContext();
-
-  if (USER) return <Navigate to="/events" />;
-  return <Outlet />;
+  return !USER ? <Outlet /> : <Navigate to="/events" />;
 }
 
-function NotAuthenticated() {
+function RequireAuth() {
   const { USER } = useStoreContext();
+  return USER ? <Outlet /> : <Navigate to="/login" />;
+}
 
-  if (!USER) return <Navigate to="/" />;
-  return <Outlet />;
+function RequireVerificationToken() {
+  const token = getToken(TOKEN.auth);
+  return token ? <Outlet /> : <Navigate to="/login" />;
 }
 
 export default App;

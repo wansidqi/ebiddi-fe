@@ -26,13 +26,25 @@ export interface InventoryInterface {
   has_registration_card: boolean;
   has_key: boolean;
   remarks: string;
-  buyer_premium: number;
   reserve_price: number;
-  security_deposit: number;
-  vehicle_type: number;
   deposit: number;
+  buyer_premium: number;
+  security_deposit: number;
+  is_flat_deposit: boolean;
+  is_manual_deposit: boolean;
+  bid_increment: number;
+  vehicle_type: number;
   images: string[];
-  bidder: any;
+  bidder: Bidder;
+}
+
+interface Bidder {
+  user_id: number;
+  bid_price: string;
+  total_bids: number;
+  min_bid: string;
+  max_bid: string;
+  bidded_at: string | Date;
 }
 
 interface AuctionHouse {
@@ -528,4 +540,11 @@ export interface Contract {
   date: string;
   auction_house: string;
   actions: string;
+}
+
+export interface AuctionLiveItem extends InventoryInterface {
+  meta: {
+    next: number;
+    prev: number;
+  };
 }

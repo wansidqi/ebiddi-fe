@@ -14,3 +14,18 @@ export interface Verify {
   verification_token: string;
   verification_pin: string;
 }
+
+export interface CreditResponse {
+  data: [
+    {
+      id: number;
+      auctionhouse_id: number;
+      amount: number;
+      auction_house: {
+        id: number;
+        code: string;
+        name: string;
+      };
+    },
+  ];
+}
