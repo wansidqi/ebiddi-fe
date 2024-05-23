@@ -20,20 +20,41 @@ import {
 import { CalendarDaysIcon, Clock, XCircleIcon } from "lucide-react";
 import { Countdown } from "./EventCountdown";
 import { EventsInterface } from "@/interfaces";
+import { useStoreContext } from "@/Context";
 
 interface Props extends EventsInterface {
-  openDetail?: boolean;
-  setOpenDetail?: React.Dispatch<React.SetStateAction<boolean>>;
+  eventId?: number;
 }
 
 export function EventDetail(props: Props) {
+  const { eventDetail, setEventDetail } = useStoreContext();
   const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  let isOpen = props.eventId === eventDetail.id;
+
+  const handleOpenChange = () => {
+    if (!isOpen) {
+      setEventDetail((prev) => ({
+        ...prev,
+        show: true,
+      }));
+    } else {
+      setEventDetail({ show: false, id: null });
+    }
+  };
+
+  const setId = () => {
+    setEventDetail((prev) => ({
+      ...prev,
+      id: props.eventId as number,
+    }));
+  };
 
   if (isDesktop) {
     return (
-      <Dialog open={props.openDetail} onOpenChange={props.setOpenDetail}>
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
-          <Button className="w-full" variant="outline">
+          <Button onClick={setId} className="w-full" variant="outline">
             Details
           </Button>
         </DialogTrigger>
@@ -48,7 +69,7 @@ export function EventDetail(props: Props) {
   }
 
   return (
-    <Drawer open={props.openDetail} onOpenChange={props.setOpenDetail}>
+    <Drawer open={isOpen} onOpenChange={handleOpenChange}>
       <DrawerTrigger asChild>
         <Button className="w-full" variant="outline">
           Details

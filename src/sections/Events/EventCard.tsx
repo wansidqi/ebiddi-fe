@@ -12,13 +12,12 @@ import { EventDetail } from "..";
 import { EventsInterface } from "@/interfaces";
 import { getDate, isCountdown, getTime } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { useAPIServices } from "@/services";
 import { useStoreContext } from "@/Context";
 
 export function EventCard(props: EventsInterface) {
   const { setTerm, USER } = useStoreContext();
-  const [openDetail, setOpenDetail] = useState(false);
+  const { setEventDetail } = useStoreContext();
 
   const navigate = useNavigate();
 
@@ -45,14 +44,18 @@ export function EventCard(props: EventsInterface) {
 
   const redirectButton = async (date: string, eventId: number) => {
     if (!USER) {
-      isCountdown(date) ? setOpenDetail(true) : navigate(`/live/${eventId}`);
+      isCountdown(date)
+        ? setEventDetail((prev) => ({ ...prev, show: true }))
+        : navigate(`/live/${eventId}`);
     } else {
       try {
         await isVerify({
           event_id: Number(eventId),
           user_id: USER?.id as number,
         });
-        isCountdown(date) ? setOpenDetail(true) : navigate(`/live/${eventId}`);
+        isCountdown(date)
+          ? setEventDetail((prev) => ({ ...prev, show: true }))
+          : navigate(`/live/${eventId}`);
       } catch (error) {
         setTerm({ showTerm: true, eventId: eventId.toString() });
       }
@@ -83,11 +86,7 @@ export function EventCard(props: EventsInterface) {
         <CardFooter className="flexcenter-col justify-between mt-4">
           <div className="flex justify-between gap-4 w-full">
             <div className="w-full">
-              <EventDetail
-                {...props}
-                openDetail={openDetail}
-                setOpenDetail={setOpenDetail}
-              />
+              <EventDetail {...props} eventId={props.id} />
             </div>
             <Button
               onClick={() => viewAuctionItems(props.id)}
