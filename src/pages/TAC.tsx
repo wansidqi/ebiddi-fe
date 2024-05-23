@@ -1,3 +1,4 @@
+import { useStoreContext } from "@/Context";
 import { AlertDialog } from "@/components";
 import { Button } from "@/components/ui/button";
 import {
@@ -5,35 +6,80 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { TOKEN, getToken } from "@/datasource/sessionStorage.datasource";
+import {
+  TOKEN,
+  getToken,
+  removeToken,
+} from "@/datasource/sessionStorage.datasource";
 import { onEnterClick } from "@/lib/utils";
 import { useAPIServices } from "@/services";
 import { LogInIcon } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function TAC() {
   const { usePostVerify, useResendTAC } = useAPIServices();
   const { mutateAsync } = usePostVerify();
   const { mutateAsync: resendTAC } = useResendTAC();
+  const navgiate = useNavigate();
+
+  const { setAlert } = useStoreContext();
+  const cooldown = 20;
 
   const [TAC, setTAC] = useState("");
+  const [isCooldown, setIsCooldown] = useState(false);
+  const [cooldownTime, setCooldownTime] = useState(cooldown);
   const authToken = getToken(TOKEN.auth);
 
-  const verify = () => {
+  useEffect(() => {
+    let timer: string | number | NodeJS.Timeout | undefined;
+    if (isCooldown) {
+      timer = setInterval(() => {
+        setCooldownTime((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(timer);
+            setIsCooldown(false);
+            return cooldown;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isCooldown]);
+
+  const verify = async () => {
     const verification = {
       verification_token: authToken as string,
       verification_pin: TAC,
     };
 
     try {
-      mutateAsync(verification);
+      await mutateAsync(verification);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const onResendTAC = async () => {
+    setIsCooldown(true);
+    try {
+      await resendTAC(authToken as string);
+      setCooldownTime(cooldown);
+    } catch (error) {
+      setIsCooldown(false);
+      removeToken(TOKEN.auth);
+      navgiate("/login");
+      setAlert({
+        isSuccess: false,
+        messsage: "pelase login again",
+        showAlert: true,
+      });
+    }
+  };
+
   return (
-    <div className="flexcenter-col gap-4 mt-20">
+    <div className="flexcenter-col h-screen gap-4 my-auto">
       <AlertDialog />
       <p className="text-4xl text-primary">TAC CODE</p>
 
@@ -64,14 +110,19 @@ export function TAC() {
           </div>
         </div>
       </Button>
-      <div className="flexcenter-col gap-1 mt-3">
-        <Button
-          onClick={() => resendTAC(authToken as string)}
-          variant={"link"}
-          className="text-lg text-primary"
+      <div className="flexcenter-col gap-1 mt-3 relative">
+        <button
+          disabled={isCooldown}
+          onClick={onResendTAC}
+          className={`${isCooldown ? "text-gray-500" : "text-primary"} text-lg`}
         >
           <div>Resend TAC code</div>
-        </Button>
+        </button>
+        <div className="absolute -right-7 top-1">
+          {isCooldown && (
+            <p className="text-gray-500 text-xs">{cooldownTime}</p>
+          )}
+        </div>
         <a className="text-lg text-primary" href="/login">
           <div>Back</div>
         </a>
