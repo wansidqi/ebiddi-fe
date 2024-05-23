@@ -45,7 +45,7 @@ export function EventCard(props: EventsInterface) {
   const redirectButton = async (date: string, eventId: number) => {
     if (!USER) {
       isCountdown(date)
-        ? setEventDetail((prev) => ({ ...prev, show: true }))
+        ? setEventDetail({ id: eventId, show: true })
         : navigate(`/live/${eventId}`);
     } else {
       try {
@@ -54,7 +54,7 @@ export function EventCard(props: EventsInterface) {
           user_id: USER?.id as number,
         });
         isCountdown(date)
-          ? setEventDetail((prev) => ({ ...prev, show: true }))
+          ? setEventDetail({ id: eventId, show: true })
           : navigate(`/live/${eventId}`);
       } catch (error) {
         setTerm({ showTerm: true, eventId: eventId.toString() });

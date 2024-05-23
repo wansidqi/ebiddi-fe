@@ -1,11 +1,9 @@
 import { useStoreContext } from "@/Context";
 import { useAPIServices } from "@/services";
 import "@/term.css";
-import { useNavigate } from "react-router-dom";
 
 export function Term() {
-  const navigate = useNavigate();
-  const { term, setTerm, USER } = useStoreContext();
+  const { term, setTerm, USER, setEventDetail } = useStoreContext();
   const { showTerm, eventId } = term;
   const { useGetAgreement, usePostConfirmAgreement } = useAPIServices();
 
@@ -17,7 +15,7 @@ export function Term() {
       mutateAsync({ event_id: Number(eventId), user_id: Number(USER?.id) });
       if (isSuccess) {
         setTerm({ eventId: "", showTerm: false });
-        navigate(`/live/${eventId}`);
+        setEventDetail({ show: true, id: Number(eventId) });
       }
     } catch (error) {
       console.log(error);
