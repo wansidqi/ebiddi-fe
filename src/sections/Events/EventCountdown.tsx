@@ -1,3 +1,4 @@
+import { DynamicRenderer } from "@/components";
 import { isCountdown } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,34 +11,31 @@ export const Countdown = ({
   eventId: number;
 }) => {
   const navigate = useNavigate();
+  // const temp = "2024-05-24T16:05:30+08:00";
   const [timeLeft, setTimeLeft] = useState(isCountdown(targetDate));
+
+  console.log(timeLeft);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       const newTimeLeft = isCountdown(targetDate);
-      if (Object.keys(newTimeLeft).length === 0) {
-      } else {
-        setTimeLeft(newTimeLeft);
-      }
+      setTimeLeft(newTimeLeft);
     }, 1000);
 
     return () => clearTimeout(timer);
   });
 
-  // const isTimeEnd = Boolean(!Object.keys(timeLeft).length);
-
   return (
-    <>
-      {!Object.keys(timeLeft).length ? (
-        <div>
-          <button
-            onClick={() => navigate(`/live/${eventId}`)}
-            className="bg-green-500 px-3 py-2 my-3 rounded-md font-bold w-full"
-          >
-            JOIN BIDDING
-          </button>
-        </div>
-      ) : (
+    <DynamicRenderer>
+      <DynamicRenderer.When cond={!Boolean(timeLeft)}>
+        <button
+          onClick={() => navigate(`/live/${eventId}`)}
+          className="bg-green-500 px-3 py-2 my-3 rounded-md font-bold w-full"
+        >
+          JOIN BIDDING
+        </button>
+      </DynamicRenderer.When>
+      <DynamicRenderer.Else>
         <div className="flexcenter gap-4 text-center">
           {Object.entries(timeLeft).map(([unit, value]) => (
             <div key={unit} className="flex">
@@ -46,7 +44,7 @@ export const Countdown = ({
             </div>
           ))}
         </div>
-      )}
-    </>
+      </DynamicRenderer.Else>
+    </DynamicRenderer>
   );
 };

@@ -1,4 +1,3 @@
-import { TimeLeft } from "@/interfaces";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -68,10 +67,9 @@ export function convertDateTime(dateTimeString: string): string {
 export const isCountdown = (dateTime: string) => {
   const targetDate = new Date(dateTime);
   const difference = targetDate.getTime() - new Date().getTime();
-  let timeLeft: TimeLeft = {};
 
   if (difference > 0) {
-    timeLeft = {
+    return {
       d: Math.floor(difference / (1000 * 60 * 60 * 24)),
       h: Math.floor((difference / (1000 * 60 * 60)) % 24),
       m: Math.floor((difference / 1000 / 60) % 60),
@@ -79,8 +77,7 @@ export const isCountdown = (dateTime: string) => {
     };
   }
 
-  const response = Object.keys(timeLeft).length ? timeLeft : false;
-  return response;
+  return false;
 };
 
 export const numWithComma = (num: number) => {

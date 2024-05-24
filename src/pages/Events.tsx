@@ -2,6 +2,7 @@ import { Container } from "@/components/Container";
 import { EventCard, EventLoading } from "@/sections";
 import { useAPIServices } from "@/services";
 import { Term } from ".";
+import { DynamicRenderer } from "@/components";
 
 export function Events() {
   const { useGetAllEvents } = useAPIServices();
@@ -18,18 +19,19 @@ export function Events() {
       <Term />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-10 ">
-        {isLoading ? (
-          <>
+        <DynamicRenderer>
+          <DynamicRenderer.When cond={isLoading}>
             <EventLoading />
             <EventLoading />
             <EventLoading />
             <EventLoading />
             <EventLoading />
             <EventLoading />
-          </>
-        ) : (
-          <>{data?.map((item, i) => <EventCard key={i} {...item} />)}</>
-        )}
+          </DynamicRenderer.When>
+          <DynamicRenderer.Else>
+            {data?.map((item, i) => <EventCard key={i} {...item} />)}
+          </DynamicRenderer.Else>
+        </DynamicRenderer>
       </div>
     </Container>
   );
