@@ -14,8 +14,6 @@ export const Countdown = ({
   // const temp = "2024-05-24T16:05:30+08:00";
   const [timeLeft, setTimeLeft] = useState(isCountdown(targetDate));
 
-  console.log(timeLeft);
-
   useEffect(() => {
     const timer = setTimeout(() => {
       const newTimeLeft = isCountdown(targetDate);

@@ -27,34 +27,19 @@ interface Props extends EventsInterface {
 }
 
 export function EventDetail(props: Props) {
-  const { eventDetail, setEventDetail } = useStoreContext();
+  const { eventId } = props;
+  const { showDetailById, setShowDetailById } = useStoreContext();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  let isOpen = props.eventId === eventDetail.id;
-
-  const handleOpenChange = () => {
-    if (!isOpen) {
-      setEventDetail((prev) => ({
-        ...prev,
-        show: true,
-      }));
-    } else {
-      setEventDetail({ show: false, id: null });
-    }
-  };
-
-  const setId = () => {
-    setEventDetail((prev) => ({
-      ...prev,
-      id: props.eventId as number,
-    }));
+  const handleOpenChange = (open: boolean) => {
+    open ? setShowDetailById(eventId as number) : setShowDetailById(null);
   };
 
   if (isDesktop) {
     return (
-      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <Dialog open={showDetailById === eventId} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
-          <Button onClick={setId} className="w-full" variant="outline">
+          <Button className="w-full" variant="outline">
             Details
           </Button>
         </DialogTrigger>
@@ -69,7 +54,7 @@ export function EventDetail(props: Props) {
   }
 
   return (
-    <Drawer open={isOpen} onOpenChange={handleOpenChange}>
+    <Drawer open={showDetailById === eventId} onOpenChange={handleOpenChange}>
       <DrawerTrigger asChild>
         <Button className="w-full" variant="outline">
           Details

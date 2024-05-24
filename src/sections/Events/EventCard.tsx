@@ -17,7 +17,7 @@ import { useStoreContext } from "@/Context";
 
 export function EventCard(props: EventsInterface) {
   const { setTerm, USER } = useStoreContext();
-  const { setEventDetail } = useStoreContext();
+  const { setShowDetailById } = useStoreContext();
 
   const navigate = useNavigate();
 
@@ -45,7 +45,7 @@ export function EventCard(props: EventsInterface) {
   const redirectButton = async (date: string, eventId: number) => {
     if (!USER) {
       isCountdown(date)
-        ? setEventDetail({ id: eventId, show: true })
+        ? setShowDetailById(eventId)
         : navigate(`/live/${eventId}`);
     } else {
       try {
@@ -54,7 +54,7 @@ export function EventCard(props: EventsInterface) {
           user_id: USER?.id as number,
         });
         isCountdown(date)
-          ? setEventDetail({ id: eventId, show: true })
+          ? setShowDetailById(eventId)
           : navigate(`/live/${eventId}`);
       } catch (error) {
         setTerm({ showTerm: true, eventId: eventId.toString() });
