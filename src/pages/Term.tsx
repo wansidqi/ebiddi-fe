@@ -3,7 +3,7 @@ import { useAPIServices } from "@/services";
 import "@/term.css";
 
 export function Term() {
-  const { term, setTerm, USER, setEventDetail } = useStoreContext();
+  const { term, setTerm, USER, setShowDetailById } = useStoreContext();
   const { showTerm, eventId } = term;
   const { useGetAgreement, usePostConfirmAgreement } = useAPIServices();
 
@@ -15,7 +15,7 @@ export function Term() {
       mutateAsync({ event_id: Number(eventId), user_id: Number(USER?.id) });
       if (isSuccess) {
         setTerm({ eventId: "", showTerm: false });
-        setEventDetail({ show: true, id: Number(eventId) });
+        setShowDetailById(Number(eventId));
       }
     } catch (error) {
       console.log(error);
