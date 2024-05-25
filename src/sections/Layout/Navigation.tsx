@@ -8,7 +8,6 @@ import {
   ScrollText,
   UserRound,
 } from "lucide-react";
-import { useTheme } from "@/components/ThemeProvider";
 import { Fragment, useEffect, useRef, useState } from "react";
 import icon from "@/assets/images/e-biddi icon.png";
 import { useStoreContext } from "@/Context";
@@ -17,7 +16,6 @@ import { useAPIServices } from "@/services";
 
 export function Navigation() {
   const navigate = useNavigate();
-  const { setTheme } = useTheme();
   const { USER } = useStoreContext();
 
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -73,10 +71,6 @@ export function Navigation() {
     setShowSidebar(false);
     callback();
   };
-
-  useEffect(() => {
-    setTheme("dark");
-  }, []);
 
   useEffect(() => {
     if (showSidebar) {

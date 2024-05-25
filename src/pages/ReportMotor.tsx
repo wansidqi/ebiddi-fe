@@ -1,13 +1,10 @@
-import { useTheme } from "@/components/ThemeProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { useAPIServices } from "@/services";
-import { useEffect } from "react";
 import { tickbox } from "./ReportCar";
 import { useParams } from "react-router-dom";
 import { LoaderCircle } from "lucide-react";
 
 export function ReportMotor() {
-  const { setTheme } = useTheme();
-
   const { vehicle_id } = useParams();
 
   const { useGetItemById } = useAPIServices();
@@ -283,10 +280,6 @@ export function ReportMotor() {
     },
   ];
 
-  useEffect(() => {
-    setTheme("light");
-  }, []);
-
   if (isLoading)
     return (
       <div className="flexcenter h-screen">
@@ -295,156 +288,162 @@ export function ReportMotor() {
     );
 
   return (
-    <div className="report-layout arial text-[#2C3E50] text-[9px] overflow-auto">
-      <main className="mt-14 border-b border-[#2C3E50]">
-        <p className="text-[15px] font-bold">INSPECTION REPORT --</p>
-        <p className="text-[11px] mt-6">VEHICLE INFORMATION</p>
-      </main>
+    <ThemeProvider defaultTheme="light" storageKey="report">
+      <div className="report-layout arial text-[#2C3E50] text-[9px] overflow-auto">
+        <main className="mt-14 border-b border-[#2C3E50]">
+          <p className="text-[15px] font-bold">INSPECTION REPORT --</p>
+          <p className="text-[11px] mt-6">VEHICLE INFORMATION</p>
+        </main>
 
-      <main className="grid grid-cols-10 gap-x-1 mt-6">
-        <>
-          <div className="flex">Panel</div>
-          <Underline className="col-span-3">
-            :{data?.banker.name ?? ""}
-          </Underline>
-          <div className="">Presentation</div>
-          <Underline className="col-span-2">:</Underline>
-          <div className="">Mode</div>
-          <Underline className="col-span-2">:</Underline>
-        </>
-        <>
-          <div className="">Branch</div>
-          <Underline className="col-span-3">:</Underline>
-          <div className="">Date In</div>
-          <Underline className="col-span-2">:{report?.datein}</Underline>
-          <div className="">Time In</div>
-          <Underline className="col-span-2">:{report?.timein}</Underline>
-        </>
-        <>
-          <div className="">Model</div>
-          <Underline className="col-span-3">:HONDA RS150R REPSOL</Underline>
-          <div className="">Mileage</div>
-          <Underline className="col-span-2">:{report?.mileage}</Underline>
-          <div className="">Key</div>
-          <Underline className="col-span-2">
-            : {tickbox(report?.withkey) + report?.withkeyremarks}
-          </Underline>
-        </>
-        <>
-          <div className="">Reg No.</div>
-          <Underline className="col-span-3">
-            :{data?.registration_number}
-          </Underline>
-          <div className="">Road Tax</div>
-          <Underline className="col-span-2">
-            : {tickbox(report?.withroadtax) + report?.roadtax}
-          </Underline>
-          <div className="">Remote</div>
-          <Underline className=" col-span-2">
-            :{tickbox(report?.withremote) + report?.withremoteremarks}
-          </Underline>
-        </>
-        <>
-          <div className="">Engine No.</div>
-          <Underline className="col-span-3">:{report?.engine_number}</Underline>
-          <div className="">Chassis No.</div>
-          <Underline className="col-span-5">
-            :{report?.chassis_number}
-          </Underline>
-        </>
-        <>
-          <div className="">RO Engine No.</div>
-          <Underline className="col-span-3">
-            :{report?.roengine_number}
-          </Underline>
-          <div className="">RO Chassis No.</div>
-          <Underline className="col-span-5">
-            :{report?.rochasis_number}
-          </Underline>
-        </>
-        <>
-          <div className="">Transmission</div>
-          <Underline className="col-span-3">:{report?.transmission}</Underline>
-          <div className="">General Condition</div>
-          <Underline className="col-span-5">
-            :{report?.general_condition}
-          </Underline>
-        </>
-      </main>
+        <main className="grid grid-cols-10 gap-x-1 mt-6">
+          <>
+            <div className="flex">Panel</div>
+            <Underline className="col-span-3">
+              :{data?.banker.name ?? ""}
+            </Underline>
+            <div className="">Presentation</div>
+            <Underline className="col-span-2">:</Underline>
+            <div className="">Mode</div>
+            <Underline className="col-span-2">:</Underline>
+          </>
+          <>
+            <div className="">Branch</div>
+            <Underline className="col-span-3">:</Underline>
+            <div className="">Date In</div>
+            <Underline className="col-span-2">:{report?.datein}</Underline>
+            <div className="">Time In</div>
+            <Underline className="col-span-2">:{report?.timein}</Underline>
+          </>
+          <>
+            <div className="">Model</div>
+            <Underline className="col-span-3">:HONDA RS150R REPSOL</Underline>
+            <div className="">Mileage</div>
+            <Underline className="col-span-2">:{report?.mileage}</Underline>
+            <div className="">Key</div>
+            <Underline className="col-span-2">
+              : {tickbox(report?.withkey) + report?.withkeyremarks}
+            </Underline>
+          </>
+          <>
+            <div className="">Reg No.</div>
+            <Underline className="col-span-3">
+              :{data?.registration_number}
+            </Underline>
+            <div className="">Road Tax</div>
+            <Underline className="col-span-2">
+              : {tickbox(report?.withroadtax) + report?.roadtax}
+            </Underline>
+            <div className="">Remote</div>
+            <Underline className=" col-span-2">
+              :{tickbox(report?.withremote) + report?.withremoteremarks}
+            </Underline>
+          </>
+          <>
+            <div className="">Engine No.</div>
+            <Underline className="col-span-3">
+              :{report?.engine_number}
+            </Underline>
+            <div className="">Chassis No.</div>
+            <Underline className="col-span-5">
+              :{report?.chassis_number}
+            </Underline>
+          </>
+          <>
+            <div className="">RO Engine No.</div>
+            <Underline className="col-span-3">
+              :{report?.roengine_number}
+            </Underline>
+            <div className="">RO Chassis No.</div>
+            <Underline className="col-span-5">
+              :{report?.rochasis_number}
+            </Underline>
+          </>
+          <>
+            <div className="">Transmission</div>
+            <Underline className="col-span-3">
+              :{report?.transmission}
+            </Underline>
+            <div className="">General Condition</div>
+            <Underline className="col-span-5">
+              :{report?.general_condition}
+            </Underline>
+          </>
+        </main>
 
-      <br />
+        <br />
 
-      <main className="flex gap-8">
-        <table className="border-collapse border border-[#2C3E50] w-1/2 mt-2">
-          <thead className="">
-            <tr>
-              <th className="border border-[#2C3E50] text-center">No</th>
-              <th className="border border-[#2C3E50] px-4">Items</th>
-              <th className="border border-[#2C3E50]">Condition</th>
-              <th className="border border-[#2C3E50] px-4">Remarks</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reports.slice(0, 26).map((report, index) => (
-              <tr key={index}>
-                <BorderGray className="border border-[#2C3E50] text-center">
-                  {index + 1}
-                </BorderGray>
-                <BorderGray className="border border-[#2C3E50] pr-1">
-                  {report.title}
-                </BorderGray>
-                <BorderGray className="border border-[#2C3E50] text-center text-[11px]">
-                  {showGrade(report.data as any)}
-                </BorderGray>
-                <BorderGray className="border border-[#2C3E50] px-4">
-                  {/* {report.remark} */}
-                </BorderGray>
+        <main className="flex gap-8">
+          <table className="border-collapse border border-[#2C3E50] w-1/2 mt-2">
+            <thead className="">
+              <tr>
+                <th className="border border-[#2C3E50] text-center">No</th>
+                <th className="border border-[#2C3E50] px-4">Items</th>
+                <th className="border border-[#2C3E50]">Condition</th>
+                <th className="border border-[#2C3E50] px-4">Remarks</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {reports.slice(0, 26).map((report, index) => (
+                <tr key={index}>
+                  <BorderGray className="border border-[#2C3E50] text-center">
+                    {index + 1}
+                  </BorderGray>
+                  <BorderGray className="border border-[#2C3E50] pr-1">
+                    {report.title}
+                  </BorderGray>
+                  <BorderGray className="border border-[#2C3E50] text-center text-[11px]">
+                    {showGrade(report.data as any)}
+                  </BorderGray>
+                  <BorderGray className="border border-[#2C3E50] px-4">
+                    {/* {report.remark} */}
+                  </BorderGray>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-        <table className="border-collapse border border-[#2C3E50] w-1/2 mt-2">
-          <thead className="">
-            <tr>
-              <th className="border border-[#2C3E50] text-center">No</th>
-              <th className="border border-[#2C3E50] px-4">Items</th>
-              <th className="border border-[#2C3E50]">Condition</th>
-              <th className="border border-[#2C3E50] px-4">Remarks</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reports.slice(26).map((report, index) => (
-              <tr key={index}>
-                <BorderGray className="border border-[#2C3E50] text-center">
-                  {index + 1}
-                </BorderGray>
-                <BorderGray className="border border-[#2C3E50] pr-1">
-                  {report.title}
-                </BorderGray>
-                <BorderGray className="border border-[#2C3E50] text-center text-[11px]">
-                  {showGrade(report.data as any)}
-                </BorderGray>
-                <BorderGray className="border border-[#2C3E50] px-4">
-                  {/* {report.remark} */}
-                </BorderGray>
+          <table className="border-collapse border border-[#2C3E50] w-1/2 mt-2">
+            <thead className="">
+              <tr>
+                <th className="border border-[#2C3E50] text-center">No</th>
+                <th className="border border-[#2C3E50] px-4">Items</th>
+                <th className="border border-[#2C3E50]">Condition</th>
+                <th className="border border-[#2C3E50] px-4">Remarks</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </main>
+            </thead>
+            <tbody>
+              {reports.slice(26).map((report, index) => (
+                <tr key={index}>
+                  <BorderGray className="border border-[#2C3E50] text-center">
+                    {index + 1}
+                  </BorderGray>
+                  <BorderGray className="border border-[#2C3E50] pr-1">
+                    {report.title}
+                  </BorderGray>
+                  <BorderGray className="border border-[#2C3E50] text-center text-[11px]">
+                    {showGrade(report.data as any)}
+                  </BorderGray>
+                  <BorderGray className="border border-[#2C3E50] px-4">
+                    {/* {report.remark} */}
+                  </BorderGray>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </main>
 
-      <br />
+        <br />
 
-      <main className="flex">
-        <div className="border-l border-t border-b border-[#2C3E50] pr-20 pb-12">
-          Remarks:
-        </div>
-        <div className="border border-[#2C3E50] w-full">
-          {report?.extcomponentremarks}
-        </div>
-      </main>
-    </div>
+        <main className="flex">
+          <div className="border-l border-t border-b border-[#2C3E50] pr-20 pb-12">
+            Remarks:
+          </div>
+          <div className="border border-[#2C3E50] w-full">
+            {report?.extcomponentremarks}
+          </div>
+        </main>
+      </div>
+    </ThemeProvider>
   );
 }
 

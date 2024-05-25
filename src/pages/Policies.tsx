@@ -1,12 +1,6 @@
 import { Container } from "@/components/Container";
-import { useTheme } from "@/components/ThemeProvider";
-import { useEffect } from "react";
 
 export function Policies() {
-  const { setTheme } = useTheme();
-  useEffect(() => {
-    setTheme("light");
-  }, []);
   return (
     <Container>
       <div className="arial text-[17px] max-w-[1140px] mx-auto">
