@@ -28,11 +28,11 @@ interface Props extends EventsInterface {
 
 export function EventDetail(props: Props) {
   const { eventId } = props;
-  const { showDetailById, setShowDetailById } = useStoreContext();
+  const { showDetailById, openDetailModal, closeDetailModal } = useStoreContext();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const handleOpenChange = (open: boolean) => {
-    open ? setShowDetailById(eventId as number) : setShowDetailById(null);
+    open ? openDetailModal(eventId as number) : closeDetailModal();
   };
 
   if (isDesktop) {

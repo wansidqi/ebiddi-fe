@@ -42,7 +42,7 @@ export function ItemDetail(props: InventoryInterface) {
             </Button>
           )}
         </DialogTrigger>
-        <DialogContent className="">
+        <DialogContent className="max-w-xl">
           <DialogHeader>
             <DialogTitle className="text-center text-2xl">
               LOT {props.lot_no}
@@ -96,7 +96,7 @@ function Detail(props: InventoryInterface) {
       <div className="flex sm:grid sm:grid-cols-1">
         <ItemsCarousel images={props.images} />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 text-left sm:my-5 gap-1 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-1 text-left sm:my-5 gap-1 text-sm">
         <p className="flex gap-2">
           <span className="text-primary">LEGAL OWNER:</span> {props.legal_owner}
         </p>

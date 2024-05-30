@@ -13,9 +13,10 @@ import {
   TAC,
 } from "@/pages";
 import { Items } from "./sections";
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import { TOKEN, getToken } from "./datasource/sessionStorage.datasource";
 import { useStoreContext } from "./Context";
+import { AlertDialog } from "./components";
 
 function App() {
   const { SET_USER } = useStoreContext();
@@ -26,28 +27,33 @@ function App() {
   }, []);
 
   return (
-    <Routes>
-      <Route element={<RequireVerificationToken />}>
-        <Route path={"/tac"} element={<TAC />} />
-      </Route>
+    <Fragment>
+      <div className="flexcenter w-full">
+        <AlertDialog />
+      </div>
+      <Routes>
+        <Route element={<RequireVerificationToken />}>
+          <Route path={"/tac"} element={<TAC />} />
+        </Route>
 
-      <Route element={<RequireNoAuth />}>
-        <Route path={"/"} element={<Home />} />
-        <Route path={"/login"} element={<Login />} />
-      </Route>
+        <Route element={<RequireNoAuth />}>
+          <Route path={"/"} element={<Home />} />
+          <Route path={"/login"} element={<Login />} />
+        </Route>
 
-      <Route element={<RequireAuth />}>
-        <Route path={"/profile"} element={<Profile />} />
-      </Route>
+        <Route element={<RequireAuth />}>
+          <Route path={"/profile"} element={<Profile />} />
+        </Route>
 
-      <Route path={"/contract"} element={<Contract />} />
-      <Route path={"/policy"} element={<Policies />} />
-      <Route path={"/ireportmotor/:vehicle_id"} element={<ReportMotor />} />
-      <Route path={"/ireportcar/:vehicle_id"} element={<ReportCar />} />
-      <Route path={"/events"} element={<Events />} />
-      <Route path={"/items/:eventId"} element={<Items />} />
-      <Route path={"/live/:eventId"} element={<Live />} />
-    </Routes>
+        <Route path={"/contract"} element={<Contract />} />
+        <Route path={"/policy"} element={<Policies />} />
+        <Route path={"/ireportmotor/:vehicle_id"} element={<ReportMotor />} />
+        <Route path={"/ireportcar/:vehicle_id"} element={<ReportCar />} />
+        <Route path={"/events"} element={<Events />} />
+        <Route path={"/items/:eventId"} element={<Items />} />
+        <Route path={"/live/:eventId"} element={<Live />} />
+      </Routes>
+    </Fragment>
   );
 }
 

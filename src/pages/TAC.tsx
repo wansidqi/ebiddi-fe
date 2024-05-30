@@ -1,5 +1,4 @@
 import { useStoreContext } from "@/Context";
-import { AlertDialog } from "@/components";
 import { Button } from "@/components/ui/button";
 import {
   InputOTP,
@@ -80,7 +79,6 @@ export function TAC() {
 
   return (
     <div className="flexcenter-col h-screen gap-4 my-auto">
-      <AlertDialog />
       <p className="text-4xl text-primary">TAC CODE</p>
 
       <InputOTP

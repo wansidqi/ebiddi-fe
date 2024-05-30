@@ -1,4 +1,5 @@
 import { useStoreContext } from "@/Context";
+import { DynamicRenderer } from "@/components";
 import { numWithComma } from "@/lib/utils";
 import { useAPIServices } from "@/services";
 import { useEffect, useState } from "react";
@@ -39,48 +40,51 @@ export function BidCountdown() {
 
   return (
     <div>
-      {USER ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-2 sm:gap-y-6 my-8">
-          <div className="flexcenter-col col-span-2 sm:col-span-3 sm:order-1 text-3xl">
-            <p className="text-primary">Ends in:</p>
-            <p className="digital text-5xl font-bold">
-              {!isActive ? "00:00" : `00:0${countdown}`}
-            </p>
+      <DynamicRenderer>
+        <DynamicRenderer.When cond={USER !== null}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-2 sm:gap-y-6 my-8">
+            <div className="flexcenter-col col-span-2 sm:col-span-3 sm:order-1 text-3xl">
+              <p className="text-primary">Ends in:</p>
+              <p className="digital text-5xl font-bold">
+                {!isActive ? "00:00" : `00:0${countdown}`}
+              </p>
+            </div>
+            <div className="flexcenter-col text-lg sm:order-2">
+              <p className="text-primary sm:text-2xl">Current Bid:</p>
+              <p className="text-yellow-500 sm:text-2xl">RM 888,888</p>
+            </div>
+            <div className="flexcenter-col text-lg sm:order-3">
+              <p className="text-primary sm:text-2xl">Current Bidder:</p>
+              <p className="text-yellow-500 sm:text-2xl">WAN AHMAD SIDQI</p>
+            </div>
+            <div className="flexcenter-col col-span-2 sm:col-span-1 text-lg sm:order-2">
+              <p className="text-primary sm:text-2xl">Deposit Balance:</p>
+              <p className="sm:text-2xl">{data?.auction_house.name}t</p>
+              <p className="text-yellow-500 sm:text-2xl">
+                RM{numWithComma(data?.amount as number)}
+              </p>
+            </div>
           </div>
-          <div className="flexcenter-col text-lg sm:order-2">
-            <p className="text-primary sm:text-2xl">Current Bid:</p>
-            <p className="text-yellow-500 sm:text-2xl">RM 888,888</p>
+        </DynamicRenderer.When>
+        <DynamicRenderer.Else>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-2 sm:gap-y-6 my-8">
+            <div className="flexcenter-col col-span-2 sm:col-span-1 sm:order-2 text-3xl">
+              <p className="text-primary">Ends in:</p>
+              <p className="digital text-5xl font-bold">
+                {!isActive ? "00:00" : `00:0${countdown}`}
+              </p>
+            </div>
+            <div className="flexcenter-col text-lg sm:order-1">
+              <p className="text-primary sm:text-2xl">Current Bid:</p>
+              <p className="text-yellow-500 sm:text-2xl">RM 888,888</p>
+            </div>
+            <div className="flexcenter-col text-lg sm:order-3">
+              <p className="text-primary sm:text-2xl">Current Bidder:</p>
+              <p className="text-yellow-500 sm:text-2xl">WAN AHMAD SIDQI</p>
+            </div>
           </div>
-          <div className="flexcenter-col text-lg sm:order-3">
-            <p className="text-primary sm:text-2xl">Current Bidder:</p>
-            <p className="text-yellow-500 sm:text-2xl">WAN AHMAD SIDQI</p>
-          </div>
-          <div className="flexcenter-col col-span-2 sm:col-span-1 text-lg sm:order-2">
-            <p className="text-primary sm:text-2xl">Deposit Balance:</p>
-            <p className="sm:text-2xl">{data?.auction_house.name}t</p>
-            <p className="text-yellow-500 sm:text-2xl">
-              RM{numWithComma(data?.amount as number)}
-            </p>
-          </div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-2 sm:gap-y-6 my-8">
-          <div className="flexcenter-col col-span-2 sm:col-span-1 sm:order-2 text-3xl">
-            <p className="text-primary">Ends in:</p>
-            <p className="digital text-5xl font-bold">
-              {!isActive ? "00:00" : `00:0${countdown}`}
-            </p>
-          </div>
-          <div className="flexcenter-col text-lg sm:order-1">
-            <p className="text-primary sm:text-2xl">Current Bid:</p>
-            <p className="text-yellow-500 sm:text-2xl">RM 888,888</p>
-          </div>
-          <div className="flexcenter-col text-lg sm:order-3">
-            <p className="text-primary sm:text-2xl">Current Bidder:</p>
-            <p className="text-yellow-500 sm:text-2xl">WAN AHMAD SIDQI</p>
-          </div>
-        </div>
-      )}
+        </DynamicRenderer.Else>
+      </DynamicRenderer>
 
       {dev && (
         <button

@@ -15,7 +15,8 @@ type Data = {
   setShowLiveDialog: React.Dispatch<React.SetStateAction<boolean>>;
 
   showDetailById: number | null;
-  setShowDetailById: React.Dispatch<React.SetStateAction<number | null>>;
+  openDetailModal: (number: number) => void;
+  closeDetailModal: () => void;
 
   alert: {
     showAlert: boolean;
@@ -54,6 +55,12 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
   const [term, setTerm] = useState({ showTerm: false, eventId: "" });
 
   const [showDetailById, setShowDetailById] = useState<null | number>(null);
+  const openDetailModal = (number: number) => {
+    setShowDetailById(number);
+  };
+  const closeDetailModal = () => {
+    setShowDetailById(null);
+  };
 
   const contextValue: Data = {
     showLiveDialog,
@@ -63,7 +70,8 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
     term,
     setTerm,
     showDetailById,
-    setShowDetailById,
+    openDetailModal,
+    closeDetailModal,
   };
 
   useEffect(() => {

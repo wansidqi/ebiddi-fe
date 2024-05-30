@@ -18,7 +18,7 @@ export function ItemsCarousel({ images }: { images: string[] }) {
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="flexcenter sm:mx-32"
+      className="flexcenter sm:mx-20"
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
     >

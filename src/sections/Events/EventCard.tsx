@@ -17,7 +17,7 @@ import { useStoreContext } from "@/Context";
 
 export function EventCard(props: EventsInterface) {
   const { setTerm, USER } = useStoreContext();
-  const { setShowDetailById } = useStoreContext();
+  const { openDetailModal } = useStoreContext();
 
   const navigate = useNavigate();
 
@@ -43,22 +43,22 @@ export function EventCard(props: EventsInterface) {
   ];
 
   const redirectButton = async (date: string, eventId: number) => {
-    if (!USER) {
+    const handleRedirect = () => {
       isCountdown(date)
-        ? setShowDetailById(eventId)
+        ? openDetailModal(eventId)
         : navigate(`/live/${eventId}`);
-    } else {
-      try {
-        await isVerify({
-          event_id: Number(eventId),
-          user_id: USER?.id as number,
-        });
-        isCountdown(date)
-          ? setShowDetailById(eventId)
-          : navigate(`/live/${eventId}`);
-      } catch (error) {
-        setTerm({ showTerm: true, eventId: eventId.toString() });
-      }
+    };
+
+    if (!USER) {
+      handleRedirect();
+      return;
+    }
+
+    try {
+      await isVerify({ event_id: eventId, user_id: USER.id });
+      handleRedirect();
+    } catch (error) {
+      setTerm({ showTerm: true, eventId: eventId.toString() });
     }
   };
 

@@ -1,5 +1,5 @@
+import { useStoreContext } from "@/Context";
 import logo from "@/assets/images/e-biddi icon.png";
-import { AlertDialog } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,20 +11,18 @@ import { useState } from "react";
 export function Login() {
   const { usePostLogin } = useAPIServices();
   const { mutateAsync } = usePostLogin();
+  const { dev } = useStoreContext();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const credentials = {
-    username,
-    password,
-    // username: "012345678900",
-    // password: "12345",
+    username: dev ? "012345678900" : username,
+    password: dev ? "12345" : password,
   };
 
   return (
     <div className="flexcenter-col mx-8 my-auto h-screen gap-7">
-      <AlertDialog />
       <img className="w-40" src={logo} alt="" />
       <h1 className="text-3xl">LOGIN TO E-BIDDI</h1>
       <div className="flex flex-col w-full sm:w-1/3 gap-4">

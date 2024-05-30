@@ -1,5 +1,5 @@
 import { useStoreContext } from "@/Context";
-import { AlertDialog, DynamicDrawer } from "@/components";
+import {  DynamicDrawer } from "@/components";
 import { Container } from "@/components/Container";
 import { Input } from "@/components/ui/input";
 import { convertDateTime, numWithComma } from "@/lib/utils";
@@ -37,7 +37,6 @@ export function Profile() {
   return (
     <Container className="">
       <div className="relative flexcenter w-full">
-        <AlertDialog />
       </div>
       <div className="text-center">
         <p className="text-5xl sm:text-6xl text-primary my-4">PROFILE</p>
