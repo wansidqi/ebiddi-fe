@@ -16,7 +16,7 @@ import { Items } from "./sections";
 import { Fragment, useEffect } from "react";
 import { TOKEN, getToken } from "./datasource/sessionStorage.datasource";
 import { useStoreContext } from "./Context";
-import { AlertDialog } from "./components";
+import { AlertDialog, WS } from "./components";
 
 function App() {
   const { SET_USER } = useStoreContext();
@@ -45,6 +45,7 @@ function App() {
           <Route path={"/profile"} element={<Profile />} />
         </Route>
 
+        <Route path={"/ws"} element={<WS />} />
         <Route path={"/contract"} element={<Contract />} />
         <Route path={"/policy"} element={<Policies />} />
         <Route path={"/ireportmotor/:vehicle_id"} element={<ReportMotor />} />
