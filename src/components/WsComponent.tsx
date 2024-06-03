@@ -5,7 +5,7 @@ export const WS = () => {
 
   return (
     <div className="flexcenter-col min-h-screen gap-4">
-      <span>The WebSocket is {socket?.state}</span>
+      <span>The WebSocket is {socket ? socket.state : "disconnected"}</span>
     </div>
   );
 };

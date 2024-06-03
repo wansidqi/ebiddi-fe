@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import * as socketClusterClient from "socketcluster-client";
 
 const AppContext = createContext<Data | null>(null);
+
 type ws = socketClusterClient.AGClientSocket | null;
 
 export function useWsContext() {
@@ -13,10 +14,8 @@ export function useWsContext() {
 }
 
 type Data = {
-  socket: ws | null;
-  setSocket: React.Dispatch<
-    React.SetStateAction<socketClusterClient.AGClientSocket | null>
-  >;
+  socket: ws;
+  setSocket: React.Dispatch<React.SetStateAction<ws>>;
 };
 
 function WsContext(props: React.PropsWithChildren<{}>) {
@@ -31,15 +30,16 @@ function WsContext(props: React.PropsWithChildren<{}>) {
       hostname: "bidding.e-biddi.com",
       secure: true,
       port: 443,
-      autoConnect: false,
+      autoConnect: true,
       protocolVersion: 1,
       path: "/socketcluster/",
     });
-    setSocket(socket);
 
     try {
       socket.connect();
+      setSocket(socket);
     } catch (error) {
+      socket.disconnect();
       console.error("Error connecting to WebSocket:", error);
     }
   };
