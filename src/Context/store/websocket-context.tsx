@@ -30,7 +30,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
       hostname: "bidding.e-biddi.com",
       secure: true,
       port: 443,
-      autoConnect: true,
+      autoConnect: false,
       protocolVersion: 1,
       path: "/socketcluster/",
     });
