@@ -73,13 +73,13 @@ export function Login() {
       <div className={dev ? "flex gap-4" : "hidden"}>
         <button
           onClick={() => mutateAsync(bidderCredentials)}
-          className="px-3 py-2 bg-yellow-500 rounded-md"
+          className="w-40 pt-3 pb-2 px-3 bg-yellow-500 rounded-md"
         >
           bidder
         </button>
         <button
           onClick={() => mutateAsync(auctionnerCredentials)}
-          className="px-3 py-2 bg-green-500 rounded-md"
+          className="w-40 pt-3 pb-2 px-3 bg-green-500 rounded-md"
         >
           auctioneer
         </button>

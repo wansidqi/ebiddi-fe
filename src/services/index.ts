@@ -17,6 +17,7 @@ export enum KEY {
   contract = "contract",
   auction_item = "auction_item",
   credit = "credit",
+  auctioneer = "auctioneer",
 }
 
 export function useGetQueryData<T>(key: QueryKey): T {

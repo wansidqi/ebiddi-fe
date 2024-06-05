@@ -2,6 +2,7 @@ import datasource from "@/datasource/axiosInstance";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { KEY } from ".";
 import { EventsInterface } from "@/interfaces";
+import { useStoreContext } from "@/Context";
 
 interface EventsResponse {
   data: EventsInterface[];
@@ -27,6 +28,22 @@ const useGetAllEvents = () => {
       return data.data as EventsInterface[];
     },
     retry: false,
+  });
+};
+
+const useGetAuctioneerEvent = () => {
+  const { USER } = useStoreContext();
+  let id = USER?.id;
+  // let id = 2449;
+
+  return useQuery({
+    enabled: !!id,
+    queryKey: [KEY.auctioneer, id],
+    queryFn: async () => {
+      const response = await datasource({ url: `/events/auctioneer/${id}` });
+      const data = response.data;
+      return data.data as EventsInterface[];
+    },
   });
 };
 
@@ -109,5 +126,5 @@ export const EventService = {
   useGetEventById,
   useGetAgreement,
   usePostConfirmAgreement,
-  usePostVerifyAgreement,
+  usePostVerifyAgreement,useGetAuctioneerEvent
 };
