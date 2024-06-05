@@ -1,3 +1,4 @@
+import { useStoreContext } from "@/Context";
 import { DynamicRenderer } from "@/components";
 import { isCountdown } from "@/lib/utils";
 import { useState, useEffect } from "react";
@@ -13,6 +14,12 @@ export const Countdown = ({
   const navigate = useNavigate();
   // const temp = "2024-05-24T16:05:30+08:00";
   const [timeLeft, setTimeLeft] = useState(isCountdown(targetDate));
+  const { closeDetailModal } = useStoreContext();
+
+  const navigateToLive = () => {
+    closeDetailModal();
+    navigate(`/live/${eventId}`);
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -27,7 +34,7 @@ export const Countdown = ({
     <DynamicRenderer>
       <DynamicRenderer.When cond={!Boolean(timeLeft)}>
         <button
-          onClick={() => navigate(`/live/${eventId}`)}
+          onClick={navigateToLive}
           className="bg-green-500 px-3 py-2 my-3 rounded-md font-bold w-full"
         >
           JOIN BIDDING

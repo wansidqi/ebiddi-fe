@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Container } from "@/components/Container";
 import {
   BidCountdown,
@@ -13,6 +13,7 @@ import { useAPIServices } from "@/services";
 import { useParams } from "react-router-dom";
 import { AuctionLiveItem } from "@/interfaces";
 import { LucideGavel, LockKeyholeIcon, UnlockKeyhole } from "lucide-react";
+import { useStoreContext } from "@/Context";
 
 export function Live() {
   const [toggleLock, setToggleLock] = useState(false);
@@ -22,6 +23,26 @@ export function Live() {
   const { data: events } = useGetEventById(eventId as string);
   const firstItem = events?.inventories[0].auction_id as number;
   const { data } = useGetLiveAuction(firstItem);
+
+  const { subscription, socket } = useStoreContext();
+
+  useEffect(() => {
+    subscription({
+      channel: "event",
+      id: eventId as string,
+      onData: (data) => {
+        console.log(data);
+      },
+    });
+
+    subscription({
+      channel: "status",
+      id: eventId as string,
+      onData: (data) => {
+        console.log(data);
+      },
+    });
+  }, [socket, subscription]);
 
   return (
     <div>

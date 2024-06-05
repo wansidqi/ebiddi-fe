@@ -1,3 +1,4 @@
+import { SubscribeParams, PublishBid } from "@/interfaces/websocket";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as socketClusterClient from "socketcluster-client";
 
@@ -13,31 +14,14 @@ const AppContext = createContext<Data | null>(null);
 
 type ws = socketClusterClient.AGClientSocket | null;
 
-interface SubscribeParams<T> {
-  id: string;
-  channel: "event" | "bid" | "status";
-  onData: (data: T) => any;
-}
-
 type Data = {
   socket: ws;
-  publishData<T>(name: string, data: T): void;
   subscription<T>(params: SubscribeParams<T>): Promise<void>;
-  testSubscription<T>(name: string, onData: (data: T) => void): Promise<void>;
-
+  publishBid(params: PublishBid): void;
 };
 
 function WsContext(props: React.PropsWithChildren<{}>) {
   const [socket, setSocket] = useState<ws>(null);
-
-  async function testSubscription<T>(name: string, onData: (data: T) => void) {
-    if (!socket) return;
-    let channel = socket.subscribe(name);
-
-    for await (let data of channel) {
-      onData(data);
-    }
-  }
 
   async function subscription<T>(params: SubscribeParams<T>) {
     if (!socket) return;
@@ -46,16 +30,24 @@ function WsContext(props: React.PropsWithChildren<{}>) {
       params.channel === "event"
         ? `/event/${params.id}`
         : `/event/${params.id}/${params.channel}`;
-    const channel = socket.subscribe(topic);
 
+    const channel = socket.subscribe(topic);
+  
     for await (const data of channel) {
-      params.onData(data);
+      try {
+        console.log(data);
+        // params.onData(data);
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 
-  function publishData<T>(channelName: string, data: T) {
+  function publishBid(params: PublishBid) {
     if (!socket) return;
-    socket.invokePublish(channelName, data);
+    // const channel = `event/${params.id}/auction/${params.auction_id}/bid`;
+    const testing = "TEST_SOCKET";
+    socket.invokePublish(testing, params.data);
   }
 
   useEffect(() => {
@@ -82,9 +74,8 @@ function WsContext(props: React.PropsWithChildren<{}>) {
 
   const contextValue: Data = {
     socket,
-    testSubscription,
-    publishData,
     subscription,
+    publishBid,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;

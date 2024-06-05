@@ -30,6 +30,8 @@ type Data = {
 function AuctionContext(props: React.PropsWithChildren<{}>) {
   const [USER, SET_USER] = useState<User | null>(null);
 
+  console.log(USER)
+
   const [view, setView] = useState<"Grid" | "List">("Grid");
   const [selectEvent, setSelectEvent] = useState<EventsInterface | null>(null);
   const [countdown, setCountdown] = useState(9);
