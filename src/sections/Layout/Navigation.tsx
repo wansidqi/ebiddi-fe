@@ -13,6 +13,7 @@ import icon from "@/assets/images/e-biddi icon.png";
 import { useStoreContext } from "@/Context";
 import { Hamburger } from "@/components";
 import { useAPIServices } from "@/services";
+import { ROLE } from "@/interfaces/enum";
 
 export function Navigation() {
   const navigate = useNavigate();
@@ -36,16 +37,19 @@ export function Navigation() {
   const navMenu = [
     {
       name: "Home",
+      role: [ROLE.BIDDER, ROLE.AUCTIONEER],
       callback: () => navigate("/events"),
       icon: <Home color={iconAttribute.color} size={iconAttribute.size} />,
     },
     {
       name: "Profile",
+      role: [ROLE.BIDDER, ROLE.AUCTIONEER],
       callback: () => navigate("/profile"),
       icon: <UserRound color={iconAttribute.color} size={iconAttribute.size} />,
     },
     {
       name: "Contract",
+      role: [ROLE.BIDDER],
       callback: () => navigate("/contract"),
       icon: (
         <ScrollText color={iconAttribute.color} size={iconAttribute.size} />
@@ -53,6 +57,7 @@ export function Navigation() {
     },
     {
       name: "Policy",
+      role: [ROLE.BIDDER],
       callback: () => navigate("/policy"),
       icon: (
         <ReceiptText color={iconAttribute.color} size={iconAttribute.size} />
@@ -60,6 +65,7 @@ export function Navigation() {
     },
     {
       name: "Logout",
+      role: [ROLE.BIDDER, ROLE.AUCTIONEER],
       callback: () => {
         mutateAsync();
       },
@@ -117,17 +123,19 @@ export function Navigation() {
               <div className="z-50 min-h-screen w-3/4 overflow-auto border-x bg-[#011138] text-[16px]">
                 <div className="p-0">
                   <div className="flex flex-col justify-start gap-6 py-10 w-full sm:hidden">
-                    {navMenu.map((item, i) => (
-                      <button
-                        key={i}
-                        onClick={() => navigateAndCloseSidebar(item.callback)}
-                      >
-                        <div className="flex ml-4 gap-3">
-                          <div>{item.icon}</div>
-                          <p>{item.name}</p>
-                        </div>
-                      </button>
-                    ))}
+                    {navMenu
+                      .filter((show) => show.role.includes(USER.role))
+                      .map((item, i) => (
+                        <button
+                          key={i}
+                          onClick={() => navigateAndCloseSidebar(item.callback)}
+                        >
+                          <div className="flex ml-4 gap-3">
+                            <div>{item.icon}</div>
+                            <p>{item.name}</p>
+                          </div>
+                        </button>
+                      ))}
                   </div>
                 </div>
               </div>
@@ -135,14 +143,16 @@ export function Navigation() {
           </main>
 
           <main id="navbar" className="sm:flex gap-5 justify-end w-full hidden">
-            {navMenu.map((item, i) => (
-              <button key={i} onClick={item.callback}>
-                <div className="flexcenter gap-2">
-                  <div>{item.icon}</div>
-                  <p className="mt-2">{item.name}</p>
-                </div>
-              </button>
-            ))}
+            {navMenu
+              .filter((show) => show.role.includes(USER.role))
+              .map((item, i) => (
+                <button key={i} onClick={item.callback}>
+                  <div className="flexcenter gap-2">
+                    <div>{item.icon}</div>
+                    <p className="mt-2">{item.name}</p>
+                  </div>
+                </button>
+              ))}
           </main>
 
           <div className="sm:ml-5">

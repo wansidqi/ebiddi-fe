@@ -16,9 +16,16 @@ export function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const credentials = {
-    username: dev ? "012345678900" : username,
-    password: dev ? "12345" : password,
+  const credentials = { username, password };
+
+  const bidderCredentials = {
+    username: "012345678900",
+    password: "12345",
+  };
+
+  const auctionnerCredentials = {
+    username: "950308015066",
+    password: "12345",
   };
 
   return (
@@ -62,6 +69,22 @@ export function Login() {
           </div>
         </div>
       </Button>
+
+      <div className={dev ? "flex gap-4" : "hidden"}>
+        <button
+          onClick={() => mutateAsync(bidderCredentials)}
+          className="px-3 py-2 bg-yellow-500 rounded-md"
+        >
+          bidder
+        </button>
+        <button
+          onClick={() => mutateAsync(auctionnerCredentials)}
+          className="px-3 py-2 bg-green-500 rounded-md"
+        >
+          auctioneer
+        </button>
+      </div>
+
       <div className="flexcenter-col gap-2 mt-3">
         <a
           className="text-xl flex gap-2 text-primary"

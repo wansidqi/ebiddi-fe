@@ -1,3 +1,5 @@
+import { ROLE } from "./enum";
+
 export interface EventsInterface {
   id: number;
   status: string;
@@ -499,7 +501,7 @@ export interface User {
   temp_password: boolean;
   user_agreement: boolean;
   created_at: string;
-  role: string;
+  role: ROLE;
   credits: [
     {
       id: number;
