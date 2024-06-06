@@ -544,9 +544,42 @@ export interface Contract {
   actions: string;
 }
 
+export interface CreditInterface {
+  id: number;
+  auctionhouse_id: number;
+  amount: number;
+  auction_house: {
+    id: number;
+    code: string;
+    name: string;
+  };
+}
+
 export interface AuctionLiveItem extends InventoryInterface {
   meta: {
     next: number;
     prev: number;
+  };
+}
+
+export interface Payload {
+  event_id: string;
+  auction_id: string;
+  status: string;
+  bid: {
+    start: number;
+    next: number;
+    current: number;
+    up: number;
+  };
+  timer: {
+    tick: number;
+    call: number;
+  };
+  bidders: {
+    all: never[];
+    highest_amount: number;
+    highest_user_id: number;
+    highest_user_name: string;
   };
 }

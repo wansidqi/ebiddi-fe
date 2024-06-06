@@ -1,3 +1,5 @@
+import { CreditInterface } from ".";
+
 export interface LoginCredential {
   username: string;
   password: string;
@@ -16,16 +18,5 @@ export interface Verify {
 }
 
 export interface CreditResponse {
-  data: [
-    {
-      id: number;
-      auctionhouse_id: number;
-      amount: number;
-      auction_house: {
-        id: number;
-        code: string;
-        name: string;
-      };
-    },
-  ];
+  data: CreditInterface[];
 }

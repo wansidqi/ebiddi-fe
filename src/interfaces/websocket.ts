@@ -4,12 +4,13 @@ export interface SubscribeParams<T> {
   onData: (data: T) => any;
 }
 
-export interface PublishBid {
+export interface PublishParams<T> {
   id: string;
   auction_id: string;
-  data: {
-    user_id: string;
-    name: string;
-    amount: number;
-  };
+  channel: "bid" | "event";
+  data: T;
+}
+
+export interface ChannelData {
+  countdown: number;
 }

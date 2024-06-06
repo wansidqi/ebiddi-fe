@@ -19,13 +19,13 @@ export function Login() {
   const credentials = { username, password };
 
   const bidderCredentials = {
-    username: "012345678900",
-    password: "12345",
+    username: import.meta.env.VITE_BIDDER,
+    password: import.meta.env.VITE_PASSWORD,
   };
 
   const auctionnerCredentials = {
-    username: "950308015066",
-    password: "12345",
+    username: import.meta.env.VITE_AUCTIONEER,
+    password: import.meta.env.VITE_PASSWORD,
   };
 
   return (

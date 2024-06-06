@@ -4,7 +4,7 @@ import { ItemService } from "./items.api";
 import { AuthenticationService } from "./authentication.api";
 import { ProfileServices } from "./profile.api";
 import { ContractService } from "./contract.api";
-import { LiveService } from "./live.api";
+import { AuctionService } from "./auction.api";
 
 export enum KEY {
   events = "events",
@@ -30,5 +30,5 @@ export const useAPIServices = () => ({
   ...AuthenticationService,
   ...ProfileServices,
   ...ContractService,
-  ...LiveService,
+  ...AuctionService,
 });

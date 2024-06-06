@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { VEHICLE_TYPE } from "@/interfaces/enum";
 
-export const gridCSS = "grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3";
+export const gridCSS = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3";
 
 export function ItemsGrid({ events }: { events: undefined | EventsInterface }) {
   const navigate = useNavigate();

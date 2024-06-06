@@ -1,5 +1,5 @@
 import datasource from "@/datasource/axiosInstance";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { KEY } from ".";
 import { EventsInterface } from "@/interfaces";
 import { useStoreContext } from "@/Context";
@@ -12,16 +12,10 @@ interface EventResponse {
   data: EventsInterface;
 }
 
-interface AgreementResponse {
-  data: {
-    event_name: string;
-    agreement_content: string;
-  };
-}
-
 const useGetAllEvents = () => {
   return useQuery({
     queryKey: [KEY.events],
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       const response = await datasource({ url: "/events", method: "get" });
       const data = response.data as EventsResponse;
@@ -37,6 +31,7 @@ const useGetAuctioneerEvent = () => {
   // let id = 2449;
 
   return useQuery({
+    refetchOnWindowFocus: false,
     enabled: !!id,
     queryKey: [KEY.auctioneer, id],
     queryFn: async () => {
@@ -62,69 +57,8 @@ const useGetEventById = (id: string) => {
   });
 };
 
-const useGetAgreement = (eventId: string) => {
-  return useQuery({
-    queryKey: [KEY.agreement],
-    queryFn: async () => {
-      const response = await datasource({
-        method: "get",
-        url: `/auction/${eventId}/agreement`,
-      });
-      const data = response.data as AgreementResponse;
-      return data.data;
-    },
-    enabled: !!eventId,
-  });
-};
-
-const usePostConfirmAgreement = () => {
-  type Param = {
-    user_id: number;
-    event_id: number;
-  };
-
-  return useMutation({
-    mutationFn: async (data: Param) => {
-      const response = await datasource({
-        method: "post",
-        url: "/auction/agreement/confirm",
-        data,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      });
-      return response.data;
-    },
-  });
-};
-
-const usePostVerifyAgreement = () => {
-  type Param = {
-    user_id: number;
-    event_id: number;
-  };
-
-  return useMutation({
-    mutationFn: async (data: Param) => {
-      const response = await datasource({
-        method: "post",
-        url: "/auction/agreement/verify",
-        data,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      });
-      return response.data;
-    },
-  });
-};
-
-/* if !usePostVerifyAgreement -> useGetAgreement -> usePostConfirmAgreement  */
-
 export const EventService = {
   useGetAllEvents,
   useGetEventById,
-  useGetAgreement,
-  usePostConfirmAgreement,
-  usePostVerifyAgreement,useGetAuctioneerEvent
+  useGetAuctioneerEvent,
 };

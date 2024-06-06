@@ -10,12 +10,13 @@ import {
 import { CalendarDaysIcon, Clock, LucideNavigation } from "lucide-react";
 import { EventDetail } from "..";
 import { EventsInterface } from "@/interfaces";
-import { getDate, isCountdown, getTime } from "@/lib/utils";
+import { getDate, isCountdown, getTime, roleRenderer } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useAPIServices } from "@/services";
 import { useStoreContext } from "@/Context";
 
 export function EventCard(props: EventsInterface) {
+  //#region
   const { setTerm, USER } = useStoreContext();
   const { openDetailModal } = useStoreContext();
 
@@ -62,9 +63,16 @@ export function EventCard(props: EventsInterface) {
     }
   };
 
-  const viewAuctionItems = (id: number) => {
-    navigate(`/items/${id}`);
+  const viewAuctionItems = () => {
+    roleRenderer({
+      role: USER?.role,
+      //TODO: navigation endpoint auctionID
+      auctioneer: navigate(`/auctioneer/`),
+      bidder: navigate(`/items/${props.id}`),
+      noRole: navigate(`/items/${props.id}`),
+    });
   };
+  //#endregion
 
   return (
     <>
@@ -89,18 +97,28 @@ export function EventCard(props: EventsInterface) {
               <EventDetail {...props} eventId={props.id} />
             </div>
             <Button
-              onClick={() => viewAuctionItems(props.id)}
+              onClick={viewAuctionItems}
               className="w-full"
               variant="secondary"
             >
-              View Auction Items
+              {roleRenderer({
+                role: USER?.role,
+                auctioneer: "Contract",
+                bidder: "View Auction Items",
+                noRole: "View Auction Items",
+              })}
             </Button>
           </div>
           <Button
             onClick={() => redirectButton(props.event_date, props.id)}
             className="w-full my-4"
           >
-            {USER ? "Join Auction" : "Live Biddings"}
+            {roleRenderer({
+              role: USER?.role,
+              auctioneer: "Enter Events",
+              bidder: "Join Auction",
+              noRole: "Live Biddings",
+            })}
           </Button>
         </CardFooter>
       </Card>

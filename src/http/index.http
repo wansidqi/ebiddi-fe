@@ -1,3 +1,9 @@
+###GET
+GET https://api.e-biddi.com/api/auction/1146
+
+###GET
+GET https://api.e-biddi.com/api/events/1146
+
 ###POST
 POST https://api.e-biddi.com/api/auth/login
 # Content-Type: application/x-www-form-urlencoded

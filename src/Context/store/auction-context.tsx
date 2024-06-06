@@ -1,4 +1,4 @@
-import { EventsInterface, User } from "@/interfaces";
+import { EventsInterface, Payload, User } from "@/interfaces";
 import React, { createContext, useContext, useState } from "react";
 
 const AppContext = createContext<Data | null>(null);
@@ -24,6 +24,9 @@ type Data = {
   USER: User | null;
   SET_USER: React.Dispatch<React.SetStateAction<User | null>>;
 
+  payload: Payload;
+  setPayload: React.Dispatch<React.SetStateAction<Payload>>;
+
   dev: boolean;
 };
 
@@ -32,7 +35,29 @@ function AuctionContext(props: React.PropsWithChildren<{}>) {
 
   const [view, setView] = useState<"Grid" | "List">("Grid");
   const [selectEvent, setSelectEvent] = useState<EventsInterface | null>(null);
-  const [countdown, setCountdown] = useState(9);
+  const [countdown, setCountdown] = useState(11);
+
+  const [payload, setPayload] = useState<Payload>({
+    event_id: "",
+    auction_id: "",
+    status: "",
+    bid: {
+      start: 0,
+      next: 0,
+      current: 0,
+      up: 0,
+    },
+    timer: {
+      tick: 0,
+      call: 0,
+    },
+    bidders: {
+      all: [],
+      highest_amount: 0,
+      highest_user_id: 0,
+      highest_user_name: "",
+    },
+  });
 
   const dev = true;
 
@@ -46,6 +71,8 @@ function AuctionContext(props: React.PropsWithChildren<{}>) {
     dev,
     USER,
     SET_USER,
+    payload,
+    setPayload,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;

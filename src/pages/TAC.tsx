@@ -103,7 +103,7 @@ export function TAC() {
       <Button onClick={verify} className="w-52 text-xl pt-2 pb-1 sm:w-1/6">
         <div className="relative w-full text-center">
           <p>Next</p>
-          <div className="absolute top-0 right-4 sm:right-10">
+          <div className="absolute top-0 right-0 lg:right-10">
             <LogInIcon />
           </div>
         </div>

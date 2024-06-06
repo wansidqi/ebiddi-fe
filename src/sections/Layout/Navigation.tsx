@@ -11,7 +11,7 @@ import {
 import { Fragment, useEffect, useRef, useState } from "react";
 import icon from "@/assets/images/e-biddi icon.png";
 import { useStoreContext } from "@/Context";
-import { Hamburger } from "@/components";
+import { DynamicRenderer, Hamburger } from "@/components";
 import { useAPIServices } from "@/services";
 import { ROLE } from "@/interfaces/enum";
 
@@ -26,7 +26,7 @@ export function Navigation() {
   const { mutateAsync } = usePostLogout();
 
   const back = () => {
-    navigate(-1);
+    navigate('/events');
   };
 
   const iconAttribute = {
@@ -97,78 +97,90 @@ export function Navigation() {
 
   return (
     <Fragment>
-      {USER ? (
-        <div className="flex justify-between py-3 px-5 sm:px-10 gap-2 sticky top-0 z-50 bg-[#011138] text-primary">
-          <div className="flex gap-4">
-            <button onClick={() => setShowSidebar(true)} className="sm:hidden">
-              <Hamburger />
-            </button>
-            <button>
-              <img width={"50px"} src={icon} alt="" />
-            </button>
-          </div>
+      <DynamicRenderer>
+        <DynamicRenderer.When cond={USER !== null}>
+          <div className="flex justify-between py-3 px-5 sm:px-10 gap-2 sticky top-0 z-50 bg-[#011138] text-primary">
+            <div className="flex gap-4">
+              <button
+                onClick={() => setShowSidebar(true)}
+                className="sm:hidden"
+              >
+                <Hamburger />
+              </button>
+              <button>
+                <img width={"50px"} src={icon} alt="" />
+              </button>
+            </div>
 
-          <main id="sidebar">
-            {showSidebar && (
-              <div className="fixed inset-0 z-50 bg-black bg-opacity-50" />
-            )}
-            <div
-              ref={sidebarRef}
-              className={`roboto scrollbar-hidden fixed inset-0 z-50 overflow-auto bg-opacity-70 ${
-                showSidebar
-                  ? "translate-x-0 transform transition-transform duration-300 ease-in-out"
-                  : "-translate-x-full transform transition-transform duration-300 ease-in-out"
-              }`}
-            >
-              <div className="z-50 min-h-screen w-3/4 overflow-auto border-x bg-[#011138] text-[16px]">
-                <div className="p-0">
-                  <div className="flex flex-col justify-start gap-6 py-10 w-full sm:hidden">
-                    {navMenu
-                      .filter((show) => show.role.includes(USER.role))
-                      .map((item, i) => (
-                        <button
-                          key={i}
-                          onClick={() => navigateAndCloseSidebar(item.callback)}
-                        >
-                          <div className="flex ml-4 gap-3">
-                            <div>{item.icon}</div>
-                            <p>{item.name}</p>
-                          </div>
-                        </button>
-                      ))}
+            <main id="sidebar">
+              {showSidebar && (
+                <div className="fixed inset-0 z-50 bg-black bg-opacity-50" />
+              )}
+              <div
+                ref={sidebarRef}
+                className={`roboto scrollbar-hidden fixed inset-0 z-50 overflow-auto bg-opacity-70 ${
+                  showSidebar
+                    ? "translate-x-0 transform transition-transform duration-300 ease-in-out"
+                    : "-translate-x-full transform transition-transform duration-300 ease-in-out"
+                }`}
+              >
+                <div className="z-50 min-h-screen w-3/4 overflow-auto border-x bg-[#011138] text-[16px]">
+                  <div className="p-0">
+                    <div className="flex flex-col justify-start gap-6 py-10 w-full sm:hidden">
+                      {USER &&
+                        navMenu
+                          .filter((show) => show.role.includes(USER.role))
+                          .map((item, i) => (
+                            <button
+                              key={i}
+                              onClick={() =>
+                                navigateAndCloseSidebar(item.callback)
+                              }
+                            >
+                              <div className="flex ml-4 gap-3">
+                                <div>{item.icon}</div>
+                                <p>{item.name}</p>
+                              </div>
+                            </button>
+                          ))}
+                    </div>
                   </div>
                 </div>
               </div>
+            </main>
+            <main
+              id="navbar"
+              className="sm:flex gap-5 justify-end w-full hidden"
+            >
+              {USER &&
+                navMenu
+                  .filter((show) => show.role.includes(USER.role))
+                  .map((item, i) => (
+                    <button key={i} onClick={item.callback}>
+                      <div className="flexcenter gap-2">
+                        <div>{item.icon}</div>
+                        <p className="mt-2">{item.name}</p>
+                      </div>
+                    </button>
+                  ))}
+            </main>
+
+            <div className="sm:ml-5">
+              <ModeToggle />
+            </div>
+          </div>
+        </DynamicRenderer.When>
+        <DynamicRenderer.Else>
+          <main className="flex justify-between m-5">
+            <button onClick={back} className="border-secondary rounded-md p-2">
+              <ArrowLeftCircle strokeWidth={3} size={"28px"} />
+            </button>
+            <div className="">
+              <ModeToggle />
             </div>
           </main>
-
-          <main id="navbar" className="sm:flex gap-5 justify-end w-full hidden">
-            {navMenu
-              .filter((show) => show.role.includes(USER.role))
-              .map((item, i) => (
-                <button key={i} onClick={item.callback}>
-                  <div className="flexcenter gap-2">
-                    <div>{item.icon}</div>
-                    <p className="mt-2">{item.name}</p>
-                  </div>
-                </button>
-              ))}
-          </main>
-
-          <div className="sm:ml-5">
-            <ModeToggle />
-          </div>
-        </div>
-      ) : (
-        <main className="flex justify-between m-5">
-          <button onClick={back} className="border-secondary rounded-md p-2">
-            <ArrowLeftCircle strokeWidth={3} size={"28px"} />
-          </button>
-          <div className="">
-            <ModeToggle />
-          </div>
-        </main>
-      )}
+        </DynamicRenderer.Else>
+      </DynamicRenderer>
     </Fragment>
   );
 }

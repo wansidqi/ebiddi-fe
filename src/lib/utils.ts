@@ -1,3 +1,4 @@
+import { ROLE } from "@/interfaces/enum";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -91,4 +92,37 @@ export const onEnterClick = (
   if (e.key === "Enter") {
     callback();
   }
+};
+
+export const roleRenderer = ({
+  role,
+  bidder,
+  auctioneer,
+  noRole,
+}: {
+  role: ROLE | undefined;
+  bidder: any;
+  auctioneer: any;
+  noRole: any;
+}) => {
+  switch (role) {
+    case ROLE.AUCTIONEER:
+      // console.log('auc')
+      return auctioneer;
+    case ROLE.BIDDER:
+      // console.log('bidder')
+      return bidder;
+    default:
+      // console.log('no role')
+      return noRole;
+  }
+};
+
+export const playAudio = (text: string) => {
+  const speech = new SpeechSynthesisUtterance();
+  speech.text = text;
+  speech.volume = 2;
+  speech.rate = 1;
+  speech.pitch = 3;
+  window.speechSynthesis.speak(speech);
 };

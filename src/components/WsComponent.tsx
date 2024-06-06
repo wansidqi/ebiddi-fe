@@ -2,7 +2,7 @@ import { useStoreContext } from "@/Context";
 import { useEffect } from "react";
 
 export const WS = () => {
-  const { socket, subscription, publishBid } = useStoreContext();
+  const { socket, subscription, publish } = useStoreContext();
 
   async function testSubscription<T>(name: string, onData: (data: T) => void) {
     if (!socket) return;
@@ -37,7 +37,8 @@ export const WS = () => {
   }, [socket]);
 
   const bid = async () => {
-    publishBid({
+    publish({
+      channel: "bid",
       id: "1123",
       auction_id: "121",
       data: { name: "Sidqi", amount: 1150, user_id: "251" },

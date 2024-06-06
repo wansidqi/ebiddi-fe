@@ -12,7 +12,7 @@ import {
   ReportMotor,
   TAC,
 } from "@/pages";
-import { Items } from "./sections";
+import { AuctioneerContract, Items } from "./sections";
 import { Fragment, useEffect } from "react";
 import { TOKEN, getToken } from "./datasource/sessionStorage.datasource";
 import { useStoreContext } from "./Context";
@@ -53,6 +53,8 @@ function App() {
         <Route path={"/events"} element={<Events />} />
         <Route path={"/items/:eventId"} element={<Items />} />
         <Route path={"/live/:eventId"} element={<Live />} />
+
+        <Route path={"/auctioneer/contract/:auctionId"} element={<AuctioneerContract />} />
       </Routes>
     </Fragment>
   );
