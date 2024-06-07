@@ -56,7 +56,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
       start: 0,
       up: 0,
     },
-    countdown: 0,
+    countdown: 11,
     status: "START",
     bidders: {
       all: [],

@@ -20,6 +20,10 @@ export enum KEY {
   auctioneer = "auctioneer",
 }
 
+/* 
+  const queryKey = [KEY.auction_item, auctionId];
+  const data = useGetQueryData<T>(queryKey);
+*/
 export function useGetQueryData<T>(key: QueryKey): T {
   return useQueryClient().getQueryData(key) as T;
 }

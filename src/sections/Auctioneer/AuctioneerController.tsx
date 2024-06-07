@@ -10,18 +10,22 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export function AuctioneerController() {
-  const { auctionId } = useParams();
+  const { auctionId, eventId } = useParams();
   const navigate = useNavigate();
 
-  const { USER, setCountdown, countdown, publishEvent, setPayload, payload } =
-    useStoreContext();
+  const {
+    USER,
+    setCountdown,
+    countdown,
+    publishEvent,
+    setPayload,
+    payload,
+    socket,
+  } = useStoreContext();
   const bid_status: number = 0;
   const bids = [];
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-
-  // const queryKey = [KEY.auction_item, auctionId];
-  // const auction = useGetQueryData<AuctionLiveItem>(queryKey);
 
   const { useGetLiveAuction } = useAPIServices();
   const { data: auction } = useGetLiveAuction(auctionId as string);
@@ -42,7 +46,19 @@ export function AuctioneerController() {
       auction_id: auctionId as string,
     };
     setPayload(newPayload);
-    publishEvent({ event_id: "", data: newPayload });
+    if (!eventId) return;
+    publishEvent({ event_id: eventId, data: newPayload });
+  };
+
+  const sendDisplay = () => {
+    if (!auctionId || !eventId) return;
+    const newPayload: EventData = {
+      ...payload,
+      event_id: eventId,
+      auction_id: auctionId,
+      status: "",
+    };
+    publishEvent({ data: newPayload, event_id: eventId });
   };
 
   const clickStart = () => {
@@ -52,19 +68,22 @@ export function AuctioneerController() {
       setIsActive(true);
       setIsPaused(false);
       const newPayload: EventData = { ...payload, status: "RUN" };
-      publishEvent({ event_id: "", data: newPayload });
+      if (!eventId) return;
+      publishEvent({ event_id: eventId, data: newPayload });
     }
   };
 
   const clickPause = () => {
     setIsPaused(true);
     const newPayload: EventData = { ...payload, status: "PAUSE" };
-    publishEvent({ event_id: "", data: newPayload });
+    if (!eventId) return;
+    publishEvent({ event_id: eventId, data: newPayload });
   };
 
   const clickResume = () => {
     setIsPaused(false);
     const newPayload: EventData = { ...payload, status: "RUN" };
+    setPayload(newPayload);
     publishEvent({ event_id: "", data: newPayload });
   };
 
@@ -75,6 +94,10 @@ export function AuctioneerController() {
   const goNext = () => {
     navigate(`/auctioneer/${auction?.meta?.next}`);
   };
+
+  useEffect(() => {
+    sendDisplay();
+  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -107,9 +130,9 @@ export function AuctioneerController() {
   }, [countdown]);
 
   useEffect(() => {
-    publishTimer();
     if (countdown === 11) return;
-  }, [countdown]);
+    publishTimer();
+  }, [countdown, socket]);
 
   return (
     <div>

@@ -26,7 +26,8 @@ export function Navigation() {
   const { mutateAsync } = usePostLogout();
 
   const back = () => {
-    navigate('/events');
+    navigate(-1);
+    // navigate('/events');
   };
 
   const iconAttribute = {

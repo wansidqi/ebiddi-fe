@@ -50,9 +50,9 @@ export function BidHeader() {
             </div>
             <div className="flexcenter-col col-span-2 sm:col-span-1 text-lg sm:order-2">
               <p className="text-primary sm:text-2xl">Deposit Balance:</p>
-              <p className="sm:text-2xl">{data?.auction_house.name}t</p>
+              <p className="sm:text-2xl">{data?.auction_house.name}</p>
               <p className="text-yellow-500 sm:text-2xl">
-                RM{numWithComma(data?.amount as number)}
+                RM{numWithComma(data?.amount as number) || 0}
               </p>
             </div>
           </div>

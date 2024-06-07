@@ -4,6 +4,7 @@ import datasource from "@/datasource/axiosInstance";
 import { AuctionLiveItem } from "@/interfaces";
 import { useStoreContext } from "@/Context";
 import { CreditResponse } from "@/interfaces/API";
+import { ROLE } from "@/interfaces/enum";
 
 interface AgreementResponse {
   data: {
@@ -15,7 +16,7 @@ interface AgreementResponse {
 const useGetCredit = (auctionHouseId: string) => {
   const { USER } = useStoreContext();
   return useQuery({
-    enabled: !!USER?.id,
+    enabled: !!USER?.id && !Boolean(USER.role === ROLE.AUCTIONEER),
     queryKey: [KEY.credit, auctionHouseId],
     queryFn: async () => {
       const response = await datasource({

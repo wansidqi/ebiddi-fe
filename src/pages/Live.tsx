@@ -1,52 +1,45 @@
 import { Fragment, useEffect, useState } from "react";
 import { Container } from "@/components/Container";
 import {
-  BidCountdown,
+  AuctioneerController,
+  BidHeader,
   BidList,
-  CallAlert,
-  LiveDetail,
   LiveDialog,
   Participator,
 } from "@/sections";
 import waiting from "@/assets/images/waiting.png";
-import { useAPIServices } from "@/services";
-import { useParams } from "react-router-dom";
-import { AuctionLiveItem } from "@/interfaces";
 import { LucideGavel, LockKeyholeIcon, UnlockKeyhole } from "lucide-react";
 import { useStoreContext } from "@/Context";
+import { DynamicRenderer } from "@/components";
+import { ROLE } from "@/interfaces/enum";
+import { Toaster } from "@/components/ui/toaster";
+import { useParams } from "react-router-dom";
 
 export function Live() {
-  const [toggleLock, setToggleLock] = useState(false);
-
   const { eventId } = useParams();
-  const { useGetEventById, useGetLiveAuction } = useAPIServices();
-  const { data: events } = useGetEventById(eventId as string);
-  const firstItem = events?.inventories[0].auction_id as number;
-  const { data } = useGetLiveAuction(firstItem);
-
-  const { subscription, socket } = useStoreContext();
+  const [toggleLock, setToggleLock] = useState(false);
+  const { USER, subscribeEvent, setCountdown, socket, setPayload, payload } =
+    useStoreContext();
 
   useEffect(() => {
-    subscription({
-      channel: "event",
-      id: eventId as string,
+    if (!eventId) return;
+    subscribeEvent({
+      event_id: eventId,
       onData: (data) => {
         console.log(data);
+        let { countdown, auction_id } = data;
+        setPayload(data);
+        setCountdown(countdown);
       },
     });
+  }, [socket]);
 
-    subscription({
-      channel: "status",
-      id: eventId as string,
-      onData: (data) => {
-        console.log(data);
-      },
-    });
-  }, [socket, subscription]);
+  const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
+  const isAuctionIdNotExist = payload.auction_id === "";
 
   return (
     <div>
-      <CallAlert />
+      <Toaster />
       <LiveDialog />
       <Container>
         <p className="text-3xl sm:text-5xl text-center text-primary">
@@ -54,37 +47,45 @@ export function Live() {
         </p>
         <Participator />
 
-        {events?.status === "Deactive" ? (
-          <WaitingComponent />
-        ) : (
-          <Fragment>
-            <BidCountdown />
-
-            <div className="flex sm:grid sm:grid-cols-2 w-full overflow-x-auto gap-4 my-8">
-              <div id="bidding" className="flex-shrink-0 w-[92%] sm:order-1">
-                <BidList />
-              </div>
-              <div id="details" className="flex-shrink-0 w-[92%] sm:order-2">
-                <LiveDetail {...(data as AuctionLiveItem)} />
-              </div>
-            </div>
-
-            <div className="flexcenter gap-6">
-              <button
-                onClick={() => setToggleLock(!toggleLock)}
-                className="bg-green-600 py-3 rounded-md w-full relative sm:w-1/2"
-              >
-                <p>RM 51,500.00</p>
-                <div className="absolute right-10 top-[0.85rem]">
-                  <LucideGavel />
+        <DynamicRenderer>
+          <DynamicRenderer.When
+            cond={false && isNotAuctioneer && isAuctionIdNotExist}
+          >
+            <WaitingComponent />
+          </DynamicRenderer.When>
+          <DynamicRenderer.Else>
+            <Fragment>
+              <BidHeader />
+              <div className="flex sm:grid sm:grid-cols-2 w-full overflow-x-auto gap-4 my-8">
+                <div id="bidding" className="flex-shrink-0 w-[92%] sm:order-1">
+                  <BidList />
                 </div>
-              </button>
-              <div className="flex gap-4">
-                {toggleLock ? <LockKeyholeIcon /> : <UnlockKeyhole />}
+                <div id="details" className="flex-shrink-0 w-[92%] sm:order-2">
+                  {/* <LiveDetail /> */}
+                  {/* <LiveDetail {...(data as AuctionLiveItem)} /> */}
+                </div>
               </div>
-            </div>
-          </Fragment>
-        )}
+
+              {USER?.role === ROLE.BIDDER && (
+                <div className="flexcenter gap-6">
+                  <button
+                    onClick={() => setToggleLock(!toggleLock)}
+                    className="bg-green-600 py-3 rounded-md w-full relative sm:w-1/2"
+                  >
+                    <p>RM 51,500.00</p>
+                    <div className="absolute right-10 top-[0.85rem]">
+                      <LucideGavel />
+                    </div>
+                  </button>
+                  <div className="flex gap-4">
+                    {toggleLock ? <LockKeyholeIcon /> : <UnlockKeyhole />}
+                  </div>
+                </div>
+              )}
+              <AuctioneerController />
+            </Fragment>
+          </DynamicRenderer.Else>
+        </DynamicRenderer>
       </Container>
     </div>
   );
