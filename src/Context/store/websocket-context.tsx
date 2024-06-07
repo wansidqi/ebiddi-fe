@@ -1,4 +1,12 @@
-import { SubscribeParams, PublishParams } from "@/interfaces/websocket";
+import {
+  EventData,
+  StatusData,
+  PubBid,
+  SubBid,
+  Publication,
+  Subscription,
+  BidData,
+} from "@/interfaces/websocket";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as socketClusterClient from "socketcluster-client";
 
@@ -16,60 +24,108 @@ type ws = socketClusterClient.AGClientSocket | null;
 
 type Data = {
   socket: ws;
-  subscription<T>(params: SubscribeParams<T>): Promise<void>;
-  publish<T>(params: PublishParams<T>): void;
+
+  subscribeBid: (params: SubBid) => Promise<void>;
+  publishEvent: (params: Publication<EventData>) => void;
+
+  publishBid: (params: PubBid) => void;
+  subscribeEvent: (params: Subscription<EventData>) => Promise<void>;
+  subscribeStatus: (params: Subscription<StatusData>) => Promise<void>;
+
+  bidData: BidData;
+  setBidData: React.Dispatch<React.SetStateAction<BidData>>;
+
+  payload: EventData;
+  setPayload: React.Dispatch<React.SetStateAction<EventData>>;
 };
 
 function WsContext(props: React.PropsWithChildren<{}>) {
+  const isTest = true;
   const [socket, setSocket] = useState<ws>(null);
+  const [bidData, setBidData] = useState<BidData>({
+    amount: 0,
+    name: "",
+    user_id: 0,
+  });
+  const [payload, setPayload] = useState<EventData>({
+    auction_id: "",
+    event_id: "",
+    bid: {
+      current: 0,
+      next: 0,
+      start: 0,
+      up: 0,
+    },
+    countdown: 0,
+    status: "START",
+    bidders: {
+      all: [],
+      highest_amount: 0,
+      highest_user_id: 0,
+      highest_user_name: "",
+    },
+  });
 
-  async function subscription<T>(params: SubscribeParams<T>) {
+  const publishBid = (params: PubBid) => {
     if (!socket) return;
+    let channel = `event/${params.event_id}/auction/${params.auction_id}/bid`;
+    let test_channel = `test/event/${params.event_id}/auction/${params.auction_id}/bid`;
+    socket.invokePublish(isTest ? test_channel : channel, params.data);
+  };
 
-    let topic: string;
-
-    switch (params.channel) {
-      case "event":
-        // topic = `/event/${params.id}`;
-        topic = "TEST_SOCKET";
-        break;
-
-      case "bid":
-        // topic = `/event/${params.id}/${params.channel}`;
-        topic = "TEST_BID";
-        break;
-
-      case "status":
-        topic = `/event/${params.id}/${params.channel}`;
-        break;
-
-      default:
-        throw new Error(`Unknown channel: ${params.channel}`);
-    }
-
-    const channel = socket.subscribe(topic);
+  const subscribeBid = async (params: SubBid) => {
+    if (!socket) return;
+    const url = `event/${params.event_id}/auction/${params.auction_id}/bid`;
+    const test_url = `test/event/${params.event_id}/auction/${params.auction_id}/bid`;
+    const channel = socket.subscribe(isTest ? test_url : url);
 
     for await (const data of channel) {
       try {
-        // console.log(data);
-        params.onData(data);
+        params.onData && params.onData(data);
       } catch (error) {
         console.log(error);
       }
     }
-  }
+  };
 
-  function publish<T>(params: PublishParams<T>) {
+  const publishEvent = (params: Publication<EventData>) => {
     if (!socket) return;
-    // const event = `event/${params.id}`;
-    // const bid = `event/${params.id}/auction/${params.auction_id}/bid`;
-    const event = "TEST_SOCKET";
-    const bid = "TEST_BID";
+    const channel = `event/${params.event_id}`;
+    const test_channel = `test/event/${params.event_id}`;
+    socket.invokePublish(isTest ? test_channel : channel, params.data);
+  };
 
-    const channel = params.channel === "bid" ? bid : event;
+  const subscribeEvent = async (params: Subscription<EventData>) => {
+    if (!socket) return;
 
-    socket.invokePublish(channel, params.data);
-  }
+    const url = `event/${params.event_id}`;
+    const test_url = `test/event/${params.event_id}`;
+    const channel = socket.subscribe(isTest ? test_url : url);
+
+    for await (const data of channel) {
+      try {
+        params.onData && params.onData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const subscribeStatus = async (params: Subscription<StatusData>) => {
+    if (!socket) return;
+
+    const url = `event/${params.event_id}/status`;
+    const test_url = `test/event/${params.event_id}/status`;
+    const channel = socket.subscribe(isTest ? test_url : url);
+
+    for await (const data of channel) {
+      try {
+        params.onData && params.onData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   useEffect(() => {
     const init = () => {
@@ -95,8 +151,15 @@ function WsContext(props: React.PropsWithChildren<{}>) {
 
   const contextValue: Data = {
     socket,
-    subscription,
-    publish,
+    bidData,
+    setBidData,
+    payload,
+    setPayload,
+    subscribeBid,
+    publishEvent,
+    publishBid,
+    subscribeEvent,
+    subscribeStatus,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;

@@ -87,14 +87,16 @@ const usePostVerifyAgreement = () => {
 
 /* if !usePostVerifyAgreement -> useGetAgreement -> usePostConfirmAgreement  */
 
-const useGetLiveAuction = (itemId: number) => {
+const useGetLiveAuction = (auctionId: string) => {
   return useQuery({
-    enabled: !!itemId,
-    queryKey: [KEY.auction_item, itemId],
+    enabled: !!auctionId,
+    queryKey: [KEY.auction_item, auctionId],
+    retry: false,
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       const response = await datasource({
         method: "get",
-        url: `/auction/${itemId}`,
+        url: `/auction/${auctionId}`,
       });
       return response.data.data as AuctionLiveItem;
     },

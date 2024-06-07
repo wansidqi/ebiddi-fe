@@ -1,8 +1,8 @@
 ###GET
-GET https://api.e-biddi.com/api/auction/1146
+GET https://api.e-biddi.com/api/auction/69889
 
 ###GET
-GET https://api.e-biddi.com/api/events/1146
+GET https://api.e-biddi.com/api/events/1157
 
 ###POST
 POST https://api.e-biddi.com/api/auth/login

@@ -16,7 +16,7 @@ import { AuctioneerContract, Items } from "./sections";
 import { Fragment, useEffect } from "react";
 import { TOKEN, getToken } from "./datasource/sessionStorage.datasource";
 import { useStoreContext } from "./Context";
-import { AlertDialog, WS } from "./components";
+import { AlertDialog } from "./components";
 
 function App() {
   const { SET_USER } = useStoreContext();
@@ -45,7 +45,6 @@ function App() {
           <Route path={"/profile"} element={<Profile />} />
         </Route>
 
-        <Route path={"/ws"} element={<WS />} />
         <Route path={"/contract"} element={<Contract />} />
         <Route path={"/policy"} element={<Policies />} />
         <Route path={"/ireportmotor/:vehicle_id"} element={<ReportMotor />} />
@@ -53,8 +52,12 @@ function App() {
         <Route path={"/events"} element={<Events />} />
         <Route path={"/items/:eventId"} element={<Items />} />
         <Route path={"/live/:eventId"} element={<Live />} />
+        <Route path={"/auctioneer/:eventId/:auctionId"} element={<Live />} />
 
-        <Route path={"/auctioneer/contract/:auctionId"} element={<AuctioneerContract />} />
+        <Route
+          path={"/auctioneer/contract/:auctionId"}
+          element={<AuctioneerContract />}
+        />
       </Routes>
     </Fragment>
   );

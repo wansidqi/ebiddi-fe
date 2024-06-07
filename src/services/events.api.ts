@@ -45,6 +45,7 @@ const useGetAuctioneerEvent = () => {
 const useGetEventById = (id: string) => {
   return useQuery({
     queryKey: [KEY.event, id],
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       const response = await datasource({
         url: `/events/${id}`,

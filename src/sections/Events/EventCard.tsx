@@ -67,6 +67,7 @@ export function EventCard(props: EventsInterface) {
     roleRenderer({
       role: USER?.role,
       //TODO: navigation endpoint auctionID
+      /* contract */
       auctioneer: navigate(`/auctioneer/`),
       bidder: navigate(`/items/${props.id}`),
       noRole: navigate(`/items/${props.id}`),

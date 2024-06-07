@@ -1,78 +1,20 @@
 import { useStoreContext } from "@/Context";
 import { DynamicRenderer } from "@/components";
-import { useToast } from "@/components/ui/use-toast";
-import { ROLE } from "@/interfaces/enum";
-import { ChannelData } from "@/interfaces/websocket";
-import { numWithComma, playAudio } from "@/lib/utils";
-import { useAPIServices } from "@/services";
-import { useEffect, useState } from "react";
+import { EventsInterface } from "@/interfaces";
+import { numWithComma } from "@/lib/utils";
+import { KEY, useAPIServices, useGetQueryData } from "@/services";
 import { useParams } from "react-router-dom";
-
-interface CallMessage {
-  call: string;
-  variant: "once" | "twice" | "final";
-}
-
-const callMessage: CallMessage[] = [
-  {
-    call: "calling once",
-    variant: "once",
-  },
-  {
-    call: "calling twice",
-    variant: "twice",
-  },
-  {
-    call: "final call",
-    variant: "final",
-  },
-];
 
 export function BidHeader() {
   const { eventId } = useParams();
-  const { toast } = useToast();
 
-  const [isActive, setIsActive] = useState(false);
-  const { countdown, setCountdown, USER, publish, socket, subscription, dev } =
-    useStoreContext();
+  const { countdown, USER } = useStoreContext();
 
-  const { useGetCredit, useGetEventById } = useAPIServices();
-  const { data: event } = useGetEventById(eventId as string);
+  const queryKey = [KEY.auction_item, eventId];
+  const event = useGetQueryData<EventsInterface>(queryKey);
+
+  const { useGetCredit } = useAPIServices();
   const { data } = useGetCredit(event?.auction_house.id.toString() as string);
-
-  const isAuctioneer = USER?.role === ROLE.AUCTIONEER;
-
-  const startAlert = ({ call, variant }: CallMessage) => {
-    toast({
-      duration: 1500,
-      variant: variant,
-      title: call.toUpperCase(),
-    });
-    playAudio(call);
-  };
-
-  const subscribeEvent = () => {
-    subscription<ChannelData>({
-      channel: "event",
-      id: "",
-      onData: (data) => {
-        setCountdown(data.countdown);
-      },
-    });
-  };
-
-  const publishEvent = () => {
-    publish<ChannelData>({
-      channel: "event",
-      auction_id: data?.id.toString() as string,
-      id: event?.id.toString() as string,
-      data: { countdown },
-    });
-  };
-
-  const handleStart = () => {
-    setIsActive(true);
-  };
 
   const displayTime = () => {
     let display = "00:00";
@@ -83,50 +25,11 @@ export function BidHeader() {
     } else if (countdown?.toString().length === 1) {
       display = `00:0${countdown}`;
       return display;
-    } else if (!isActive) {
+    } else {
       display = "00:00";
       return display;
     }
   };
-
-  useEffect(() => {
-    if (countdown === 8) {
-      startAlert(callMessage[0]);
-    } else if (countdown === 4) {
-      startAlert(callMessage[1]);
-    } else if (countdown === 0) {
-      startAlert(callMessage[2]);
-    }
-  }, [countdown]);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isActive && countdown > 0) {
-      interval = setInterval(() => {
-        setCountdown((prevCountdown) => prevCountdown - 1);
-      }, 1000);
-    }
-
-    if (countdown === 0) {
-      const timeout = setTimeout(() => {
-        setIsActive(false);
-        setCountdown(11);
-      }, 1000);
-      return () => clearTimeout(timeout);
-    }
-
-    return () => clearInterval(interval);
-  }, [isActive, countdown]);
-
-  useEffect(() => {
-    subscribeEvent();
-  }, [socket]);
-
-  useEffect(() => {
-    publishEvent();
-    if (countdown === 11) return;
-  }, [countdown]);
 
   return (
     <div>
@@ -171,17 +74,6 @@ export function BidHeader() {
           </div>
         </DynamicRenderer.Else>
       </DynamicRenderer>
-
-      {isAuctioneer ||
-        (dev && (
-          <button
-            className={`w-full ${isActive ? "bg-gray-500" : "bg-green-500"}  px-3 py-2 rounded-md`}
-            onClick={handleStart}
-            disabled={isActive}
-          >
-            Start Countdown
-          </button>
-        ))}
     </div>
   );
 }

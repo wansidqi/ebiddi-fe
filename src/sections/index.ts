@@ -17,7 +17,7 @@ export * from "./Live/BidHeader";
 export * from "./Live/LiveDetail";
 export * from "./Live/LiveDialog";
 
-export * from "./Auctioneer/AuctioneerButton";
+export * from "./Auctioneer/AuctioneerController";
 export * from "./Auctioneer/AuctioneerContract";
 
 export * from "./Layout/Navigation";
