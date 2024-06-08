@@ -19,10 +19,10 @@ export function BidHeader() {
   const displayTime = () => {
     let display = "00:00";
 
-    if (timer?.toString().length === 2) {
+    if (timer.toString().length === 2) {
       display = `00:${timer}`;
       return display;
-    } else if (timer?.toString().length === 1) {
+    } else if (timer.toString().length === 1) {
       display = `00:0${timer}`;
       return display;
     } else {

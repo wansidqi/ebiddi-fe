@@ -127,6 +127,25 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     }
   };
 
+  const testSubPub = async () => {
+    if (!socket) return;
+    let channel = "mychannel";
+    socket.invokePublish(channel, { message: "hello" });
+
+    let myChannel = socket.subscribe(channel);
+    for await (const data of myChannel) {
+      try {
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    // testSubPub();
+  }, [socket]);
+
   useEffect(() => {
     const init = () => {
       const newSocket = socketClusterClient.create({

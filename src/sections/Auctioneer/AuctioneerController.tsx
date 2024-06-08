@@ -95,7 +95,7 @@ export function AuctioneerController() {
       clickResume();
     } else {
       setCountdown(11);
-      setTimer(countdown - 1);
+      setTimer(countdown);
       setIsActive(true);
       setIsPaused(false);
       setBidStatus(BidStatus.RUN);
@@ -215,11 +215,19 @@ export function AuctioneerController() {
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
+    if (bidStatus === BidStatus.END || payload.status === "SOLD") {
+      setCountdown(0);
+    } else {
+      // setCountdown(payload.countdown);
+    }
+
     if (isActive && countdown > 0 && !isPaused) {
       interval = setInterval(() => {
-        setCountdown((prevCountdown) => prevCountdown - 1);
-        setTimer(countdown - 1);
-        console.log({ countdown, timer });
+        setCountdown((prevCountdown) => {
+          let cd = prevCountdown - 1;
+          setTimer(cd);
+          return cd;
+        });
       }, 1000);
     }
 
@@ -235,19 +243,24 @@ export function AuctioneerController() {
   }, [isActive, countdown, isPaused]);
 
   useEffect(() => {
-    if (countdown === 8) {
-      startAlert(callMessage[0]);
-    } else if (countdown === 4) {
-      startAlert(callMessage[1]);
-    } else if (countdown === 0) {
-      startAlert(callMessage[2]);
-    }
-  }, [countdown]);
+    switch (timer) {
+      case 8:
+        startAlert(callMessage[0]);
+        break;
+      case 4:
+        startAlert(callMessage[1]);
+        break;
+      case 0:
+        startAlert(callMessage[2]);
+        break;
 
-  useEffect(() => {
+      default:
+        break;
+    }
+
     if (countdown === 11) return;
     publishTimer();
-  }, [countdown, socket]);
+  }, [timer, socket]);
 
   return (
     <div>
