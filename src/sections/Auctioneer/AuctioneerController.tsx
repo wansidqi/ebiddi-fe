@@ -23,6 +23,8 @@ export function AuctioneerController() {
     setPayload,
     payload,
     socket,
+    setTimer,
+    timer,
   } = useStoreContext();
   const bid_status: number = 0;
   const bids = [];
@@ -44,13 +46,9 @@ export function AuctioneerController() {
   };
 
   const publishTimer = () => {
-    let newPayload: EventData = {
-      ...payload,
-      countdown,
-    };
-    setPayload(newPayload);
+    setPayload((prev) => ({ ...prev, countdown }));
     if (!eventId) return;
-    publishEvent({ event_id: eventId, data: newPayload });
+    publishEvent({ event_id: eventId, data: { ...payload, countdown } });
   };
 
   const sendAuditTrail = (log: LogAuditTrail) => {
@@ -67,19 +65,17 @@ export function AuctioneerController() {
 
   const resetBid = () => {
     if (!auction) return;
-
     let { current, start } = payload.bid;
 
-    let newPayload: EventData = {
-      ...payload,
+    setPayload((prev) => ({
+      ...prev,
       bid: {
         start: auction.reserve_price,
         up: auction.bid_increment,
         next: start,
         current,
       },
-    };
-    setPayload(newPayload);
+    }));
   };
 
   const sendDisplay = () => {
@@ -98,6 +94,8 @@ export function AuctioneerController() {
     if (isActive) {
       clickResume();
     } else {
+      setCountdown(11);
+      setTimer(countdown - 1);
       setIsActive(true);
       setIsPaused(false);
       setBidStatus(BidStatus.RUN);
@@ -220,6 +218,8 @@ export function AuctioneerController() {
     if (isActive && countdown > 0 && !isPaused) {
       interval = setInterval(() => {
         setCountdown((prevCountdown) => prevCountdown - 1);
+        setTimer(countdown - 1);
+        console.log({ countdown, timer });
       }, 1000);
     }
 

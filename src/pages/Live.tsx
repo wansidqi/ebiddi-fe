@@ -18,7 +18,7 @@ import { useParams } from "react-router-dom";
 export function Live() {
   const { eventId } = useParams();
   const [toggleLock, setToggleLock] = useState(false);
-  const { USER, subscribeEvent, setCountdown, socket, setPayload, payload } =
+  const { USER, subscribeEvent, socket, setPayload, payload } =
     useStoreContext();
 
   useEffect(() => {
@@ -26,10 +26,8 @@ export function Live() {
     subscribeEvent({
       event_id: eventId,
       onData: (data) => {
-        console.log(data);
-        let { countdown } = data;
+        // console.log(data);
         setPayload(data);
-        setCountdown(countdown);
       },
     });
   }, [socket]);
