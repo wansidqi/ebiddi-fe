@@ -11,7 +11,6 @@ export enum ROLE {
 export enum BidStatus {
   NA,
 
-  
   START,
   RUN,
   END,

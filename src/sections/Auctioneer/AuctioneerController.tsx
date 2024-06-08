@@ -29,6 +29,7 @@ export function AuctioneerController() {
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [bidStatus, setBidStatus] = useState<BidStatus>(0);
+  //TODO bidstatus make for withdraw and end
 
   const { useGetLiveAuction, usePostAuditTrail } = useAPIServices();
   const { data: auction } = useGetLiveAuction(auctionId as string);
@@ -46,7 +47,9 @@ export function AuctioneerController() {
   const publishTimer = () => {
     setPayload((prev) => ({ ...prev, countdown }));
     if (!eventId) return;
-    publishEvent({ event_id: eventId, data: { ...payload, countdown } });
+    if (USER?.role === ROLE.AUCTIONEER) {
+      publishEvent({ event_id: eventId, data: { ...payload, countdown } });
+    }
   };
 
   const sendAuditTrail = (log: LogAuditTrail) => {
@@ -111,6 +114,7 @@ export function AuctioneerController() {
 
   const clickPause = () => {
     setIsPaused(true);
+    setBidStatus(BidStatus.PAUSE);
     const newPayload: EventData = { ...payload, status: "PAUSE" };
     if (!eventId) return;
     publishEvent({ event_id: eventId, data: newPayload });
@@ -123,6 +127,7 @@ export function AuctioneerController() {
   };
 
   const clickResume = () => {
+    setBidStatus(BidStatus.RUN);
     setIsPaused(false);
     const newPayload: EventData = { ...payload, status: "RUN" };
     setPayload(newPayload);
@@ -150,6 +155,8 @@ export function AuctioneerController() {
     setPayload(newPayload);
     resetBid();
 
+    setBidStatus(BidStatus.START);
+
     if (!eventId) return;
     publishEvent({ event_id: eventId, data: newPayload });
 
@@ -166,6 +173,7 @@ export function AuctioneerController() {
   };
 
   const clickHold = () => {
+    setBidStatus(BidStatus.HOLD);
     setIsPaused(true);
     const newPayload: EventData = { ...payload, status: "HOLD" };
     if (!eventId) return;
@@ -179,6 +187,7 @@ export function AuctioneerController() {
   };
 
   const clickSold = () => {
+    setBidStatus(BidStatus.CLOSE);
     const newPayload: EventData = { ...payload, status: "SOLD" };
     if (!eventId) return;
     publishEvent({ event_id: eventId, data: newPayload });
@@ -212,11 +221,11 @@ export function AuctioneerController() {
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
-    if (bidStatus === BidStatus.END || payload.status === "SOLD") {
-      setCountdown(0);
-    } else {
-      // setCountdown(payload.countdown);
-    }
+    // if (bidStatus === BidStatus.END || payload.status === "SOLD") {
+    //   setCountdown(0);
+    // } else {
+    //   setCountdown(payload.countdown);
+    // }
 
     if (isActive && countdown > 0 && !isPaused) {
       interval = setInterval(() => {
@@ -241,26 +250,42 @@ export function AuctioneerController() {
   useEffect(() => {
     switch (countdown) {
       case 8:
-        startAlert(callMessage[0]);
+        startAlert({ call: "calling once", variant: "once" });
         break;
       case 4:
-        startAlert(callMessage[1]);
+        startAlert({ call: "calling twice", variant: "twice" });
         break;
       case 0:
-        startAlert(callMessage[2]);
+        if (payload.status !== "SOLD") {
+          startAlert({ call: "final call", variant: "final" });
+        }
+
+        if (bidStatus !== BidStatus.CLOSE) {
+          let newStat = BidStatus.END;
+          setBidStatus(newStat);
+        }
+
+        setTimeout(
+          () => startAlert({ call: "final call", variant: "final" }),
+          3000
+        );
+        setTimeout(
+          () => startAlert({ call: "final call", variant: "final" }),
+          6000
+        );
+
         break;
 
       default:
         break;
     }
 
-    // if (countdown === 11) return;
     publishTimer();
   }, [countdown, socket]);
 
   return (
     <div>
-      {USER?.role !== ROLE.AUCTIONEER && (
+      {USER?.role === ROLE.AUCTIONEER && (
         <div className="flexcenter gap-6">
           <CondButton onClick={goBack} show={true} isIcon={true}>
             <ArrowLeftSquare size="40px" />

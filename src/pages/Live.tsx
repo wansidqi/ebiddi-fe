@@ -26,7 +26,6 @@ export function Live() {
     subscribeEvent({
       event_id: eventId,
       onData: (data) => {
-        console.log(data.countdown);
         setCountdown(data.countdown);
         setPayload(data);
       },
