@@ -27,7 +27,7 @@ export function Live() {
       event_id: eventId,
       onData: (data) => {
         console.log(data);
-        let { countdown, auction_id } = data;
+        let { countdown } = data;
         setPayload(data);
         setCountdown(countdown);
       },
@@ -62,7 +62,7 @@ export function Live() {
                 </div>
                 <div id="details" className="flex-shrink-0 w-[92%] sm:order-2">
                   {/* <LiveDetail /> */}
-                  {/* <LiveDetail {...(data as AuctionLiveItem)} /> */}
+                  {/* <LiveDetail {...(data as AuctionInterface)} /> */}
                 </div>
               </div>
 

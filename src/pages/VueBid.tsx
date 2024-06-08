@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  AuctionLiveItem,
+  AuctionInterface,
   CreditInterface,
   EventsInterface,
 } from "@/interfaces";
@@ -15,7 +15,7 @@ const AuctionLiveView = () => {
 
   const [event, setEvent] = useState<EventsInterface>();
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 768);
-  const [auction, setAuction] = useState<AuctionLiveItem>();
+  const [auction, setAuction] = useState<AuctionInterface>();
   const [credits, setCredits] = useState<CreditInterface[]>([]);
   const [isBidding, setIsBidding] = useState(false);
   const [isBtnDisabled, setIsBtnDisabled] = useState(false);
@@ -293,7 +293,7 @@ const AuctionLiveView = () => {
                         <div className="card-body">
                           <h6>Bid History</h6>
                           <ul className="list-group">
-                            {bids.map((bid:any, index) => (
+                            {bids.map((bid: any, index) => (
                               <li className="list-group-item" key={index}>
                                 {bid.name} - {bid.amount}
                               </li>

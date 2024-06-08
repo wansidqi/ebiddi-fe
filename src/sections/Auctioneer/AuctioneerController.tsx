@@ -1,7 +1,9 @@
 import { useStoreContext } from "@/Context";
 import { toast } from "@/components/ui/use-toast";
 import { CallMessage, callMessage } from "@/data/call-alert";
-import { ROLE } from "@/interfaces/enum";
+import { AuctionInterface } from "@/interfaces";
+import { LogAuditTrail } from "@/interfaces/API";
+import { BidStatus, ROLE } from "@/interfaces/enum";
 import { EventData } from "@/interfaces/websocket";
 import { playAudio } from "@/lib/utils";
 import { useAPIServices } from "@/services";
@@ -26,9 +28,11 @@ export function AuctioneerController() {
   const bids = [];
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [bidStatus, setBidStatus] = useState<BidStatus>(0);
 
-  const { useGetLiveAuction } = useAPIServices();
+  const { useGetLiveAuction, usePostAuditTrail } = useAPIServices();
   const { data: auction } = useGetLiveAuction(auctionId as string);
+  const { mutateAsync } = usePostAuditTrail();
 
   const startAlert = ({ call, variant }: CallMessage) => {
     toast({
@@ -43,14 +47,43 @@ export function AuctioneerController() {
     let newPayload: EventData = {
       ...payload,
       countdown,
-      auction_id: auctionId as string,
     };
     setPayload(newPayload);
     if (!eventId) return;
     publishEvent({ event_id: eventId, data: newPayload });
   };
 
+  const sendAuditTrail = (log: LogAuditTrail) => {
+    if (!USER) return;
+    let data = `event_id=${log.event_id}`;
+    data += `&auction_id=${log.auction_id}`;
+    data += `&type=${log.status}`;
+    data += `&user_id=${USER.id}`;
+    data += `&bid_amount=${log.bid_amount}`;
+    data += `&ip_address=${0}`;
+
+    // mutateAsync({ data });
+  };
+
+  const resetBid = () => {
+    if (!auction) return;
+
+    let { current, start } = payload.bid;
+
+    let newPayload: EventData = {
+      ...payload,
+      bid: {
+        start: auction.reserve_price,
+        up: auction.bid_increment,
+        next: start,
+        current,
+      },
+    };
+    setPayload(newPayload);
+  };
+
   const sendDisplay = () => {
+    resetBid();
     if (!auctionId || !eventId) return;
     const newPayload: EventData = {
       ...payload,
@@ -67,9 +100,17 @@ export function AuctioneerController() {
     } else {
       setIsActive(true);
       setIsPaused(false);
+      setBidStatus(BidStatus.RUN);
       const newPayload: EventData = { ...payload, status: "RUN" };
       if (!eventId) return;
       publishEvent({ event_id: eventId, data: newPayload });
+
+      sendAuditTrail({
+        event_id: Number(payload.event_id),
+        auction_id: Number(payload.auction_id),
+        bid_amount: 0,
+        status: "START",
+      });
     }
   };
 
@@ -78,6 +119,12 @@ export function AuctioneerController() {
     const newPayload: EventData = { ...payload, status: "PAUSE" };
     if (!eventId) return;
     publishEvent({ event_id: eventId, data: newPayload });
+    sendAuditTrail({
+      event_id: Number(payload.event_id),
+      auction_id: Number(payload.auction_id),
+      bid_amount: 0,
+      status: "PAUSE",
+    });
   };
 
   const clickResume = () => {
@@ -85,6 +132,74 @@ export function AuctioneerController() {
     const newPayload: EventData = { ...payload, status: "RUN" };
     setPayload(newPayload);
     publishEvent({ event_id: "", data: newPayload });
+
+    sendAuditTrail({
+      event_id: Number(payload.event_id),
+      auction_id: Number(payload.auction_id),
+      bid_amount: 0,
+      status: "UNPAUSE",
+    });
+  };
+
+  const clickReauction = () => {
+    let newPayload: EventData = {
+      ...payload,
+      status: "REAUCTION",
+      bidders: {
+        all: [],
+        highest_amount: 0,
+        highest_user_id: 0,
+        highest_user_name: "",
+      },
+    };
+    setPayload(newPayload);
+    resetBid();
+
+    if (!eventId) return;
+    publishEvent({ event_id: eventId, data: newPayload });
+
+    sendAuditTrail({
+      event_id: Number(payload.event_id),
+      auction_id: Number(payload.auction_id),
+      bid_amount: 0,
+      status: "REAUCTION",
+    });
+  };
+
+  const clickBackToAuction = () => {
+    navigate(`/list/${eventId}`);
+  };
+
+  const clickHold = () => {
+    setIsPaused(true);
+    const newPayload: EventData = { ...payload, status: "HOLD" };
+    if (!eventId) return;
+    publishEvent({ event_id: eventId, data: newPayload });
+    sendAuditTrail({
+      event_id: Number(payload.event_id),
+      auction_id: Number(payload.auction_id),
+      bid_amount: 0,
+      status: "HOLD",
+    });
+  };
+
+  const clickSold = () => {
+    const newPayload: EventData = { ...payload, status: "SOLD" };
+    if (!eventId) return;
+    publishEvent({ event_id: eventId, data: newPayload });
+  };
+
+  const getCurrentBid = (amount: number) => {
+    if (payload.bid.up == 100) {
+      return amount + 100;
+    }
+
+    if (amount < 50000) {
+      return amount + 200;
+    } else if (amount < 100000) {
+      return amount + 500;
+    }
+    return amount + 1000;
   };
 
   const goBack = () => {
@@ -97,7 +212,7 @@ export function AuctioneerController() {
 
   useEffect(() => {
     sendDisplay();
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;

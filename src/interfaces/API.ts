@@ -1,4 +1,5 @@
 import { CreditInterface } from ".";
+import { Status } from "./websocket";
 
 export interface LoginCredential {
   username: string;
@@ -20,3 +21,11 @@ export interface Verify {
 export interface CreditResponse {
   data: CreditInterface[];
 }
+
+export type LogAuditTrail = {
+  event_id: number;
+  auction_id: number;
+  status: Status | string;
+  bid_amount: number;
+};
+

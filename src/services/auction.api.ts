@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { KEY } from ".";
 import datasource from "@/datasource/axiosInstance";
-import { AuctionLiveItem } from "@/interfaces";
+import { AuctionInterface } from "@/interfaces";
 import { useStoreContext } from "@/Context";
 import { CreditResponse } from "@/interfaces/API";
 import { ROLE } from "@/interfaces/enum";
@@ -99,7 +99,7 @@ const useGetLiveAuction = (auctionId: string) => {
         method: "get",
         url: `/auction/${auctionId}`,
       });
-      return response.data.data as AuctionLiveItem;
+      return response.data.data as AuctionInterface;
     },
   });
 };
@@ -138,12 +138,7 @@ const usePostItemSold = () => {
 
 const usePostAuditTrail = () => {
   return useMutation({
-    mutationFn: async ({
-      data,
-    }: {
-      //TODO identify what data need to be posted
-      data: any;
-    }) => {
+    mutationFn: async ({ data }: { data: any }) => {
       const response = await datasource({
         method: "post",
         url: `/auction/log`,

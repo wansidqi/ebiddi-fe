@@ -1,7 +1,7 @@
-import { AuctionLiveItem } from "@/interfaces";
+import { AuctionInterface } from "@/interfaces";
 import { numWithComma } from "@/lib/utils";
 
-export function LiveDetail(data: AuctionLiveItem | undefined) {
+export function LiveDetail(data: AuctionInterface | undefined) {
   return (
     <div className="border flex flex-col gap-y-2 py-3 px-2 rounded-md h-[30em]">
       <div className="text-center text-2xl my-2">LOT 301</div>

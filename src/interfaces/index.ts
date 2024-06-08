@@ -40,6 +40,14 @@ export interface InventoryInterface {
   bidder: Bidder;
 }
 
+export interface AuctionInterface extends InventoryInterface {
+  meta: {
+    next: number;
+    prev: number;
+  };
+  event: EventsInterface;
+}
+
 interface Bidder {
   user_id: number;
   bid_price: string;
@@ -555,13 +563,6 @@ export interface CreditInterface {
   };
 }
 
-export interface AuctionLiveItem extends InventoryInterface {
-  meta: {
-    next: number;
-    prev: number;
-  };
-}
-
 export interface Payload {
   event_id: string;
   auction_id: string;
@@ -577,7 +578,7 @@ export interface Payload {
     call: number;
   };
   bidders: {
-    all: never[];
+    all: string[];
     highest_amount: number;
     highest_user_id: number;
     highest_user_name: string;

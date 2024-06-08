@@ -52,12 +52,9 @@ function App() {
         <Route path={"/events"} element={<Events />} />
         <Route path={"/items/:eventId"} element={<Items />} />
         <Route path={"/live/:eventId"} element={<Live />} />
-        <Route path={"/auctioneer/:eventId/:auctionId"} element={<Live />} />
 
-        <Route
-          path={"/auctioneer/contract/:auctionId"}
-          element={<AuctioneerContract />}
-        />
+        <Route path={"/auctioneer/:eventId/:auctionId"} element={<Live />} />
+        <Route path={"/list/:eventId"} element={<AuctioneerContract />} />
       </Routes>
     </Fragment>
   );
