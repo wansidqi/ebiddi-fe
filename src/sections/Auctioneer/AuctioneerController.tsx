@@ -23,8 +23,6 @@ export function AuctioneerController() {
     setPayload,
     payload,
     socket,
-    setTimer,
-    timer,
   } = useStoreContext();
   const bid_status: number = 0;
   const bids = [];
@@ -95,7 +93,6 @@ export function AuctioneerController() {
       clickResume();
     } else {
       setCountdown(11);
-      setTimer(countdown);
       setIsActive(true);
       setIsPaused(false);
       setBidStatus(BidStatus.RUN);
@@ -225,7 +222,6 @@ export function AuctioneerController() {
       interval = setInterval(() => {
         setCountdown((prevCountdown) => {
           let cd = prevCountdown - 1;
-          setTimer(cd);
           return cd;
         });
       }, 1000);
@@ -243,7 +239,7 @@ export function AuctioneerController() {
   }, [isActive, countdown, isPaused]);
 
   useEffect(() => {
-    switch (timer) {
+    switch (countdown) {
       case 8:
         startAlert(callMessage[0]);
         break;
@@ -258,9 +254,9 @@ export function AuctioneerController() {
         break;
     }
 
-    if (countdown === 11) return;
+    // if (countdown === 11) return;
     publishTimer();
-  }, [timer, socket]);
+  }, [countdown, socket]);
 
   return (
     <div>
