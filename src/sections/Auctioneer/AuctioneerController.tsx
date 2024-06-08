@@ -193,6 +193,18 @@ export function AuctioneerController() {
     publishEvent({ event_id: eventId, data: newPayload });
   };
 
+  const clickEnd = () => {
+    setPayload((prev) => ({ ...prev, status: "END" }));
+    if (!eventId) return;
+    publishEvent({ event_id: eventId, data: { ...payload, status: "END" } });
+
+    itemSold();
+
+    setBidStatus(0);
+  };
+
+  const itemSold = () => {};
+
   const getCurrentBid = (amount: number) => {
     if (payload.bid.up == 100) {
       return amount + 100;
