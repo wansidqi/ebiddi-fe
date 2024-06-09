@@ -31,9 +31,11 @@ export function AuctioneerController() {
   const [bidStatus, setBidStatus] = useState<BidStatus>(0);
   //TODO bidstatus make for withdraw and end
 
-  const { useGetLiveAuction, usePostAuditTrail } = useAPIServices();
+  const { useGetLiveAuction, usePostAuditTrail, usePostItemSold } =
+    useAPIServices();
   const { data: auction } = useGetLiveAuction(auctionId as string);
-  const { mutateAsync } = usePostAuditTrail();
+  const { mutateAsync: onPostAuditTrail } = usePostAuditTrail();
+  const { mutateAsync: onPostItemSold } = usePostItemSold();
 
   const startAlert = ({ call, variant }: CallMessage) => {
     toast({
@@ -64,7 +66,7 @@ export function AuctioneerController() {
     data += `&bid_amount=${log.bid_amount}`;
     data += `&ip_address=${0}`;
 
-    // mutateAsync({ data });
+    // onPostAuditTrail({ data });
   };
 
   const resetBid = () => {
@@ -194,7 +196,36 @@ export function AuctioneerController() {
     setBidStatus(0);
   };
 
-  const itemSold = () => {};
+  const itemSold = () => {
+    const auction_id = `${payload.auction_id}`;
+
+    const postData = {
+      user_id: payload.bidders.highest_user_id,
+      bidding_price: payload.bidders.highest_amount,
+      total_bid: payload.bidders.all.length,
+      min_bid: 0,
+      max_bid: payload.bidders.highest_amount,
+      event_id: payload.event_id,
+      status: "SOLD",
+      audit_trail_document: `http://52.77.243.149:8000/audit/auction/${payload.auction_id}`,
+    };
+
+    const data = new URLSearchParams(postData as any).toString();
+
+    onPostItemSold(
+      { auction_id, data },
+      {
+        onSuccess: () => {
+          sendAuditTrail({
+            event_id: Number(payload.event_id),
+            auction_id: Number(payload.auction_id),
+            status: "SOLD",
+            bid_amount: 0,
+          });
+        },
+      }
+    );
+  };
 
   const getCurrentBid = (amount: number) => {
     if (payload.bid.up == 100) {

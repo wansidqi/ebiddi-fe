@@ -116,14 +116,13 @@ const usePostWithdraw = () => {
   });
 };
 
-const usePostItemSold = () => {
+const usePostItemSold = (options = {}) => {
   return useMutation({
     mutationFn: async ({
       auction_id,
       data,
     }: {
       auction_id: string;
-      //TODO identify what data need to be posted
       data: any;
     }) => {
       const response = await datasource({
@@ -133,6 +132,7 @@ const usePostItemSold = () => {
       });
       return response.data;
     },
+    ...options,
   });
 };
 
