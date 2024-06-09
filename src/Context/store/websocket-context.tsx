@@ -10,7 +10,7 @@ import {
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as socketClusterClient from "socketcluster-client";
 import { TOKEN, getToken } from "@/datasource/sessionStorage.datasource";
-import { ROLE } from "@/interfaces/enum";
+import { BidStatus, ROLE } from "@/interfaces/enum";
 
 export function useWsContext() {
   const context = useContext(AppContext);
@@ -39,6 +39,9 @@ type Data = {
 
   payload: EventData;
   setPayload: React.Dispatch<React.SetStateAction<EventData>>;
+
+  bidStatus: BidStatus;
+  setBidStatus: React.Dispatch<React.SetStateAction<BidStatus>>;
 };
 
 function WsContext(props: React.PropsWithChildren<{}>) {
@@ -67,6 +70,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
       highest_user_name: "",
     },
   });
+  const [bidStatus, setBidStatus] = useState<BidStatus>(1);
 
   const isAuctioneer =
     JSON.parse(getToken(TOKEN.user) as string).role === ROLE.AUCTIONEER;
@@ -192,6 +196,8 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     publishBid,
     subscribeEvent,
     subscribeStatus,
+    bidStatus,
+    setBidStatus,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;

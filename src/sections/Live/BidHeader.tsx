@@ -1,14 +1,19 @@
 import { useStoreContext } from "@/Context";
 import { DynamicRenderer } from "@/components";
+import { toast } from "@/components/ui/use-toast";
+import { CallMessage } from "@/data/call-alert";
 import { EventsInterface } from "@/interfaces";
-import { numWithComma } from "@/lib/utils";
+import { BidStatus } from "@/interfaces/enum";
+import { numWithComma, playAudio } from "@/lib/utils";
 import { KEY, useAPIServices, useGetQueryData } from "@/services";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 export function BidHeader() {
   const { eventId } = useParams();
 
-  const { countdown, USER } = useStoreContext();
+  const { countdown, USER, bidStatus, setBidStatus, payload } =
+    useStoreContext();
 
   const queryKey = [KEY.auction_item, eventId];
   const event = useGetQueryData<EventsInterface>(queryKey);
@@ -32,6 +37,49 @@ export function BidHeader() {
       return display;
     }
   };
+
+  const startAlert = ({ call, variant }: CallMessage) => {
+    toast({
+      duration: 1500,
+      variant: variant,
+      title: call.toUpperCase(),
+    });
+    playAudio(call);
+  };
+
+  useEffect(() => {
+    switch (countdown) {
+      case 8:
+        startAlert({ call: "calling once", variant: "once" });
+        break;
+      case 4:
+        startAlert({ call: "calling twice", variant: "twice" });
+        break;
+      case 0:
+        if (payload.status !== "SOLD") {
+          startAlert({ call: "final call", variant: "final" });
+        }
+
+        if (bidStatus !== BidStatus.CLOSE) {
+          let newStat = BidStatus.END;
+          setBidStatus(newStat);
+        }
+
+        setTimeout(
+          () => startAlert({ call: "final call", variant: "final" }),
+          3000
+        );
+        setTimeout(
+          () => startAlert({ call: "final call", variant: "final" }),
+          6000
+        );
+
+        break;
+
+      default:
+        break;
+    }
+  }, [countdown]);
 
   return (
     <div>

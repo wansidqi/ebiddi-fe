@@ -10,9 +10,8 @@ export type Status =
   | "PAUSE"
   | "WITHDRAW"
   | "CLOSE"
+  | "DISPLAY"
   | "HOLD";
-
-
 
 export interface EventData {
   event_id: string;

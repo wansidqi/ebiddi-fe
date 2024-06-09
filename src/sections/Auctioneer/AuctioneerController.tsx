@@ -1,10 +1,7 @@
 import { useStoreContext } from "@/Context";
-import { toast } from "@/components/ui/use-toast";
-import { CallMessage } from "@/data/call-alert";
 import { LogAuditTrail } from "@/interfaces/API";
 import { BidStatus, ROLE } from "@/interfaces/enum";
-import { EventData } from "@/interfaces/websocket";
-import { playAudio } from "@/lib/utils";
+import { EventData, Status } from "@/interfaces/websocket";
 import { useAPIServices } from "@/services";
 import { ArrowLeftSquare, ArrowRightSquare } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -23,13 +20,15 @@ export function AuctioneerController() {
     setPayload,
     payload,
     socket,
+    subscribeBid,
+    bidStatus,
+    setBidStatus,
   } = useStoreContext();
-  const bid_status: number = 0;
-  const bids = [];
+
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [bidStatus, setBidStatus] = useState<BidStatus>(1);
   const [withdrawModal, setWithdrawModal] = useState(false);
+  const [bids, setBids] = useState([]);
 
   const {
     useGetLiveAuction,
@@ -38,19 +37,11 @@ export function AuctioneerController() {
     usePostWithdraw,
   } = useAPIServices();
 
-  const { data: auction } = useGetLiveAuction(auctionId as string);
+  const { data: auction, refetch } = useGetLiveAuction(auctionId as string);
   const { mutateAsync: onPostAuditTrail } = usePostAuditTrail();
   const { mutateAsync: onPostItemSold } = usePostItemSold();
   const { mutateAsync: onWithdraw } = usePostWithdraw();
 
-  const startAlert = ({ call, variant }: CallMessage) => {
-    toast({
-      duration: 1500,
-      variant: variant,
-      title: call.toUpperCase(),
-    });
-    playAudio(call);
-  };
 
   const publishTimer = () => {
     if (!auctionId || !eventId) return;
@@ -72,7 +63,7 @@ export function AuctioneerController() {
     data += `&bid_amount=${log.bid_amount}`;
     data += `&ip_address=${0}`;
 
-    // onPostAuditTrail({ data });
+    onPostAuditTrail({ data });
   };
 
   const resetBid = () => {
@@ -141,27 +132,27 @@ export function AuctioneerController() {
   };
 
   const clickWithdraw = () => {
-    // onWithdraw(payload.auction_id, {
-    //   onSuccess: () => {
-    //     setPayload((prev) => ({ ...prev, status: "WITHDRAW" }));
-    //     //stop timer
-    //     setCountdown(0);
-    //     setIsActive(false);
-    //     setIsPaused(false);
-    //     if (!eventId) return;
-    //     publishEvent({
-    //       event_id: eventId,
-    //       data: { ...payload, status: "WITHDRAW" },
-    //     });
-    //     setBidStatus(BidStatus.WITHDRAW);
-    //     sendAuditTrail({
-    //       event_id: Number(payload.event_id),
-    //       auction_id: Number(payload.auction_id),
-    //       status: "WITHDRAW",
-    //       bid_amount: 0,
-    //     });
-    //   },
-    // });
+    onWithdraw(payload.auction_id, {
+      onSuccess: () => {
+        setPayload((prev) => ({ ...prev, status: "WITHDRAW" }));
+        //stop timer
+        setCountdown(0);
+        setIsActive(false);
+        setIsPaused(false);
+        if (!eventId) return;
+        publishEvent({
+          event_id: eventId,
+          data: { ...payload, status: "WITHDRAW" },
+        });
+        setBidStatus(BidStatus.WITHDRAW);
+        sendAuditTrail({
+          event_id: Number(payload.event_id),
+          auction_id: Number(payload.auction_id),
+          status: "WITHDRAW",
+          bid_amount: 0,
+        });
+      },
+    });
   };
 
   const clickReauction = () => {
@@ -242,22 +233,21 @@ export function AuctioneerController() {
 
     const data = new URLSearchParams(postData as any).toString();
 
-    // onPostItemSold(
-    //   { auction_id, data },
-    //   {
-    //     onSuccess: () => {
-    //       sendAuditTrail({
-    //         event_id: Number(payload.event_id),
-    //         auction_id: Number(payload.auction_id),
-    //         status: "SOLD",
-    //         bid_amount: 0,
-    //       });
-    //     },
-    //   }
-    // );
+    onPostItemSold(
+      { auction_id, data },
+      {
+        onSuccess: () => {
+          sendAuditTrail({
+            event_id: Number(payload.event_id),
+            auction_id: Number(payload.auction_id),
+            status: "SOLD",
+            bid_amount: 0,
+          });
+        },
+      }
+    );
   };
 
-  //TODO on setup
   const getCurrentBid = (amount: number) => {
     if (payload.bid.up == 100) {
       return amount + 100;
@@ -280,6 +270,37 @@ export function AuctioneerController() {
   };
 
   useEffect(() => {
+    refetch();
+    if (!eventId || !auctionId) return;
+    subscribeBid({
+      auction_id: auctionId,
+      event_id: eventId,
+      onData: (data) => {
+        console.log(data);
+      },
+    });
+  }, [auctionId, socket]);
+
+  useEffect(() => {
+    const sendDisplay = () => {
+      if (!eventId) return;
+
+      setPayload((prev) => {
+        const newPayload = {
+          ...prev,
+          event_id: eventId,
+          status: "DISPLAY" as Status,
+        };
+        resetBid();
+        return newPayload;
+      });
+
+      publishEvent({ event_id: eventId, data: payload });
+    };
+    sendDisplay();
+  }, [eventId, auction]);
+
+  useEffect(() => {
     let interval: NodeJS.Timeout;
 
     // if (bidStatus === BidStatus.END || payload.status === "SOLD") {
@@ -296,6 +317,7 @@ export function AuctioneerController() {
         });
       }, 1000);
     }
+    publishTimer();
 
     if (countdown === 0) {
       const timeout = setTimeout(() => {
@@ -307,42 +329,6 @@ export function AuctioneerController() {
 
     return () => clearInterval(interval);
   }, [isActive, countdown, isPaused]);
-
-  useEffect(() => {
-    switch (countdown) {
-      case 8:
-        startAlert({ call: "calling once", variant: "once" });
-        break;
-      case 4:
-        startAlert({ call: "calling twice", variant: "twice" });
-        break;
-      case 0:
-        if (payload.status !== "SOLD") {
-          startAlert({ call: "final call", variant: "final" });
-        }
-
-        if (bidStatus !== BidStatus.CLOSE) {
-          let newStat = BidStatus.END;
-          setBidStatus(newStat);
-        }
-
-        setTimeout(
-          () => startAlert({ call: "final call", variant: "final" }),
-          3000
-        );
-        setTimeout(
-          () => startAlert({ call: "final call", variant: "final" }),
-          6000
-        );
-
-        break;
-
-      default:
-        break;
-    }
-
-    publishTimer();
-  }, [countdown, socket]);
 
   return (
     <>
@@ -363,7 +349,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={clickStart}
-              show={true || bid_status === 1 || bid_status == 4}
+              show={true || bidStatus === 1 || bidStatus == 4}
               className="bg-green-500"
             >
               START
@@ -371,7 +357,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={clickPause}
-              show={true || bid_status == 2 || bid_status == 3}
+              show={true || bidStatus == 2 || bidStatus == 3}
               className="bg-green-600"
             >
               PAUSE
@@ -387,7 +373,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={() => setWithdrawModal(true)}
-              show={true || bid_status === 1 || bid_status == 4}
+              show={true || bidStatus === 1 || bidStatus == 4}
               className="bg-green-600"
             >
               WITHDRAW CURRENT VEHICLE
@@ -395,7 +381,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={clickReauction}
-              show={bid_status == 4}
+              show={bidStatus == 4}
               className="bg-green-600"
             >
               RE-AUCTION
@@ -403,7 +389,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={clickSold}
-              show={bid_status == 3 && bids.length > 0}
+              show={bidStatus == 3 && bids.length > 0}
               className="bg-green-600"
             >
               SOLD
@@ -411,7 +397,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={clickHold}
-              show={bid_status == 3 && bids.length == 0}
+              show={bidStatus == 3 && bids.length == 0}
               className="bg-green-600"
             >
               NO BID
@@ -419,7 +405,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={clickEnd}
-              show={bid_status == 6}
+              show={bidStatus == 6}
               className="bg-green-600"
             >
               END
