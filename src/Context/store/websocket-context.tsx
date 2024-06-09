@@ -9,7 +9,6 @@ import {
 } from "@/interfaces/websocket";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as socketClusterClient from "socketcluster-client";
-import { useStoreContext } from "..";
 import { TOKEN, getToken } from "@/datasource/sessionStorage.datasource";
 import { ROLE } from "@/interfaces/enum";
 
@@ -69,8 +68,6 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     },
   });
 
-  const isBidder =
-    JSON.parse(getToken(TOKEN.user) as string).role === ROLE.BIDDER;
   const isAuctioneer =
     JSON.parse(getToken(TOKEN.user) as string).role === ROLE.AUCTIONEER;
 
@@ -78,20 +75,24 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     if (!socket) return;
     let channel = `event/${params.event_id}/auction/${params.auction_id}/bid`;
     let test_channel = `test/event/${params.event_id}/auction/${params.auction_id}/bid`;
-    socket.invokePublish(isTest ? test_channel : channel, params.data);
+    !isAuctioneer &&
+      socket.invokePublish(isTest ? test_channel : channel, params.data);
   };
 
   const subscribeBid = async (params: SubBid) => {
     if (!socket) return;
-    const url = `event/${params.event_id}/auction/${params.auction_id}/bid`;
-    const test_url = `test/event/${params.event_id}/auction/${params.auction_id}/bid`;
-    const channel = socket.subscribe(isTest ? test_url : url);
 
-    for await (const data of channel) {
-      try {
-        params.onData && params.onData(data);
-      } catch (error) {
-        console.log(error);
+    if (isAuctioneer) {
+      const url = `event/${params.event_id}/auction/${params.auction_id}/bid`;
+      const test_url = `test/event/${params.event_id}/auction/${params.auction_id}/bid`;
+      const channel = socket.subscribe(isTest ? test_url : url);
+
+      for await (const data of channel) {
+        try {
+          params.onData && params.onData(data);
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   };
@@ -107,7 +108,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
   const subscribeEvent = async (params: Subscription<EventData>) => {
     if (!socket) return;
 
-    if (isBidder) {
+    if (!isAuctioneer) {
       const url = `event/${params.event_id}`;
       const test_url = `test/event/${params.event_id}`;
       const channel = socket.subscribe(isTest ? test_url : url);
@@ -125,37 +126,38 @@ function WsContext(props: React.PropsWithChildren<{}>) {
   const subscribeStatus = async (params: Subscription<StatusData>) => {
     if (!socket) return;
 
-    const url = `event/${params.event_id}/status`;
-    const test_url = `test/event/${params.event_id}/status`;
-    const channel = socket.subscribe(isTest ? test_url : url);
+    if (!isAuctioneer) {
+      const url = `event/${params.event_id}/status`;
+      const test_url = `test/event/${params.event_id}/status`;
+      const channel = socket.subscribe(isTest ? test_url : url);
 
-    for await (const data of channel) {
-      try {
-        params.onData && params.onData(data);
-      } catch (error) {
-        console.log(error);
+      for await (const data of channel) {
+        try {
+          params.onData && params.onData(data);
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   };
 
-  const testSubPub = async () => {
-    if (!socket) return;
-    let channel = "mychannel";
-    socket.invokePublish(channel, { message: "hello" });
+  // useEffect(() => {
+  //   const testSubPub = async () => {
+  //     if (!socket) return;
+  //     let channel = "mychannel";
+  //     socket.invokePublish(channel, { message: "hello" });
 
-    let myChannel = socket.subscribe(channel);
-    for await (const data of myChannel) {
-      try {
-        console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    // testSubPub();
-  }, [socket]);
+  //     let myChannel = socket.subscribe(channel);
+  //     for await (const data of myChannel) {
+  //       try {
+  //         console.log(data);
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     }
+  //   };
+  //   testSubPub();
+  // }, [socket]);
 
   useEffect(() => {
     const init = () => {
