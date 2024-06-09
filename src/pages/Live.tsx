@@ -4,7 +4,6 @@ import {
   AuctioneerController,
   BidHeader,
   BidList,
-  LiveDialog,
   Participator,
 } from "@/sections";
 import waiting from "@/assets/images/waiting.png";
@@ -38,7 +37,6 @@ export function Live() {
   return (
     <div>
       <Toaster />
-      <LiveDialog />
       <Container>
         <p className="text-3xl sm:text-5xl text-center text-primary">
           AUCTIONS LIVE VIEW
@@ -80,7 +78,7 @@ export function Live() {
                   </div>
                 </div>
               )}
-              <AuctioneerController />
+              {!isNotAuctioneer && <AuctioneerController />}
             </Fragment>
           </DynamicRenderer.Else>
         </DynamicRenderer>

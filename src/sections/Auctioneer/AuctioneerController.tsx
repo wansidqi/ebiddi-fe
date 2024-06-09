@@ -29,6 +29,7 @@ export function AuctioneerController() {
   const [isPaused, setIsPaused] = useState(false);
   const [withdrawModal, setWithdrawModal] = useState(false);
   const [bids, setBids] = useState<BidData[]>([]);
+  const [naviStatus, setNaviStatus] = useState(false);
 
   const {
     useGetLiveAuction,
@@ -87,6 +88,7 @@ export function AuctioneerController() {
       setCountdown(11);
       setIsActive(true);
       setIsPaused(false);
+      setNaviStatus(false);
 
       setBidStatus(BidStatus.RUN);
 
@@ -148,7 +150,10 @@ export function AuctioneerController() {
           event_id: eventId,
           data: { ...payload, status: "WITHDRAW" },
         });
+
         setBidStatus(BidStatus.WITHDRAW);
+        setNaviStatus(true);
+
         sendAuditTrail({
           event_id: Number(payload.event_id),
           auction_id: Number(payload.auction_id),
@@ -191,8 +196,10 @@ export function AuctioneerController() {
   };
 
   const clickHold = () => {
+    setNaviStatus(true);
     setBidStatus(BidStatus.HOLD);
     setIsPaused(true);
+
     const newPayload: EventData = { ...payload, status: "HOLD" };
     if (!eventId) return;
     publishEvent({ event_id: eventId, data: newPayload });
@@ -205,10 +212,12 @@ export function AuctioneerController() {
   };
 
   const clickSold = () => {
-    setBidStatus(BidStatus.CLOSE);
     const newPayload: EventData = { ...payload, status: "SOLD" };
     if (!eventId) return;
     publishEvent({ event_id: eventId, data: newPayload });
+
+    setBidStatus(BidStatus.CLOSE);
+    setNaviStatus(false);
   };
 
   const clickEnd = () => {
@@ -219,6 +228,7 @@ export function AuctioneerController() {
     itemSold();
 
     setBidStatus(0);
+    setNaviStatus(true);
   };
 
   const itemSold = () => {
@@ -265,7 +275,7 @@ export function AuctioneerController() {
     return amount + 1000;
   };
 
-  const goBack = () => {
+  const goPrev = () => {
     navigate(`/auctioneer/${auction?.meta?.prev}`);
   };
 
@@ -275,6 +285,7 @@ export function AuctioneerController() {
 
   useEffect(() => {
     const sendDisplay = () => {
+      setNaviStatus(true);
       if (!eventId) return;
       resetBid();
       publishEvent({ event_id: eventId, data: payload });
@@ -347,6 +358,7 @@ export function AuctioneerController() {
     publishTimer();
 
     if (countdown === 0) {
+      setBidStatus(1);
       const timeout = setTimeout(() => {
         setIsActive(false);
         setCountdown(11);
@@ -370,13 +382,17 @@ export function AuctioneerController() {
       <div>
         {USER?.role === ROLE.AUCTIONEER && (
           <div className="flexcenter gap-6">
-            <CondButton onClick={goBack} show={true} isIcon={true}>
+            <CondButton
+              onClick={goPrev}
+              show={auction?.meta.prev !== 0 && naviStatus}
+              isIcon={true}
+            >
               <ArrowLeftSquare size="40px" />
             </CondButton>
 
             <CondButton
               onClick={clickStart}
-              show={true || bidStatus === 1 || bidStatus == 4}
+              show={bidStatus === 1 || bidStatus === 4}
               className="bg-green-500"
             >
               START
@@ -384,7 +400,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={clickPause}
-              show={true || bidStatus == 2 || bidStatus == 3}
+              show={bidStatus === 2 || bidStatus === 3}
               className="bg-green-600"
             >
               PAUSE
@@ -392,7 +408,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={clickBackToAuction}
-              show={true}
+              show={naviStatus}
               className="bg-green-600"
             >
               BACK TO AUCTION LIST
@@ -400,7 +416,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={() => setWithdrawModal(true)}
-              show={true || bidStatus === 1 || bidStatus == 4}
+              show={bidStatus === 1 || bidStatus === 4}
               className="bg-green-600"
             >
               WITHDRAW CURRENT VEHICLE
@@ -408,7 +424,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={clickReauction}
-              show={bidStatus == 4}
+              show={bidStatus === 4}
               className="bg-green-600"
             >
               RE-AUCTION
