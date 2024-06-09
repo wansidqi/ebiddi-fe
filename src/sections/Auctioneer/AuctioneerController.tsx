@@ -1,7 +1,6 @@
 import { useStoreContext } from "@/Context";
 import { toast } from "@/components/ui/use-toast";
-import { CallMessage, callMessage } from "@/data/call-alert";
-import { AuctionInterface } from "@/interfaces";
+import { CallMessage } from "@/data/call-alert";
 import { LogAuditTrail } from "@/interfaces/API";
 import { BidStatus, ROLE } from "@/interfaces/enum";
 import { EventData } from "@/interfaces/websocket";
@@ -258,6 +257,7 @@ export function AuctioneerController() {
     // );
   };
 
+  //TODO on setup
   const getCurrentBid = (amount: number) => {
     if (payload.bid.up == 100) {
       return amount + 100;
@@ -377,7 +377,11 @@ export function AuctioneerController() {
               PAUSE
             </CondButton>
 
-            <CondButton show={true} className="bg-green-600">
+            <CondButton
+              onClick={clickBackToAuction}
+              show={true}
+              className="bg-green-600"
+            >
               BACK TO AUCTION LIST
             </CondButton>
 
@@ -398,6 +402,7 @@ export function AuctioneerController() {
             </CondButton>
 
             <CondButton
+              onClick={clickSold}
               show={bid_status == 3 && bids.length > 0}
               className="bg-green-600"
             >
@@ -405,6 +410,7 @@ export function AuctioneerController() {
             </CondButton>
 
             <CondButton
+              onClick={clickHold}
               show={bid_status == 3 && bids.length == 0}
               className="bg-green-600"
             >
