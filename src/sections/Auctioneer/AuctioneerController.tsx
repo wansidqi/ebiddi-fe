@@ -45,11 +45,14 @@ export function AuctioneerController() {
   };
 
   const publishTimer = () => {
-    setPayload((prev) => ({ ...prev, countdown }));
-    if (!eventId) return;
-    if (USER?.role === ROLE.AUCTIONEER) {
-      publishEvent({ event_id: eventId, data: { ...payload, countdown } });
-    }
+    if (!auctionId || !eventId) return;
+    setPayload((prev) => ({
+      ...prev,
+      countdown,
+      auction_id: auctionId,
+      event_id: eventId,
+    }));
+    publishEvent({ event_id: eventId, data: { ...payload, countdown } });
   };
 
   const sendAuditTrail = (log: LogAuditTrail) => {
@@ -77,18 +80,6 @@ export function AuctioneerController() {
         current,
       },
     }));
-  };
-
-  const sendDisplay = () => {
-    resetBid();
-    if (!auctionId || !eventId) return;
-    const newPayload: EventData = {
-      ...payload,
-      event_id: eventId,
-      auction_id: auctionId,
-      status: "",
-    };
-    publishEvent({ data: newPayload, event_id: eventId });
   };
 
   const clickStart = () => {
@@ -225,10 +216,6 @@ export function AuctioneerController() {
   const goNext = () => {
     navigate(`/auctioneer/${auction?.meta?.next}`);
   };
-
-  useEffect(() => {
-    sendDisplay();
-  }, [socket]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
