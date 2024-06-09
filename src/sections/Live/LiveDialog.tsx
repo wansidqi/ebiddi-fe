@@ -22,7 +22,46 @@ const popupMsg = [
   },
 ];
 
-export function LiveDialog() {
+interface Props {
+  state: boolean;
+  handleState: React.Dispatch<React.SetStateAction<boolean>>;
+  title: string;
+  content: string;
+  variant?: "destructive" | "outline" | "secondary" | "ghost" | "link";
+  onClick: () => any;
+}
+
+export function LiveDialog(props: Props) {
+  const onConfirm = () => {
+    props.handleState(false);
+    props.onClick();
+  };
+
+  return (
+    <div>
+      <Dialog open={props.state} onOpenChange={() => props.handleState(false)}>
+        <DialogContent className="w-full sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{props.title}</DialogTitle>
+            <div className="flexcenter py-1">
+              <InfoIcon size={"50px"} />
+            </div>
+            <DialogDescription className="py-3 text-center">
+              {props.content}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant={props.variant || "default"} onClick={onConfirm}>
+              Okay
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+export function LiveDialogTest() {
   const { showLiveDialog, setShowLiveDialog } = useStoreContext();
 
   return (

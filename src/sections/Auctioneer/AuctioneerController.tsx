@@ -10,6 +10,7 @@ import { useAPIServices } from "@/services";
 import { ArrowLeftSquare, ArrowRightSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { LiveDialog } from "../Live/LiveDialog";
 
 export function AuctioneerController() {
   const { auctionId, eventId } = useParams();
@@ -28,14 +29,20 @@ export function AuctioneerController() {
   const bids = [];
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [bidStatus, setBidStatus] = useState<BidStatus>(0);
-  //TODO bidstatus make for withdraw and end
+  const [bidStatus, setBidStatus] = useState<BidStatus>(1);
+  const [withdrawModal, setWithdrawModal] = useState(false);
 
-  const { useGetLiveAuction, usePostAuditTrail, usePostItemSold } =
-    useAPIServices();
+  const {
+    useGetLiveAuction,
+    usePostAuditTrail,
+    usePostItemSold,
+    usePostWithdraw,
+  } = useAPIServices();
+
   const { data: auction } = useGetLiveAuction(auctionId as string);
   const { mutateAsync: onPostAuditTrail } = usePostAuditTrail();
   const { mutateAsync: onPostItemSold } = usePostItemSold();
+  const { mutateAsync: onWithdraw } = usePostWithdraw();
 
   const startAlert = ({ call, variant }: CallMessage) => {
     toast({
@@ -134,6 +141,30 @@ export function AuctioneerController() {
     });
   };
 
+  const clickWithdraw = () => {
+    // onWithdraw(payload.auction_id, {
+    //   onSuccess: () => {
+    //     setPayload((prev) => ({ ...prev, status: "WITHDRAW" }));
+    //     //stop timer
+    //     setCountdown(0);
+    //     setIsActive(false);
+    //     setIsPaused(false);
+    //     if (!eventId) return;
+    //     publishEvent({
+    //       event_id: eventId,
+    //       data: { ...payload, status: "WITHDRAW" },
+    //     });
+    //     setBidStatus(BidStatus.WITHDRAW);
+    //     sendAuditTrail({
+    //       event_id: Number(payload.event_id),
+    //       auction_id: Number(payload.auction_id),
+    //       status: "WITHDRAW",
+    //       bid_amount: 0,
+    //     });
+    //   },
+    // });
+  };
+
   const clickReauction = () => {
     let newPayload: EventData = {
       ...payload,
@@ -212,19 +243,19 @@ export function AuctioneerController() {
 
     const data = new URLSearchParams(postData as any).toString();
 
-    onPostItemSold(
-      { auction_id, data },
-      {
-        onSuccess: () => {
-          sendAuditTrail({
-            event_id: Number(payload.event_id),
-            auction_id: Number(payload.auction_id),
-            status: "SOLD",
-            bid_amount: 0,
-          });
-        },
-      }
-    );
+    // onPostItemSold(
+    //   { auction_id, data },
+    //   {
+    //     onSuccess: () => {
+    //       sendAuditTrail({
+    //         event_id: Number(payload.event_id),
+    //         auction_id: Number(payload.auction_id),
+    //         status: "SOLD",
+    //         bid_amount: 0,
+    //       });
+    //     },
+    //   }
+    // );
   };
 
   const getCurrentBid = (amount: number) => {
@@ -314,68 +345,87 @@ export function AuctioneerController() {
   }, [countdown, socket]);
 
   return (
-    <div>
-      {USER?.role === ROLE.AUCTIONEER && (
-        <div className="flexcenter gap-6">
-          <CondButton onClick={goBack} show={true} isIcon={true}>
-            <ArrowLeftSquare size="40px" />
-          </CondButton>
+    <>
+      <LiveDialog
+        state={withdrawModal}
+        handleState={setWithdrawModal}
+        title={`Are you sure?`}
+        content={`withdrawing LOT ${payload.auction_id}`}
+        variant="destructive"
+        onClick={() => clickWithdraw()}
+      />
+      <div>
+        {USER?.role === ROLE.AUCTIONEER && (
+          <div className="flexcenter gap-6">
+            <CondButton onClick={goBack} show={true} isIcon={true}>
+              <ArrowLeftSquare size="40px" />
+            </CondButton>
 
-          <CondButton
-            onClick={clickStart}
-            show={true || bid_status === 1 || bid_status == 4}
-            className="bg-green-500"
-          >
-            START
-          </CondButton>
+            <CondButton
+              onClick={clickStart}
+              show={true || bid_status === 1 || bid_status == 4}
+              className="bg-green-500"
+            >
+              START
+            </CondButton>
 
-          <CondButton
-            onClick={clickPause}
-            show={true || bid_status == 2 || bid_status == 3}
-            className="bg-green-600"
-          >
-            PAUSE
-          </CondButton>
+            <CondButton
+              onClick={clickPause}
+              show={true || bid_status == 2 || bid_status == 3}
+              className="bg-green-600"
+            >
+              PAUSE
+            </CondButton>
 
-          <CondButton show={true} className="bg-green-600">
-            BACK TO AUCTION LIST
-          </CondButton>
+            <CondButton show={true} className="bg-green-600">
+              BACK TO AUCTION LIST
+            </CondButton>
 
-          <CondButton
-            show={bid_status === 1 || bid_status == 4}
-            className="bg-green-600"
-          >
-            WITHDRAW CURRENT VEHICLE
-          </CondButton>
+            <CondButton
+              onClick={() => setWithdrawModal(true)}
+              show={true || bid_status === 1 || bid_status == 4}
+              className="bg-green-600"
+            >
+              WITHDRAW CURRENT VEHICLE
+            </CondButton>
 
-          <CondButton show={bid_status == 4} className="bg-green-600">
-            RE-AUCTION
-          </CondButton>
+            <CondButton
+              onClick={clickReauction}
+              show={bid_status == 4}
+              className="bg-green-600"
+            >
+              RE-AUCTION
+            </CondButton>
 
-          <CondButton
-            show={bid_status == 3 && bids.length > 0}
-            className="bg-green-600"
-          >
-            SOLD
-          </CondButton>
+            <CondButton
+              show={bid_status == 3 && bids.length > 0}
+              className="bg-green-600"
+            >
+              SOLD
+            </CondButton>
 
-          <CondButton
-            show={bid_status == 3 && bids.length == 0}
-            className="bg-green-600"
-          >
-            NO BID
-          </CondButton>
+            <CondButton
+              show={bid_status == 3 && bids.length == 0}
+              className="bg-green-600"
+            >
+              NO BID
+            </CondButton>
 
-          <CondButton show={bid_status == 6} className="bg-green-600">
-            END
-          </CondButton>
+            <CondButton
+              onClick={clickEnd}
+              show={bid_status == 6}
+              className="bg-green-600"
+            >
+              END
+            </CondButton>
 
-          <CondButton onClick={goNext} show={true} isIcon={true}>
-            <ArrowRightSquare size="40px" />
-          </CondButton>
-        </div>
-      )}
-    </div>
+            <CondButton onClick={goNext} show={true} isIcon={true}>
+              <ArrowRightSquare size="40px" />
+            </CondButton>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 
