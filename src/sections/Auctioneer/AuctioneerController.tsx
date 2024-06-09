@@ -1,7 +1,7 @@
 import { useStoreContext } from "@/Context";
 import { LogAuditTrail } from "@/interfaces/API";
 import { BidStatus, ROLE } from "@/interfaces/enum";
-import { EventData, Status } from "@/interfaces/websocket";
+import { BidData, EventData } from "@/interfaces/websocket";
 import { useAPIServices } from "@/services";
 import { ArrowLeftSquare, ArrowRightSquare } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -28,7 +28,7 @@ export function AuctioneerController() {
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [withdrawModal, setWithdrawModal] = useState(false);
-  const [bids, setBids] = useState([]);
+  const [bids, setBids] = useState<BidData[]>([]);
 
   const {
     useGetLiveAuction,
@@ -41,7 +41,6 @@ export function AuctioneerController() {
   const { mutateAsync: onPostAuditTrail } = usePostAuditTrail();
   const { mutateAsync: onPostItemSold } = usePostItemSold();
   const { mutateAsync: onWithdraw } = usePostWithdraw();
-
 
   const publishTimer = () => {
     if (!auctionId || !eventId) return;
@@ -88,8 +87,11 @@ export function AuctioneerController() {
       setCountdown(11);
       setIsActive(true);
       setIsPaused(false);
+
       setBidStatus(BidStatus.RUN);
-      const newPayload: EventData = { ...payload, status: "RUN" };
+
+      const newPayload: EventData = { ...payload, status: "AUCTION" };
+      setPayload(newPayload);
       if (!eventId) return;
       publishEvent({ event_id: eventId, data: newPayload });
 
@@ -107,6 +109,8 @@ export function AuctioneerController() {
     setBidStatus(BidStatus.PAUSE);
     const newPayload: EventData = { ...payload, status: "PAUSE" };
     if (!eventId) return;
+
+    setPayload(newPayload);
     publishEvent({ event_id: eventId, data: newPayload });
     sendAuditTrail({
       event_id: Number(payload.event_id),
@@ -119,7 +123,7 @@ export function AuctioneerController() {
   const clickResume = () => {
     setBidStatus(BidStatus.RUN);
     setIsPaused(false);
-    const newPayload: EventData = { ...payload, status: "RUN" };
+    const newPayload: EventData = { ...payload, status: "AUCTION" };
     setPayload(newPayload);
     publishEvent({ event_id: "", data: newPayload });
 
@@ -270,35 +274,58 @@ export function AuctioneerController() {
   };
 
   useEffect(() => {
+    const sendDisplay = () => {
+      if (!eventId) return;
+      resetBid();
+      publishEvent({ event_id: eventId, data: payload });
+    };
+    sendDisplay();
+  }, [eventId, auction]);
+
+  useEffect(() => {
     refetch();
+
     if (!eventId || !auctionId) return;
     subscribeBid({
       auction_id: auctionId,
       event_id: eventId,
       onData: (data) => {
         console.log(data);
+
+        if (payload.bidders.highest_amount >= data.amount) {
+          return;
+        }
+
+        if (payload.bidders.highest_user_id === data.user_id) {
+          return;
+        }
+
+        setBids((prev) => [...prev, data]);
+
+        setPayload((prev) => {
+          const updatedPayload = {
+            ...prev,
+            bidders: {
+              all: [...prev.bidders.all, data],
+              highest_amount: data.amount,
+              highest_user_id: data.user_id,
+              highest_user_name: data.name,
+            },
+            bid: {
+              current: data.amount,
+              next: getCurrentBid(data.amount),
+              start: prev.bid.start,
+              up: prev.bid.up,
+            },
+          };
+
+          publishEvent({ event_id: eventId, data: updatedPayload });
+
+          return updatedPayload;
+        });
       },
     });
   }, [auctionId, socket]);
-
-  useEffect(() => {
-    const sendDisplay = () => {
-      if (!eventId) return;
-
-      setPayload((prev) => {
-        const newPayload = {
-          ...prev,
-          event_id: eventId,
-          status: "DISPLAY" as Status,
-        };
-        resetBid();
-        return newPayload;
-      });
-
-      publishEvent({ event_id: eventId, data: payload });
-    };
-    sendDisplay();
-  }, [eventId, auction]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;

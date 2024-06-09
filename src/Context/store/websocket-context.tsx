@@ -62,7 +62,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
       up: 0,
     },
     countdown: 11,
-    status: "START",
+    status: "DISPLAY",
     bidders: {
       all: [],
       highest_amount: 0,
