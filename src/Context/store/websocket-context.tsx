@@ -9,6 +9,9 @@ import {
 } from "@/interfaces/websocket";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as socketClusterClient from "socketcluster-client";
+import { useStoreContext } from "..";
+import { TOKEN, getToken } from "@/datasource/sessionStorage.datasource";
+import { ROLE } from "@/interfaces/enum";
 
 export function useWsContext() {
   const context = useContext(AppContext);
@@ -66,6 +69,11 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     },
   });
 
+  const isBidder =
+    JSON.parse(getToken(TOKEN.user) as string).role === ROLE.BIDDER;
+  const isAuctioneer =
+    JSON.parse(getToken(TOKEN.user) as string).role === ROLE.AUCTIONEER;
+
   const publishBid = (params: PubBid) => {
     if (!socket) return;
     let channel = `event/${params.event_id}/auction/${params.auction_id}/bid`;
@@ -92,21 +100,24 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     if (!socket) return;
     const channel = `event/${params.event_id}`;
     const test_channel = `test/event/${params.event_id}`;
-    socket.invokePublish(isTest ? test_channel : channel, params.data);
+    isAuctioneer &&
+      socket.invokePublish(isTest ? test_channel : channel, params.data);
   };
 
   const subscribeEvent = async (params: Subscription<EventData>) => {
     if (!socket) return;
 
-    const url = `event/${params.event_id}`;
-    const test_url = `test/event/${params.event_id}`;
-    const channel = socket.subscribe(isTest ? test_url : url);
+    if (isBidder) {
+      const url = `event/${params.event_id}`;
+      const test_url = `test/event/${params.event_id}`;
+      const channel = socket.subscribe(isTest ? test_url : url);
 
-    for await (const data of channel) {
-      try {
-        params.onData && params.onData(data);
-      } catch (error) {
-        console.log(error);
+      for await (const data of channel) {
+        try {
+          params.onData && params.onData(data);
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   };
