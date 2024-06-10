@@ -1,5 +1,5 @@
 import { LucideGavel, LockKeyholeIcon, UnlockKeyhole } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function BidderController() {
   const [toggleLock, setToggleLock] = useState(false);

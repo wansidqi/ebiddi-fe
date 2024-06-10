@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import { Container } from "@/components/Container";
 import {
   AuctioneerController,
@@ -9,7 +9,6 @@ import {
   Participator,
 } from "@/sections";
 import waiting from "@/assets/images/waiting.png";
-import { LucideGavel, LockKeyholeIcon, UnlockKeyhole } from "lucide-react";
 import { useStoreContext } from "@/Context";
 import { DynamicRenderer } from "@/components";
 import { ROLE } from "@/interfaces/enum";
@@ -18,7 +17,6 @@ import { useParams } from "react-router-dom";
 
 export function Live() {
   const { eventId } = useParams();
-  const [toggleLock, setToggleLock] = useState(false);
   const { USER, subscribeEvent, socket, setPayload, payload, setCountdown } =
     useStoreContext();
 
