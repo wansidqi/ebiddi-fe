@@ -17,6 +17,7 @@ import { Fragment, useEffect } from "react";
 import { TOKEN, getToken } from "./datasource/sessionStorage.datasource";
 import { useStoreContext } from "./Context";
 import { AlertDialog } from "./components";
+import { ROLE } from "./interfaces/enum";
 
 function App() {
   const { SET_USER } = useStoreContext();
@@ -41,21 +42,27 @@ function App() {
           <Route path={"/login"} element={<Login />} />
         </Route>
 
-        <Route element={<RequireAuth />}>
+        <Route element={<RequireBidderAuth />}>
           <Route path={"/profile"} element={<Profile />} />
+          <Route path={"/contract"} element={<Contract />} />
+          <Route path={"/policy"} element={<Policies />} />
         </Route>
 
-        <Route path={"/contract"} element={<Contract />} />
-        <Route path={"/policy"} element={<Policies />} />
+        <Route element={<RequireAuctioneerAuth />}>
+          <Route path={"/profile"} element={<Profile />} />
+          <Route path={"/auctioneer/list/:eventId"} element={<AuctList />} />
+          <Route path={"/contract/event/:eventId"} element={<AuctContract />} />
+          <Route
+            path={"/auctioneer/live/:eventId/:auctionId"}
+            element={<Live />}
+          />
+        </Route>
+
         <Route path={"/ireportmotor/:vehicle_id"} element={<ReportMotor />} />
         <Route path={"/ireportcar/:vehicle_id"} element={<ReportCar />} />
         <Route path={"/events"} element={<Events />} />
         <Route path={"/items/:eventId"} element={<Items />} />
         <Route path={"/live/:eventId"} element={<Live />} />
-
-        <Route path={"/auctioneer/list/:eventId"} element={<AuctList />} />
-        <Route path={"/auctioneer/live/:eventId/:auctionId"} element={<Live />} />
-        <Route path={"/contract/event/:eventId"} element={<AuctContract />} />
       </Routes>
     </Fragment>
   );
@@ -66,9 +73,14 @@ function RequireNoAuth() {
   return !USER ? <Outlet /> : <Navigate to="/events" />;
 }
 
-function RequireAuth() {
+function RequireBidderAuth() {
   const { USER } = useStoreContext();
-  return USER ? <Outlet /> : <Navigate to="/login" />;
+  return USER?.role === ROLE.BIDDER ? <Outlet /> : <Navigate to="/login" />;
+}
+
+function RequireAuctioneerAuth() {
+  const { USER } = useStoreContext();
+  return USER?.role === ROLE.AUCTIONEER ? <Outlet /> : <Navigate to="/login" />;
 }
 
 function RequireVerificationToken() {
