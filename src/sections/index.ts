@@ -21,4 +21,6 @@ export * from "./Auctioneer/AuctioneerController";
 export * from "./Auctioneer/AuctContract";
 export * from "./Auctioneer/AuctList";
 
+export * from "./Bidder/BidderController";
+
 export * from "./Layout/Navigation";
