@@ -38,7 +38,7 @@ export function AuctList() {
   };
 
   const navigateToLive = (auction_id: any) => {
-    navigate(`/auctioneer/${eventId}/${auction_id}`);
+    navigate(`/auctioneer/live/${eventId}/${auction_id}`);
   };
 
   const closeEvent = () => {

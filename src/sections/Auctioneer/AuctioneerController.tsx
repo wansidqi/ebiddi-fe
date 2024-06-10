@@ -192,7 +192,7 @@ export function AuctioneerController() {
   };
 
   const clickBackToAuction = () => {
-    navigate(`/list/${eventId}`);
+    navigate(`/auctioneer/list/${eventId}`);
   };
 
   const clickHold = () => {
@@ -276,11 +276,15 @@ export function AuctioneerController() {
   };
 
   const goPrev = () => {
-    navigate(`/auctioneer/${auction?.meta?.prev}`);
+    if (auction?.meta?.prev !== 0) {
+      navigate(`/auctioneer/live/${eventId}/${auction?.meta?.prev}`);
+    }
   };
 
   const goNext = () => {
-    navigate(`/auctioneer/${auction?.meta?.next}`);
+    if (auction?.meta?.next !== 0) {
+      navigate(`/auctioneer/live/${eventId}/${auction?.meta?.next}`);
+    }
   };
 
   useEffect(() => {
@@ -454,7 +458,11 @@ export function AuctioneerController() {
               END
             </CondButton>
 
-            <CondButton onClick={goNext} show={true} isIcon={true}>
+            <CondButton
+              onClick={goNext}
+              show={auction?.meta?.next !== 0 && naviStatus}
+              isIcon={true}
+            >
               <ArrowRightSquare size="40px" />
             </CondButton>
           </div>

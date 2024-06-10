@@ -54,7 +54,7 @@ function App() {
         <Route path={"/live/:eventId"} element={<Live />} />
 
         <Route path={"/auctioneer/list/:eventId"} element={<AuctList />} />
-        <Route path={"/auctioneer/:eventId/:auctionId"} element={<Live />} />
+        <Route path={"/auctioneer/live/:eventId/:auctionId"} element={<Live />} />
         <Route path={"/contract/event/:eventId"} element={<AuctContract />} />
       </Routes>
     </Fragment>
