@@ -4,6 +4,7 @@ import {
   AuctioneerController,
   BidHeader,
   BidList,
+  LiveDetail,
   Participator,
 } from "@/sections";
 import waiting from "@/assets/images/waiting.png";
@@ -44,9 +45,7 @@ export function Live() {
         <Participator />
 
         <DynamicRenderer>
-          <DynamicRenderer.When
-            cond={false && isNotAuctioneer && isAuctionIdNotExist}
-          >
+          <DynamicRenderer.When cond={isNotAuctioneer && isAuctionIdNotExist}>
             <WaitingComponent />
           </DynamicRenderer.When>
           <DynamicRenderer.Else>
@@ -57,8 +56,7 @@ export function Live() {
                   <BidList />
                 </div>
                 <div id="details" className="flex-shrink-0 w-[92%] sm:order-2">
-                  {/* <LiveDetail /> */}
-                  {/* <LiveDetail {...(data as AuctionInterface)} /> */}
+                  <LiveDetail auctionId={payload.auction_id} />
                 </div>
               </div>
 

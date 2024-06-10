@@ -1,7 +1,11 @@
-import { AuctionInterface } from "@/interfaces";
 import { numWithComma } from "@/lib/utils";
+import { useAPIServices } from "@/services";
 
-export function LiveDetail(data: AuctionInterface | undefined) {
+export function LiveDetail({ auctionId }: { auctionId: string | undefined }) {
+  const { useGetLiveAuction } = useAPIServices();
+  // const test = "70172";
+  const { data } = useGetLiveAuction(auctionId);
+
   return (
     <div className="border flex flex-col gap-y-2 py-3 px-2 rounded-md h-[30em]">
       <div className="text-center text-2xl my-2">LOT 301</div>

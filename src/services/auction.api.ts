@@ -14,7 +14,7 @@ interface AgreementResponse {
   };
 }
 
-const useGetCredit = (auctionHouseId: string) => {
+const useGetCredit = (auctionHouseId: string | number | undefined) => {
   const { USER } = useStoreContext();
   return useQuery({
     enabled: !!USER?.id && !Boolean(USER.role === ROLE.AUCTIONEER),

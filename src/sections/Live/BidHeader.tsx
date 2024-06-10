@@ -3,7 +3,7 @@ import { DynamicRenderer } from "@/components";
 import { toast } from "@/components/ui/use-toast";
 import { CallMessage } from "@/data/call-alert";
 import { EventsInterface } from "@/interfaces";
-import { BidStatus } from "@/interfaces/enum";
+import { BidStatus, ROLE } from "@/interfaces/enum";
 import { numWithComma, playAudio } from "@/lib/utils";
 import { KEY, useAPIServices, useGetQueryData } from "@/services";
 import { useEffect } from "react";
@@ -17,9 +17,10 @@ export function BidHeader() {
 
   const queryKey = [KEY.auction_item, eventId];
   const event = useGetQueryData<EventsInterface>(queryKey);
+  const auctId = event?.auction_house.id;
 
   const { useGetCredit } = useAPIServices();
-  const { data } = useGetCredit(event?.auction_house.id.toString() as string);
+  const { data } = useGetCredit(auctId);
 
   const displayTime = () => {
     let display = "00:00";
@@ -84,7 +85,7 @@ export function BidHeader() {
   return (
     <div>
       <DynamicRenderer>
-        <DynamicRenderer.When cond={USER !== null}>
+        <DynamicRenderer.When cond={USER?.role === ROLE.BIDDER}>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-2 sm:gap-y-6 my-8">
             <div className="flexcenter-col col-span-2 sm:col-span-3 sm:order-1 text-3xl">
               <p className="text-primary">Ends in:</p>
@@ -92,11 +93,15 @@ export function BidHeader() {
             </div>
             <div className="flexcenter-col text-lg sm:order-2">
               <p className="text-primary sm:text-2xl">Current Bid:</p>
-              <p className="text-yellow-500 sm:text-2xl">RM 888,888</p>
+              <p className="text-yellow-500 sm:text-2xl">
+                {`RM ${payload.bidders.highest_amount || "-"}`}
+              </p>
             </div>
             <div className="flexcenter-col text-lg sm:order-3">
               <p className="text-primary sm:text-2xl">Current Bidder:</p>
-              <p className="text-yellow-500 sm:text-2xl">WAN AHMAD SIDQI</p>
+              <p className="text-yellow-500 sm:text-2xl">
+                {payload.bidders.highest_user_name || "-"}
+              </p>
             </div>
             <div className="flexcenter-col col-span-2 sm:col-span-1 text-lg sm:order-2">
               <p className="text-primary sm:text-2xl">Deposit Balance:</p>
@@ -115,11 +120,13 @@ export function BidHeader() {
             </div>
             <div className="flexcenter-col text-lg sm:order-1">
               <p className="text-primary sm:text-2xl">Current Bid:</p>
-              <p className="text-yellow-500 sm:text-2xl">RM 888,888</p>
+              <p className="text-yellow-500 sm:text-2xl">{`RM ${payload.bidders.highest_amount || "-"}`}</p>
             </div>
             <div className="flexcenter-col text-lg sm:order-3">
               <p className="text-primary sm:text-2xl">Current Bidder:</p>
-              <p className="text-yellow-500 sm:text-2xl">WAN AHMAD SIDQI</p>
+              <p className="text-yellow-500 sm:text-2xl">
+                {payload.bidders.highest_user_name || "-"}
+              </p>
             </div>
           </div>
         </DynamicRenderer.Else>
