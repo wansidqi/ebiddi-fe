@@ -9,8 +9,8 @@ import {
 } from "@/interfaces/websocket";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as socketClusterClient from "socketcluster-client";
-import { TOKEN, getToken } from "@/datasource/sessionStorage.datasource";
 import { BidStatus, ROLE } from "@/interfaces/enum";
+import { useAuctionContext } from "./auction-context";
 
 export function useWsContext() {
   const context = useContext(AppContext);
@@ -46,6 +46,8 @@ type Data = {
 
 function WsContext(props: React.PropsWithChildren<{}>) {
   const isTest = true;
+  const { USER } = useAuctionContext();
+
   const [socket, setSocket] = useState<ws>(null);
   const [bidData, setBidData] = useState<BidData>({
     amount: 0,
@@ -71,9 +73,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     },
   });
   const [bidStatus, setBidStatus] = useState<BidStatus>(1);
-
-  const isAuctioneer =
-    JSON.parse(getToken(TOKEN.user) as string).role === ROLE.AUCTIONEER;
+  const isAuctioneer = USER?.role === ROLE.AUCTIONEER;
 
   const publishBid = (params: PubBid) => {
     if (!socket) return;
