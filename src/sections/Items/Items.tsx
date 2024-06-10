@@ -12,7 +12,7 @@ export function Items() {
   useEffect(() => {}, [eventId]);
 
   const { useGetEventById } = useAPIServices();
-  const { data, isLoading } = useGetEventById(eventId as string);
+  const { data, isLoading } = useGetEventById(eventId);
 
   return (
     <Container className="">

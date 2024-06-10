@@ -42,7 +42,7 @@ const useGetAuctioneerEvent = () => {
   });
 };
 
-const useGetEventById = (id: string) => {
+const useGetEventById = (id: string | undefined) => {
   return useQuery({
     queryKey: [KEY.event, id],
     refetchOnWindowFocus: false,

@@ -2,7 +2,10 @@
 GET https://api.e-biddi.com/api/auction/69889
 
 ###GET
-GET https://api.e-biddi.com/api/events/1157
+GET https://api.e-biddi.com/api/events/1158
+
+###GET
+GET https://api.e-biddi.com/api/contract/event/69889
 
 ###POST
 POST https://api.e-biddi.com/api/auth/login

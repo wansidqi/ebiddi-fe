@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useAPIServices } from "@/services";
 import { useStoreContext } from "@/Context";
 
-export function EventCard(props: EventsInterface) {
+export function SingleEvent(props: EventsInterface) {
   //#region
   const { setTerm, USER } = useStoreContext();
   const { openDetailModal } = useStoreContext();
@@ -43,36 +43,45 @@ export function EventCard(props: EventsInterface) {
     },
   ];
 
-  const redirectButton = async (date: string, eventId: number) => {
-    const handleRedirect = () => {
-      isCountdown(date)
-        ? openDetailModal(eventId)
-        : navigate(`/live/${eventId}`);
+  const redirectToLive = async (date: string, eventId: number) => {
+    const handleRedirect = (navigation: string) => {
+      isCountdown(date) ? openDetailModal(eventId) : navigate(navigation);
     };
 
-    if (!USER) {
-      handleRedirect();
-      return;
-    }
-
-    try {
-      await isVerify({ event_id: eventId, user_id: USER.id });
-      handleRedirect();
-    } catch (error) {
-      setTerm({ showTerm: true, eventId: eventId.toString() });
-    }
-  };
-
-  const viewAuctionItems = () => {
     roleRenderer({
+      action: "function",
       role: USER?.role,
-      //TODO: navigation endpoint auctionID
-      /* contract */
-      auctioneer: navigate(`/auctioneer/`),
-      bidder: navigate(`/items/${props.id}`),
-      noRole: navigate(`/items/${props.id}`),
+
+      auctioneer: () => {
+        handleRedirect(`/auctioneer/list/${eventId}`);
+      },
+
+      bidder: async () => {
+        if (USER)
+          try {
+            await isVerify({ event_id: eventId, user_id: USER.id });
+            handleRedirect(`/live/${eventId}`);
+          } catch (error) {
+            setTerm({ showTerm: true, eventId: eventId.toString() });
+          }
+      },
+
+      noRole: () => {
+        handleRedirect(`/live/${eventId}`);
+      },
     });
   };
+
+  const viewAuctionItemsOrContract = () => {
+    roleRenderer({
+      action: "function",
+      role: USER?.role,
+      auctioneer: () => navigate(`/contract/event/${props.id}`),
+      bidder: () => navigate(`/items/${props.id}`),
+      noRole: () => navigate(`/items/${props.id}`),
+    });
+  };
+
   //#endregion
 
   return (
@@ -98,11 +107,12 @@ export function EventCard(props: EventsInterface) {
               <EventDetail {...props} eventId={props.id} />
             </div>
             <Button
-              onClick={viewAuctionItems}
+              onClick={viewAuctionItemsOrContract}
               className="w-full"
               variant="secondary"
             >
               {roleRenderer({
+                action: "text",
                 role: USER?.role,
                 auctioneer: "Contract",
                 bidder: "View Auction Items",
@@ -111,10 +121,11 @@ export function EventCard(props: EventsInterface) {
             </Button>
           </div>
           <Button
-            onClick={() => redirectButton(props.event_date, props.id)}
+            onClick={() => redirectToLive(props.event_date, props.id)}
             className="w-full my-4"
           >
             {roleRenderer({
+              action: "text",
               role: USER?.role,
               auctioneer: "Enter Events",
               bidder: "Join Auction",

@@ -27,7 +27,6 @@ export function Navigation() {
 
   const back = () => {
     navigate(-1);
-    // navigate('/events');
   };
 
   const iconAttribute = {

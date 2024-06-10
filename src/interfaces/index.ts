@@ -563,24 +563,49 @@ export interface CreditInterface {
   };
 }
 
-export interface Payload {
-  event_id: string;
-  auction_id: string;
-  status: string;
-  bid: {
-    start: number;
-    next: number;
-    current: number;
-    up: number;
+export interface ContractEvent {
+  id: null;
+  url: string;
+  legal_owner: {
+    id: number;
+    code: string;
+    name: string;
   };
-  timer: {
-    tick: number;
-    call: number;
+  contract_owner: {
+    id: number;
+    name: string;
   };
-  bidders: {
-    all: string[];
-    highest_amount: number;
-    highest_user_id: number;
-    highest_user_name: string;
+  purchase_price: number;
+  deposit: number;
+  bidder_company: any;
+  created_at: string;
+  event: {
+    id: number;
+    event_name: string;
+    status: string;
+    event_timestamp: string;
+    updated_at: string;
+    auction_house: {
+      id: number;
+      auctionhouse_code: string;
+      auctionhouse_name: string;
+      auctionhouse_address: string;
+    };
+  };
+  item: {
+    id: number;
+    model: string;
+    lot_no: null;
+    registration_number: string;
+    year: string;
+    investigation_report: {
+      id: number;
+      general_condition: string;
+      chassis_number: null;
+      engine_number: null;
+      mileage: string;
+      transmission: string;
+      expaintwork: null;
+    };
   };
 }

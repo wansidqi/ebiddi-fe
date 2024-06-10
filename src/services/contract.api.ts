@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { KEY } from ".";
 import datasource from "@/datasource/axiosInstance";
-import { Contract } from "@/interfaces";
+import { Contract, ContractEvent } from "@/interfaces";
 
 interface Response {
   data: Contract[];
@@ -22,4 +22,19 @@ const useGetContract = (userId: string) => {
   });
 };
 
-export const ContractService = { useGetContract };
+const useGetContractByEvent = (eventId: string | undefined) => {
+  return useQuery({
+    queryKey: [KEY.contract],
+    queryFn: async () => {
+      const response = await datasource({
+        method: "get",
+        url: `/contract/event/${eventId}`,
+      });
+      const data = response.data.data as ContractEvent[];
+      return data;
+    },
+    enabled: !!eventId,
+  });
+};
+
+export const ContractService = { useGetContract, useGetContractByEvent };

@@ -177,28 +177,6 @@ export function Profile() {
                                 </td>
                               </tr>
                             ))}
-                            {txs?.map((tx, i) => (
-                              <tr key={i}>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                  {convertDateTime(tx.timestamp)}
-                                </td>
-                                <td className="text-left px-6 py-4 whitespace-nowrap">
-                                  {tx.description}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                  {tx.type}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                  RM{numWithComma(tx.amount)}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                  RM{numWithComma(tx.balance)}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                  {tx.credit_account}
-                                </td>
-                              </tr>
-                            ))}
                           </tbody>
                         </table>
                       </div>

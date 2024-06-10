@@ -5,6 +5,7 @@ import { AuctionInterface } from "@/interfaces";
 import { useStoreContext } from "@/Context";
 import { CreditResponse } from "@/interfaces/API";
 import { ROLE } from "@/interfaces/enum";
+import { useNavigate } from "react-router-dom";
 
 interface AgreementResponse {
   data: {
@@ -88,7 +89,7 @@ const usePostVerifyAgreement = () => {
 
 /* if !usePostVerifyAgreement -> useGetAgreement -> usePostConfirmAgreement  */
 
-const useGetLiveAuction = (auctionId: string) => {
+const useGetLiveAuction = (auctionId: string | undefined) => {
   return useQuery({
     enabled: !!auctionId,
     queryKey: [KEY.auction_item, auctionId],
@@ -149,6 +150,23 @@ const usePostAuditTrail = () => {
   });
 };
 
+const useCloseAuctionEvent = () => {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async (eventId: string) => {
+      const response = await datasource({
+        method: "post",
+        url: `/event/close/${eventId}`,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      navigate("/events");
+    },
+  });
+};
+
 export const AuctionService = {
   useGetLiveAuction,
   useGetCredit,
@@ -158,4 +176,5 @@ export const AuctionService = {
   usePostWithdraw,
   usePostItemSold,
   usePostAuditTrail,
+  useCloseAuctionEvent,
 };

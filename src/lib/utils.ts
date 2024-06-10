@@ -95,26 +95,40 @@ export const onEnterClick = (
 };
 
 export const roleRenderer = ({
+  action,
   role,
   bidder,
   auctioneer,
   noRole,
 }: {
   role: ROLE | undefined;
-  bidder: any;
-  auctioneer: any;
-  noRole: any;
+  action: "text" | "function";
+  bidder: string | (() => any);
+  auctioneer: string | (() => any);
+  noRole: string | (() => any);
 }) => {
   switch (role) {
     case ROLE.AUCTIONEER:
-      // console.log('auc')
-      return auctioneer;
+      if (action === "text") {
+        return auctioneer;
+      } else if (typeof auctioneer === "function") {
+        return auctioneer();
+      }
+      break;
     case ROLE.BIDDER:
-      // console.log('bidder')
-      return bidder;
+      if (action === "text") {
+        return bidder;
+      } else if (typeof bidder === "function") {
+        return bidder();
+      }
+      break;
     default:
-      // console.log('no role')
-      return noRole;
+      if (action === "text") {
+        return noRole;
+      } else if (typeof noRole === "function") {
+        return noRole();
+      }
+      break;
   }
 };
 

@@ -1,5 +1,5 @@
 import { Container } from "@/components/Container";
-import { EventCard, EventLoading } from "@/sections";
+import { SingleEvent, EventLoading } from "@/sections";
 import { useAPIServices } from "@/services";
 import { Term } from ".";
 import { DynamicRenderer } from "@/components";
@@ -43,8 +43,10 @@ export function Events() {
               </DynamicRenderer.When>
               <DynamicRenderer.Else>
                 {isAuctioneer
-                  ? eventAuct?.map((item, i) => <EventCard key={i} {...item} />)
-                  : data?.map((item, i) => <EventCard key={i} {...item} />)}
+                  ? eventAuct?.map((item, i) => (
+                      <SingleEvent key={i} {...item} />
+                    ))
+                  : data?.map((item, i) => <SingleEvent key={i} {...item} />)}
               </DynamicRenderer.Else>
             </DynamicRenderer>
           </div>

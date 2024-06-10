@@ -48,7 +48,9 @@ export function ItemsList({ events }: { events: undefined | EventsInterface }) {
         <tbody className="divide-y text-center text-xs sm:text-sm">
           {events?.inventories.map((item, index) => (
             <tr key={index}>
-              <td className="px-6 py-4 whitespace-nowrap">{item.lot_no}</td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <ItemDetail {...item} />
+              </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 {item.legal_owner}
               </td>
@@ -56,9 +58,7 @@ export function ItemsList({ events }: { events: undefined | EventsInterface }) {
                 {item.registration_number}
               </td>
               <td className="px-6 py-4 whitespace-nowrap">{item.model}</td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <ItemDetail {...item} />
-              </td>
+              <td className="px-6 py-4 whitespace-nowrap">{item.year}</td>
               <td className="px-6 py-4 whitespace-nowrap">
                 RM {item.reserve_price.toLocaleString("en-IN")}
               </td>

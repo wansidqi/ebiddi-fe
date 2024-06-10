@@ -14,7 +14,7 @@ import { useParams } from "react-router-dom";
 export function ItemsHeader() {
   const { eventId } = useParams();
   const { useGetEventById } = useAPIServices();
-  const { data } = useGetEventById(eventId as string);
+  const { data } = useGetEventById(eventId);
   // console.log(data?.downloadable.url);
 
   const { setView, view } = useStoreContext();

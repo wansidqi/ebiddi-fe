@@ -38,7 +38,7 @@ export function ItemDetail(props: InventoryInterface) {
             </button>
           ) : (
             <Button className="underline" variant="link">
-              {props.year}
+              {props.lot_no}
             </Button>
           )}
         </DialogTrigger>
@@ -63,7 +63,7 @@ export function ItemDetail(props: InventoryInterface) {
           </button>
         ) : (
           <Button className="underline" variant="link">
-            {props.year}
+            {props.lot_no}
           </Button>
         )}
       </DrawerTrigger>

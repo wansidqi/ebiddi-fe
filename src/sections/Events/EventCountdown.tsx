@@ -1,6 +1,6 @@
 import { useStoreContext } from "@/Context";
 import { DynamicRenderer } from "@/components";
-import { isCountdown } from "@/lib/utils";
+import { isCountdown, roleRenderer } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -14,11 +14,26 @@ export const Countdown = ({
   const navigate = useNavigate();
   // const temp = "2024-05-24T16:05:30+08:00";
   const [timeLeft, setTimeLeft] = useState(isCountdown(targetDate));
-  const { closeDetailModal } = useStoreContext();
+  const { closeDetailModal, USER } = useStoreContext();
 
   const navigateToLive = () => {
     closeDetailModal();
-    navigate(`/live/${eventId}`);
+    roleRenderer({
+      role: USER?.role,
+      action: "function",
+
+      auctioneer: () => {
+        navigate(`/auctioneer/list/${eventId}`);
+      },
+
+      bidder: () => {
+        navigate(`/live/${eventId}`);
+      },
+
+      noRole: () => {
+        navigate(`/live/${eventId}`);
+      },
+    });
   };
 
   useEffect(() => {
