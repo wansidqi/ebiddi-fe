@@ -1,9 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { KEY } from ".";
 import datasource from "@/datasource/axiosInstance";
-import { AuctionInterface } from "@/interfaces";
+import { AuctionInterface, CreditInterface } from "@/interfaces";
 import { useStoreContext } from "@/Context";
-import { CreditResponse } from "@/interfaces/API";
 import { ROLE } from "@/interfaces/enum";
 import { useNavigate } from "react-router-dom";
 
@@ -24,8 +23,8 @@ const useGetCredit = (auctionHouseId: string | number | undefined) => {
         method: "get",
         url: `/profile/${USER?.id}/auctionhouse/${auctionHouseId}/credits`,
       });
-      const data = response.data as CreditResponse;
-      return data.data[0];
+      const data = response.data.data as CreditInterface[];
+      return data;
     },
   });
 };
@@ -89,10 +88,10 @@ const usePostVerifyAgreement = () => {
 
 /* if !usePostVerifyAgreement -> useGetAgreement -> usePostConfirmAgreement  */
 
-const useGetLiveAuction = (auctionId: string | undefined) => {
+const useGetLiveAuction = (auctionId: number | string | undefined) => {
   return useQuery({
     enabled: !!auctionId,
-    queryKey: [KEY.auction_item, auctionId],
+    queryKey: [KEY.auction, auctionId],
     retry: false,
     refetchOnWindowFocus: false,
     queryFn: async () => {

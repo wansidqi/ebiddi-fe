@@ -41,6 +41,25 @@ type Data = {
       eventId: string;
     }>
   >;
+
+  biddingModal: {
+    closeModal: boolean;
+    setCloseModal: React.Dispatch<React.SetStateAction<boolean>>;
+    startModal: boolean;
+    setStartModal: React.Dispatch<React.SetStateAction<boolean>>;
+    reauctionModal: boolean;
+    setReauctionModal: React.Dispatch<React.SetStateAction<boolean>>;
+    selfWinner: boolean;
+    setSelfWinner: React.Dispatch<React.SetStateAction<boolean>>;
+    otherWinner: boolean;
+    setOtherWinner: React.Dispatch<React.SetStateAction<boolean>>;
+    pause: boolean;
+    setPause: React.Dispatch<React.SetStateAction<boolean>>;
+    withdraw: boolean;
+    setWithdraw: React.Dispatch<React.SetStateAction<boolean>>;
+    hold: boolean;
+    setHold: React.Dispatch<React.SetStateAction<boolean>>;
+  };
 };
 
 function ModalContext(props: React.PropsWithChildren<{}>) {
@@ -51,10 +70,48 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
     messsage: "",
     isSuccess: false,
   });
-
   const [term, setTerm] = useState({ showTerm: false, eventId: "" });
-
   const [showDetailById, setShowDetailById] = useState<null | number>(null);
+
+  const [closeModal, setCloseModal] = useState(false);
+  const [startModal, setStartModal] = useState(false);
+  const [reauctionModal, setReauctionModal] = useState(false);
+  const [selfWinner, setSelfWinner] = useState(false);
+  const [otherWinner, setOtherWinner] = useState(false);
+  const [pause, setPause] = useState(false);
+  const [withdraw, setWithdraw] = useState(false);
+  const [hold, setHold] = useState(false);
+
+  // const [biddingModal, setBiddingModal] = useState({
+  //   start: { state: false, title: "", content: "", variant: "default" },
+  //   hold: { state: false, title: "", content: "", variant: "default" },
+  //   reauction: { state: false, title: "", content: "", variant: "default" },
+  //   withdraw: { state: false, title: "", content: "", variant: "default" },
+  //   noBid: { state: false, title: "", content: "", variant: "default" },
+  //   sold: { state: false, title: "", content: "", variant: "default" },
+  //   call1: { state: false, title: "", content: "", variant: "default" },
+  //   call2: { state: false, title: "", content: "", variant: "default" },
+  //   call3: { state: false, title: "", content: "", variant: "destructive" },
+  // });
+  const biddingModal = {
+    closeModal,
+    setCloseModal,
+    startModal,
+    setStartModal,
+    reauctionModal,
+    setReauctionModal,
+    selfWinner,
+    setSelfWinner,
+    otherWinner,
+    setOtherWinner,
+    pause,
+    setPause,
+    withdraw,
+    setWithdraw,
+    hold,
+    setHold,
+  };
+
   const openDetailModal = (number: number) => {
     setShowDetailById(number);
   };
@@ -72,6 +129,7 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
     showDetailById,
     openDetailModal,
     closeDetailModal,
+    biddingModal,
   };
 
   useEffect(() => {

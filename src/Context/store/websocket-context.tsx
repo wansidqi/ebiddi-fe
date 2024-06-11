@@ -42,6 +42,9 @@ type Data = {
 
   bidStatus: BidStatus;
   setBidStatus: React.Dispatch<React.SetStateAction<BidStatus>>;
+
+  bidListIndex: number;
+  setBidListIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
 function WsContext(props: React.PropsWithChildren<{}>) {
@@ -72,6 +75,8 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     },
   });
   const [bidStatus, setBidStatus] = useState<BidStatus>(1);
+  const [bidListIndex, setBidListIndex] = useState(-1);
+
   const isAuctioneer = USER?.role === ROLE.AUCTIONEER;
 
   const publishBid = (params: PubBid) => {
@@ -131,8 +136,9 @@ function WsContext(props: React.PropsWithChildren<{}>) {
 
     if (!isAuctioneer) {
       const url = `event/${params.event_id}/status`;
-      const test_url = `test/event/${params.event_id}/status`;
-      const channel = socket.subscribe(dev ? test_url : url);
+      // const test_url = `test/event/${params.event_id}/status`;
+      // const channel = socket.subscribe(dev ? test_url : url);
+      const channel = socket.subscribe(url);
 
       for await (const data of channel) {
         try {
@@ -143,6 +149,23 @@ function WsContext(props: React.PropsWithChildren<{}>) {
       }
     }
   };
+
+  // useEffect(() => {
+  //   async function sub() {
+  //     if (!socket) return;
+  //     const url = `event/1160/status`;
+  //     const channel = socket.subscribe(url);
+
+  //     for await (const data of channel) {
+  //       try {
+  //         console.log(data);
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     }
+  //   }
+  //   sub();
+  // }, []);
 
   // useEffect(() => {
   //   const testSubPub = async () => {
@@ -197,6 +220,8 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     subscribeStatus,
     bidStatus,
     setBidStatus,
+    bidListIndex,
+    setBidListIndex,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;

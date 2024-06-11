@@ -74,13 +74,15 @@ function RequireNoAuth() {
 }
 
 function RequireBidderAuth() {
-  const { USER } = useStoreContext();
-  return USER?.role === ROLE.BIDDER ? <Outlet /> : <Navigate to="/login" />;
+  // const { USER } = useStoreContext();
+  // return USER?.role === ROLE.BIDDER ? <Outlet /> : <Navigate to="/login" />;
+  return <Outlet/>
 }
 
 function RequireAuctioneerAuth() {
-  const { USER } = useStoreContext();
-  return USER?.role === ROLE.AUCTIONEER ? <Outlet /> : <Navigate to="/login" />;
+  // const { USER } = useStoreContext();
+  // return USER?.role === ROLE.AUCTIONEER ? <Outlet /> : <Navigate to="/login" />;
+  return <Outlet/>
 }
 
 function RequireVerificationToken() {

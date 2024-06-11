@@ -11,8 +11,7 @@ export * from "./Items/ItemDetail";
 export * from "./Items/ItemsCarousel";
 export * from "./Items/ItemGridLoading";
 
-export * from "./Live/Participator";
-export * from "./Live/BidList";
+export * from "./Live/BidderList";
 export * from "./Live/BidHeader";
 export * from "./Live/LiveDetail";
 export * from "./Live/LiveDialog";

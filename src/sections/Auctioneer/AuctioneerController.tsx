@@ -1,7 +1,7 @@
 import { useStoreContext } from "@/Context";
 import { LogAuditTrail } from "@/interfaces/API";
 import { BidStatus, ROLE } from "@/interfaces/enum";
-import { BidData, EventData } from "@/interfaces/websocket";
+import { EventData } from "@/interfaces/websocket";
 import { useAPIServices } from "@/services";
 import { ArrowLeftSquare, ArrowRightSquare } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -23,12 +23,12 @@ export function AuctioneerController() {
     subscribeBid,
     bidStatus,
     setBidStatus,
+    setBidListIndex,
   } = useStoreContext();
 
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [withdrawModal, setWithdrawModal] = useState(false);
-  const [bids, setBids] = useState<BidData[]>([]);
   const [naviStatus, setNaviStatus] = useState(false);
 
   const {
@@ -305,23 +305,19 @@ export function AuctioneerController() {
       auction_id: auctionId,
       event_id: eventId,
       onData: (data) => {
-        console.log(data);
+        // if (payload.bidders.highest_amount >= data.amount) {
+        //   return;
+        // }
 
-        if (payload.bidders.highest_amount >= data.amount) {
-          return;
-        }
-
-        if (payload.bidders.highest_user_id === data.user_id) {
-          return;
-        }
-
-        setBids((prev) => [...prev, data]);
+        // if (payload.bidders.highest_user_id === data.user_id) {
+        //   return;
+        // }
 
         setPayload((prev) => {
           const updatedPayload = {
             ...prev,
             bidders: {
-              all: [...prev.bidders.all, data],
+              all: [data, ...prev.bidders.all],
               highest_amount: data.amount,
               highest_user_id: data.user_id,
               highest_user_name: data.name,
@@ -333,6 +329,8 @@ export function AuctioneerController() {
               up: prev.bid.up,
             },
           };
+
+          setBidListIndex(0);
 
           publishEvent({ event_id: eventId, data: updatedPayload });
 
@@ -436,7 +434,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={clickSold}
-              show={bidStatus == 3 && bids.length > 0}
+              show={bidStatus == 3 && payload.bidders.all.length > 0}
               className="bg-green-600"
             >
               SOLD
@@ -444,7 +442,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={clickHold}
-              show={bidStatus == 3 && bids.length == 0}
+              show={bidStatus == 3 && payload.bidders.all.length == 0}
               className="bg-green-600"
             >
               NO BID

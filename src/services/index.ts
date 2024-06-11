@@ -15,13 +15,13 @@ export enum KEY {
   depo_info = "depo info",
   tx = "transactions",
   contract = "contract",
-  auction_item = "auction_item",
+  auction = "auction",
   credit = "credit",
   auctioneer = "auctioneer",
 }
 
 /* 
-  const queryKey = [KEY.auction_item, auctionId];
+  const queryKey = [KEY.auction, auctionId];
   const data = useGetQueryData<T>(queryKey);
 */
 export function useGetQueryData<T>(key: QueryKey): T {

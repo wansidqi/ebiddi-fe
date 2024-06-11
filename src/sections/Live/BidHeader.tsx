@@ -2,10 +2,10 @@ import { useStoreContext } from "@/Context";
 import { DynamicRenderer } from "@/components";
 import { toast } from "@/components/ui/use-toast";
 import { CallMessage } from "@/data/call-alert";
-import { EventsInterface } from "@/interfaces";
+import { CreditInterface, EventsInterface } from "@/interfaces";
 import { BidStatus, ROLE } from "@/interfaces/enum";
 import { numWithComma, playAudio } from "@/lib/utils";
-import { KEY, useAPIServices, useGetQueryData } from "@/services";
+import { KEY, useGetQueryData } from "@/services";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -15,12 +15,12 @@ export function BidHeader() {
   const { countdown, USER, bidStatus, setBidStatus, payload } =
     useStoreContext();
 
-  const queryKey = [KEY.auction_item, eventId];
-  const event = useGetQueryData<EventsInterface>(queryKey);
-  const auctId = event?.auction_house.id;
+  const queryKeyEvent = [KEY.credit, eventId];
+  const event = useGetQueryData<EventsInterface>(queryKeyEvent);
+  const aucHousetId = event?.auction_house.id;
 
-  const { useGetCredit } = useAPIServices();
-  const { data } = useGetCredit(auctId);
+  const queryKeyCredit = [KEY.credit, aucHousetId];
+  const data = useGetQueryData<CreditInterface[]>(queryKeyCredit);
 
   const displayTime = () => {
     let display = "00:00";
@@ -50,6 +50,9 @@ export function BidHeader() {
 
   useEffect(() => {
     switch (countdown) {
+      case 10:
+        setBidStatus(2);
+        break;
       case 8:
         startAlert({ call: "calling once", variant: "once" });
         break;
@@ -94,7 +97,7 @@ export function BidHeader() {
             <div className="flexcenter-col text-lg sm:order-2">
               <p className="text-primary sm:text-2xl">Current Bid:</p>
               <p className="text-yellow-500 sm:text-2xl">
-                {`RM ${payload.bidders.highest_amount || "-"}`}
+                {`RM ${payload.bidders.highest_amount || "0"}`}
               </p>
             </div>
             <div className="flexcenter-col text-lg sm:order-3">
@@ -103,13 +106,20 @@ export function BidHeader() {
                 {payload.bidders.highest_user_name || "-"}
               </p>
             </div>
-            <div className="flexcenter-col col-span-2 sm:col-span-1 text-lg sm:order-2">
-              <p className="text-primary sm:text-2xl">Deposit Balance:</p>
-              <p className="sm:text-2xl">{data?.auction_house.name}</p>
-              <p className="text-yellow-500 sm:text-2xl">
-                RM{numWithComma(data?.amount as number) || 0}
-              </p>
-            </div>
+            {data?.map((cr, i) => (
+              <div
+                key={i}
+                className="flexcenter-col col-span-2 sm:col-span-1 text-lg sm:order-2"
+              >
+                <p className="text-primary sm:text-2xl">Deposit Balance:</p>
+                <p className="sm:text-2xl text-center">
+                  {cr?.auction_house.name}
+                </p>
+                <p className="text-yellow-500 sm:text-2xl">
+                  RM{numWithComma(cr?.amount as number) || 0}
+                </p>
+              </div>
+            ))}
           </div>
         </DynamicRenderer.When>
         <DynamicRenderer.Else>
@@ -120,7 +130,7 @@ export function BidHeader() {
             </div>
             <div className="flexcenter-col text-lg sm:order-1">
               <p className="text-primary sm:text-2xl">Current Bid:</p>
-              <p className="text-yellow-500 sm:text-2xl">{`RM ${payload.bidders.highest_amount || "-"}`}</p>
+              <p className="text-yellow-500 sm:text-2xl">{`RM ${payload.bidders.highest_amount || "0"}`}</p>
             </div>
             <div className="flexcenter-col text-lg sm:order-3">
               <p className="text-primary sm:text-2xl">Current Bidder:</p>

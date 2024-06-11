@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { InfoIcon } from "lucide-react";
+import { useEffect } from "react";
 
 const popupMsg = [
   { desc: "Bidding is starting", isWaitingScreen: false },
@@ -22,20 +23,29 @@ const popupMsg = [
   },
 ];
 
-interface Props {
+export interface ModalDialog {
   state: boolean;
   handleState: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
   content: string;
   variant?: "destructive" | "outline" | "secondary" | "ghost" | "link";
   onClick: () => any;
+  timer?: number;
 }
 
-export function LiveDialog(props: Props) {
+export function LiveDialog(props: ModalDialog) {
   const onConfirm = () => {
     props.handleState(false);
     props.onClick();
   };
+
+  useEffect(() => {
+    if (props.timer && props.state === true) {
+      setTimeout(() => {
+        props.handleState(false);
+      }, props.timer);
+    }
+  }, [props.state]);
 
   return (
     <div>
