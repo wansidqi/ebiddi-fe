@@ -253,6 +253,7 @@ export function Live() {
     subscribeEvent({
       event_id: eventId,
       onData: (data) => {
+        console.log(data.countdown);
         setCountdown(data.countdown);
         setPayload(data);
 
@@ -295,11 +296,11 @@ export function Live() {
             setBidStatus(2);
           }
 
-          if (bidStatus === 3) {
-            setCountdown(0);
-          } else {
-            setCountdown(payload.countdown);
-          }
+          // if (bidStatus === 3) {
+          //   setCountdown(0);
+          // } else {
+          //   setCountdown(payload.countdown);
+          // }
 
           if (isBidding) {
             if (payload.bidders.all.length >= data.bidders.all.length) return;
@@ -460,7 +461,7 @@ export function Live() {
 
         <DynamicRenderer>
           <DynamicRenderer.When cond={isNotAuctioneer && isAuctionIdNotExist}>
-          {/* <DynamicRenderer.When cond={false}> */}
+            {/* <DynamicRenderer.When cond={false}> */}
             <WaitingComponent />
           </DynamicRenderer.When>
           <DynamicRenderer.Else>
