@@ -305,13 +305,13 @@ export function AuctioneerController() {
       auction_id: auctionId,
       event_id: eventId,
       onData: (data) => {
-        // if (payload.bidders.highest_amount >= data.amount) {
-        //   return;
-        // }
+        if (payload.bidders.highest_amount >= data.amount) {
+          return;
+        }
 
-        // if (payload.bidders.highest_user_id === data.user_id) {
-        //   return;
-        // }
+        if (payload.bidders.highest_user_id === data.user_id) {
+          return;
+        }
 
         setPayload((prev) => {
           const updatedPayload = {
