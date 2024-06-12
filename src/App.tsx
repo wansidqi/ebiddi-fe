@@ -13,19 +13,26 @@ import {
   TAC,
 } from "@/pages";
 import { AuctContract, AuctList, Items } from "./sections";
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { TOKEN, getToken } from "./datasource/sessionStorage.datasource";
 import { useStoreContext } from "./Context";
 import { AlertDialog } from "./components";
 import { ROLE } from "./interfaces/enum";
+import { LoaderCircle } from "lucide-react";
 
 function App() {
   const { SET_USER } = useStoreContext();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const userAuth = JSON.parse(getToken(TOKEN.user) as string);
     SET_USER(userAuth);
-  }, []);
+    setLoading(false); // set loading to false after setting user
+  }, [SET_USER]);
+
+  if (loading) {
+    return <div>Loading...</div>; // or a loading spinner
+  }
 
   return (
     <Fragment>
@@ -70,24 +77,34 @@ function App() {
 
 function RequireNoAuth() {
   const { USER } = useStoreContext();
+  if (USER === undefined) return <Spinner />;
   return !USER ? <Outlet /> : <Navigate to="/events" />;
 }
 
 function RequireBidderAuth() {
   const { USER } = useStoreContext();
+  if (USER === undefined) return <Spinner />;
   return USER?.role === ROLE.BIDDER ? <Outlet /> : <Navigate to="/login" />;
-  return <Outlet/>
 }
 
 function RequireAuctioneerAuth() {
   const { USER } = useStoreContext();
+  if (USER === undefined) return <Spinner />;
   return USER?.role === ROLE.AUCTIONEER ? <Outlet /> : <Navigate to="/login" />;
-  return <Outlet/>
 }
 
 function RequireVerificationToken() {
   const token = getToken(TOKEN.auth);
+  if (token === undefined) return <Spinner />;
   return token ? <Outlet /> : <Navigate to="/login" />;
+}
+
+function Spinner() {
+  return (
+    <div className="flexcenter h-screen">
+      <LoaderCircle size={"100px"} className="animate-spin" />
+    </div>
+  );
 }
 
 export default App;
