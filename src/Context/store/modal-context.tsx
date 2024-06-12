@@ -82,17 +82,6 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
   const [withdraw, setWithdraw] = useState(false);
   const [hold, setHold] = useState(false);
 
-  // const [biddingModal, setBiddingModal] = useState({
-  //   start: { state: false, title: "", content: "", variant: "default" },
-  //   hold: { state: false, title: "", content: "", variant: "default" },
-  //   reauction: { state: false, title: "", content: "", variant: "default" },
-  //   withdraw: { state: false, title: "", content: "", variant: "default" },
-  //   noBid: { state: false, title: "", content: "", variant: "default" },
-  //   sold: { state: false, title: "", content: "", variant: "default" },
-  //   call1: { state: false, title: "", content: "", variant: "default" },
-  //   call2: { state: false, title: "", content: "", variant: "default" },
-  //   call3: { state: false, title: "", content: "", variant: "destructive" },
-  // });
   const biddingModal = {
     closeModal,
     setCloseModal,
