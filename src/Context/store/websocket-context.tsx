@@ -74,8 +74,10 @@ function WsContext(props: React.PropsWithChildren<{}>) {
       highest_user_name: "",
     },
   });
-  const [bidStatus, setBidStatus] = useState<BidStatus>(1);
+  const [bidStatus, setBidStatus] = useState<BidStatus>(0);
   const [bidListIndex, setBidListIndex] = useState(-1);
+
+  // console.log("bid status:", bidStatus);
 
   const isAuctioneer = USER?.role === ROLE.AUCTIONEER;
 
