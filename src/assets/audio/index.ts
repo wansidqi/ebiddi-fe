@@ -56,5 +56,5 @@ export const playAudio = (name: Audio) => {
   }
 
   const audio = new Audio(audioSrc);
-  audio.play().catch((e) => console.log(e));
+  audio.play().catch((e) => console.error(e));
 };
