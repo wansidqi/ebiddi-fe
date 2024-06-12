@@ -288,6 +288,10 @@ export function AuctioneerController() {
   };
 
   useEffect(() => {
+    setBidStatus(1);
+  }, [auctionId]);
+
+  useEffect(() => {
     const sendDisplay = () => {
       setNaviStatus(true);
       if (!eventId) return;
@@ -360,7 +364,7 @@ export function AuctioneerController() {
     publishTimer();
 
     if (countdown === 0) {
-      setBidStatus(1);
+      // setBidStatus(1);
       const timeout = setTimeout(() => {
         setIsActive(false);
         setCountdown(11);
