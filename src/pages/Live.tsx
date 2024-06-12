@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Container } from "@/components/Container";
 import {
   AuctioneerController,
@@ -64,6 +64,7 @@ export function Live() {
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
   const isAuctionIdNotExist = payload.auction_id === "";
 
+  const updateFlag = useRef(false);
   const [isBidding, setIsBidding] = useState(false);
   const [isBtnDisabled, setIsBtnDisabled] = useState(false);
 
@@ -289,10 +290,11 @@ export function Live() {
         if (data.status === "AUCTION") {
           setIsBidding(true);
 
-          if (bidStatus === 0) {
+          if (bidStatus === 0 && !updateFlag.current) {
             setStartModal(true);
             playAudio("start");
             setBidStatus(2);
+            updateFlag.current = true; // Set the flag to true after initial update
           }
 
           // if (bidStatus === 3) {
@@ -432,6 +434,7 @@ export function Live() {
   useEffect(() => {
     if (payload.auction_id) {
       refetch();
+      updateFlag.current = false;
     }
   }, [payload.auction_id]);
 
