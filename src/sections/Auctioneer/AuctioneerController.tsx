@@ -1,7 +1,7 @@
 import { useStoreContext } from "@/Context";
 import { LogAuditTrail } from "@/interfaces/API";
 import { BidStatus, ROLE } from "@/interfaces/enum";
-import { EventData } from "@/interfaces/websocket";
+import { EventData, Status } from "@/interfaces/websocket";
 import { useAPIServices } from "@/services";
 import { ArrowLeftSquare, ArrowRightSquare } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -43,6 +43,34 @@ export function AuctioneerController() {
   const { mutateAsync: onPostItemSold } = usePostItemSold();
   const { mutateAsync: onWithdraw } = usePostWithdraw();
 
+  const resetBid = (onReset?: () => any) => {
+    if (!auction) return;
+    let { current } = payload.bid;
+
+    setPayload((prev) => {
+      let update = {
+        ...prev,
+        bid: {
+          start: auction.reserve_price,
+          up: auction.bid_increment,
+          next: auction.reserve_price,
+          current,
+        },
+      };
+
+      onReset && onReset();
+
+      return update;
+    });
+  };
+
+  const onInitial = () => {
+    setNaviStatus(true);
+    if (!eventId) return;
+
+    resetBid();
+  };
+
   const publishTimer = () => {
     if (!auctionId || !eventId) return;
     setPayload((prev) => ({
@@ -67,25 +95,11 @@ export function AuctioneerController() {
     onPostAuditTrail({ data });
   };
 
-  const resetBid = () => {
-    if (!auction) return;
-    let { current, start } = payload.bid;
-
-    setPayload((prev) => ({
-      ...prev,
-      bid: {
-        start: auction.reserve_price,
-        up: auction.bid_increment,
-        next: start,
-        current,
-      },
-    }));
-  };
-
   const clickStart = () => {
     if (isActive) {
       clickResume();
     } else {
+      onInitial();
       setCountdown(11); ///reset countdown
       setIsActive(true);
       setIsPaused(false);
@@ -93,10 +107,17 @@ export function AuctioneerController() {
 
       setBidStatus(BidStatus.RUN);
 
-      const newPayload: EventData = { ...payload, status: "AUCTION" };
-      setPayload(newPayload);
       if (!eventId) return;
-      publishEvent({ event_id: eventId, data: newPayload });
+      if (!auction) return;
+
+      setPayload((prev) => {
+        let data = {
+          ...prev,
+          status: "AUCTION" as Status,
+        };
+        publishEvent({ event_id: eventId, data });
+        return data;
+      });
 
       sendAuditTrail({
         event_id: Number(payload.event_id),
@@ -292,18 +313,8 @@ export function AuctioneerController() {
   ///reset bid
   useEffect(() => {
     setBidStatus(1);
+    onInitial();
   }, [auctionId]);
-
-  ///send display
-  useEffect(() => {
-    const sendDisplay = () => {
-      setNaviStatus(true);
-      if (!eventId) return;
-      resetBid();
-      publishEvent({ event_id: eventId, data: payload });
-    };
-    sendDisplay();
-  }, [eventId, auction]);
 
   ///subscribe bid
   useEffect(() => {

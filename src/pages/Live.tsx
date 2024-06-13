@@ -466,7 +466,6 @@ export function Live() {
 
         <DynamicRenderer>
           <DynamicRenderer.When cond={isNotAuctioneer && isAuctionIdNotExist}>
-            {/* <DynamicRenderer.When cond={false}> */}
             <WaitingComponent />
           </DynamicRenderer.When>
           <DynamicRenderer.Else>
