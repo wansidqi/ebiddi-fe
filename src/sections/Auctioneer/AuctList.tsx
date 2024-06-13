@@ -29,7 +29,7 @@ export function AuctList() {
   const [showDialog, setshowDialog] = useState(false);
 
   const { data } = useGetEventById(eventId);
-  const { mutateAsync: onCloseEventAPI } = useCloseAuctionEvent();
+  const { mutateAsync: onCloseEventAPI } = useCloseAuctionEvent(eventId);
 
   const auctions = data?.inventories;
 
@@ -54,7 +54,7 @@ export function AuctList() {
 
         return updatedPayload;
       });
-      onCloseEventAPI(eventId);
+      onCloseEventAPI();
     }
   };
 

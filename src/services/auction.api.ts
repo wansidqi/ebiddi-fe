@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { KEY } from ".";
 import datasource from "@/datasource/axiosInstance";
 import { AuctionInterface, CreditInterface } from "@/interfaces";
@@ -150,11 +150,12 @@ const usePostAuditTrail = () => {
   });
 };
 
-const useCloseAuctionEvent = () => {
+const useCloseAuctionEvent = (eventId: string | undefined) => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (eventId: string) => {
+    mutationFn: async () => {
       const response = await datasource({
         method: "post",
         url: `/event/close/${eventId}`,
@@ -162,7 +163,8 @@ const useCloseAuctionEvent = () => {
       return response.data;
     },
     onSuccess: () => {
-      navigate("/events");
+      navigate(`/auctioneer/list/${eventId}`);
+      queryClient.invalidateQueries([KEY.event, eventId]);
     },
   });
 };
