@@ -53,13 +53,11 @@ function App() {
         </Route>
 
         <Route element={<RequireBidderAuth />}>
-          <Route path={"/profile"} element={<Profile />} />
           <Route path={"/contract"} element={<Contract />} />
           <Route path={"/policy"} element={<Policies />} />
         </Route>
 
         <Route element={<RequireAuctioneerAuth />}>
-          <Route path={"/profile"} element={<Profile />} />
           <Route path={"/auctioneer/list/:eventId"} element={<AuctList />} />
           <Route path={"/contract/event/:eventId"} element={<AuctContract />} />
           <Route
@@ -68,6 +66,7 @@ function App() {
           />
         </Route>
 
+        <Route path={"/profile"} element={<Profile />} />
         <Route path={"/ireportmotor/:vehicle_id"} element={<ReportMotor />} />
         <Route path={"/ireportcar/:vehicle_id"} element={<ReportCar />} />
         <Route path={"/events"} element={<EventsPage />} />

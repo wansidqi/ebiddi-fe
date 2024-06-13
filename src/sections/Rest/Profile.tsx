@@ -6,6 +6,7 @@ import { ROLE } from "@/interfaces/enum";
 import { convertDateTime, numWithComma } from "@/lib/utils";
 import { useAPIServices } from "@/services";
 import { Fragment, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function Profile() {
   const columns = [
@@ -20,6 +21,8 @@ export function Profile() {
   const { USER } = useStoreContext();
   const depoInfo = USER?.credits;
 
+  const navigate = useNavigate();
+
   const { useGetTx, useChangeEmail } = useAPIServices();
   const { data: txs } = useGetTx();
 
@@ -33,6 +36,10 @@ export function Profile() {
 
   useEffect(() => {
     if (USER && USER?.email) setEmailInput(USER?.email);
+  }, []);
+
+  useEffect(() => {
+    if (!USER) navigate("/");
   }, []);
 
   return (
