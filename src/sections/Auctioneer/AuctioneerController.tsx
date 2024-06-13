@@ -289,10 +289,12 @@ export function AuctioneerController() {
     }
   };
 
+  ///reset bid
   useEffect(() => {
     setBidStatus(1);
   }, [auctionId]);
 
+  ///send display
   useEffect(() => {
     const sendDisplay = () => {
       setNaviStatus(true);
@@ -302,8 +304,8 @@ export function AuctioneerController() {
     };
     sendDisplay();
   }, [eventId, auction]);
-  
-///subscribe bid
+
+  ///subscribe bid
   useEffect(() => {
     refetch();
 
@@ -347,6 +349,7 @@ export function AuctioneerController() {
     });
   }, [auctionId, socket]);
 
+  ///timer
   useEffect(() => {
     let interval: NodeJS.Timeout;
 

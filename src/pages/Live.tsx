@@ -250,6 +250,7 @@ export function Live() {
     postTrail({ data });
   };
 
+  ///subscribe event
   useEffect(() => {
     if (!eventId) return;
 
@@ -418,6 +419,7 @@ export function Live() {
     };
   }, [socket, payload]);
 
+  ///subscribe status
   useEffect(() => {
     if (!eventId) return;
     // console.log("render sub status");
@@ -431,6 +433,7 @@ export function Live() {
     });
   }, [socket]);
 
+  ///render when change auctionId
   useEffect(() => {
     if (payload.auction_id) {
       refetch();
