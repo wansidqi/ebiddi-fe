@@ -9,7 +9,7 @@ export function LiveDetail({ auctionId }: { auctionId: string | undefined }) {
 
   return (
     <div className="border flex flex-col gap-y-2 py-3 px-2 rounded-md h-[30em]">
-      <div className="text-center text-2xl my-2">LOT 301</div>
+      <div className="text-center text-2xl my-2">{data?.lot_no}</div>
       <div className="w-full mb-2 flexcenter">
         <img
           loading="lazy"

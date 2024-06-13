@@ -56,7 +56,7 @@ export function LiveDialog(props: ModalDialog) {
             <div className="flexcenter py-1">
               <InfoIcon size={"50px"} />
             </div>
-            <DialogDescription className="py-3 text-center">
+            <DialogDescription className="py-3 text-center text-lg">
               {props.content}
             </DialogDescription>
           </DialogHeader>

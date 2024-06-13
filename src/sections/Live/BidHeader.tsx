@@ -130,7 +130,7 @@ export function BidHeader() {
             </div>
             <div className="flexcenter-col text-lg sm:order-1">
               <p className="text-primary sm:text-2xl">Current Bid:</p>
-              <p className="text-yellow-500 sm:text-2xl">{`RM RM ${numWithComma(payload.bidders.highest_amount) || "0"}`}</p>
+              <p className="text-yellow-500 sm:text-2xl">{`RM ${numWithComma(payload.bidders.highest_amount) || "0"}`}</p>
             </div>
             <div className="flexcenter-col text-lg sm:order-3">
               <p className="text-primary sm:text-2xl">Current Bidder:</p>

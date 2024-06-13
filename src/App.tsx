@@ -1,24 +1,27 @@
 import "./custom.css";
 import { Route, Routes, Navigate, Outlet } from "react-router-dom";
-import {
-  Contract,
-  Events,
-  Home,
-  Live,
-  Login,
-  Policies,
-  Profile,
-  ReportCar,
-  ReportMotor,
-  TAC,
-} from "@/pages";
-import { AuctContract, AuctList, Items } from "./sections";
+
 import { Fragment, useEffect, useState } from "react";
 import { TOKEN, getToken } from "./datasource/sessionStorage.datasource";
 import { useStoreContext } from "./Context";
 import { AlertDialog } from "./components";
 import { ROLE } from "./interfaces/enum";
 import { LoaderCircle } from "lucide-react";
+import {
+  TAC,
+  Login,
+  Profile,
+  Contract,
+  Policies,
+  AuctList,
+  AuctContract,
+  LivePage,
+  ReportMotor,
+  ReportCar,
+  EventsPage,
+  Items,
+  Home,
+} from "./sections";
 
 function App() {
   const { SET_USER } = useStoreContext();
@@ -61,15 +64,15 @@ function App() {
           <Route path={"/contract/event/:eventId"} element={<AuctContract />} />
           <Route
             path={"/auctioneer/live/:eventId/:auctionId"}
-            element={<Live />}
+            element={<LivePage />}
           />
         </Route>
 
         <Route path={"/ireportmotor/:vehicle_id"} element={<ReportMotor />} />
         <Route path={"/ireportcar/:vehicle_id"} element={<ReportCar />} />
-        <Route path={"/events"} element={<Events />} />
+        <Route path={"/events"} element={<EventsPage />} />
         <Route path={"/items/:eventId"} element={<Items />} />
-        <Route path={"/live/:eventId"} element={<Live />} />
+        <Route path={"/live/:eventId"} element={<LivePage />} />
       </Routes>
     </Fragment>
   );

@@ -720,7 +720,7 @@
               <div className="center" style="position: relative;">
               <img src="https://e-biddi.com/web/images/Processed_Vehicle_Parts.png" style ="width:780px">
               <div v-for="(location, index) in locations" :key="index">
-                <div style="text-align:center;background-color:white;display:inline-block;min-width:20px;height:18px;color:black;border:1px solid black;box-sizing:border-box;position:absolute;left: + location.left + px;top: + location.top + px;">
+                <div style="">
                   {{ location.name }}
                 </div>
               </div>

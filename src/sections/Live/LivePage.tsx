@@ -23,7 +23,7 @@ import { useAPIServices } from "@/services";
 import { playAudio } from "@/assets/audio";
 import { numWithComma } from "@/lib/utils";
 
-export function Live() {
+export function LivePage() {
   const { eventId } = useParams();
   const navigate = useNavigate();
   const {

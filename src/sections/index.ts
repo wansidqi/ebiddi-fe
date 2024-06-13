@@ -1,3 +1,4 @@
+export * from "./Events/EventsPage";
 export * from "./Events/SingleEvent";
 export * from "./Events/EventDetail";
 export * from "./Events/EventCountdown";
@@ -11,15 +12,26 @@ export * from "./Items/ItemDetail";
 export * from "./Items/ItemsCarousel";
 export * from "./Items/ItemGridLoading";
 
+export * from "./Live/LivePage";
 export * from "./Live/BidderList";
 export * from "./Live/BidHeader";
 export * from "./Live/LiveDetail";
 export * from "./Live/LiveDialog";
-
-export * from "./Auctioneer/AuctioneerController";
-export * from "./Auctioneer/AuctContract";
-export * from "./Auctioneer/AuctList";
-
-export * from "./Bidder/BidderController";
+export * from "./Live/AuctioneerController";
 
 export * from "./Layout/Navigation";
+
+export * from "./Report/ReportCar";
+export * from "./Report/ReportMotor";
+export * from "./Report/VehicleInspection";
+
+export * from "./Authentication/Login";
+export * from "./Authentication/TAC";
+
+export * from "./Rest/AuctContract";
+export * from "./Rest/AuctList";
+export * from "./Rest/Contract";
+export * from "./Rest/Home";
+export * from "./Rest/Policies";
+export * from "./Rest/Profile";
+export * from "./Rest/Term";

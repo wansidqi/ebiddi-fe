@@ -1,5 +1,5 @@
 import { useStoreContext } from "@/Context";
-import { Container } from "@/components/Container";
+import { Container } from "@/components";
 import { useAPIServices } from "@/services";
 
 export function Contract() {

@@ -12,8 +12,8 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { useAPIServices } from "@/services";
 import { LoaderCircle } from "lucide-react";
 import { useParams } from "react-router-dom";
-import { VehicleInspection } from ".";
 import { InvestigationReport } from "@/interfaces";
+import { VehicleInspection } from "..";
 
 export const tickbox = (checking: any) => {
   return checking ? "☑ " : "☐ ";

@@ -1,12 +1,11 @@
 import { Container } from "@/components/Container";
-import { SingleEvent, EventLoading } from "@/sections";
+import { SingleEvent, EventLoading, Term } from "@/sections";
 import { useAPIServices } from "@/services";
-import { Term } from ".";
 import { DynamicRenderer } from "@/components";
 import { useStoreContext } from "@/Context";
 import { ROLE } from "@/interfaces/enum";
 
-export function Events() {
+export function EventsPage() {
   const { useGetAllEvents, useGetAuctioneerEvent } = useAPIServices();
   const { data, isLoading } = useGetAllEvents();
   const { data: eventAuct, isLoading: auctLoading } = useGetAuctioneerEvent();
