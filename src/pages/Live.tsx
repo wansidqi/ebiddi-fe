@@ -40,6 +40,7 @@ export function Live() {
     setBidStatus,
     setBidListIndex,
     dev,
+    unsubscribeEvent,
   } = useStoreContext();
 
   const {
@@ -166,6 +167,7 @@ export function Live() {
 
   const reset = () => {
     refetch();
+    setBidStatus(0);
 
     setPayload((prev) => ({
       ...prev,
@@ -357,7 +359,6 @@ export function Live() {
         if (data.status === "REAUCTION") {
           setReauctionModal(true);
           playAudio("reauction");
-          setBidStatus(0);
           reset();
           setIsBidding(false);
 
@@ -390,7 +391,6 @@ export function Live() {
             setOtherWinner(true);
           }
 
-          setBidStatus(0);
           reset();
         }
 
@@ -403,7 +403,6 @@ export function Live() {
           setIsBidding(false);
           setWithdraw(true);
           playAudio("withdraw");
-          setBidStatus(0);
           reset();
         }
 
@@ -411,11 +410,14 @@ export function Live() {
           setIsBidding(false);
           setHold(true);
           playAudio("withdraw");
-          setBidStatus(0);
           reset();
         }
       },
     });
+
+    return () => {
+      unsubscribeEvent(eventId);
+    };
   }, [socket, payload]);
 
   useEffect(() => {

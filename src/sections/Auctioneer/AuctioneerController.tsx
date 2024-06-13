@@ -142,7 +142,7 @@ export function AuctioneerController() {
       onSuccess: () => {
         setPayload((prev) => ({ ...prev, status: "WITHDRAW" }));
         //stop timer
-        setCountdown(0);
+        setCountdown(11);
         setIsActive(false);
         setIsPaused(false);
         if (!eventId) return;
@@ -154,12 +154,12 @@ export function AuctioneerController() {
         setBidStatus(BidStatus.WITHDRAW);
         setNaviStatus(true);
 
-        sendAuditTrail({
-          event_id: Number(payload.event_id),
-          auction_id: Number(payload.auction_id),
-          status: "WITHDRAW",
-          bid_amount: 0,
-        });
+        // sendAuditTrail({
+        //   event_id: Number(payload.event_id),
+        //   auction_id: Number(payload.auction_id),
+        //   status: "WITHDRAW",
+        //   bid_amount: 0,
+        // });
       },
     });
   };

@@ -33,6 +33,7 @@ type Data = {
   publishBid: (params: PubBid) => void;
   subscribeEvent: (params: Subscription<EventData>) => Promise<void>;
   subscribeStatus: (params: Subscription<StatusData>) => Promise<void>;
+  unsubscribeEvent: (event_id: string) => void;
 
   bidData: BidData;
   setBidData: React.Dispatch<React.SetStateAction<BidData>>;
@@ -152,6 +153,13 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     }
   };
 
+  const unsubscribeEvent = (event_id: string) => {
+    if (!socket) return;
+    const url = `event/${event_id}`;
+    const test_url = `test/event/${event_id}`;
+    socket.unsubscribe(dev ? test_url : url);
+  };
+
   // useEffect(() => {
   //   async function sub() {
   //     if (!socket) return;
@@ -224,6 +232,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     setBidStatus,
     bidListIndex,
     setBidListIndex,
+    unsubscribeEvent,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;
