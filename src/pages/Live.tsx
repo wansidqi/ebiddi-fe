@@ -530,7 +530,7 @@ export function Live() {
         handleState={setStartModal}
         title={`Lot ${auction?.lot_no}`}
         content={`Bidding is starting`}
-        timer={1000}
+        timer={1500}
         onClick={() => {}}
       />
       <LiveDialog
