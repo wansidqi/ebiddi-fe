@@ -1,4 +1,5 @@
 import { useStoreContext } from "@/Context";
+import { numWithComma } from "@/lib/utils";
 import { Fragment, useEffect } from "react";
 
 export function BidderList() {
@@ -42,9 +43,11 @@ export function BidderList() {
                 className={`flex items-end flex-col ${index === 0 ? "text-yellow-400" : ""}`}
               >
                 {index === bidListIndex ? (
-                  <div className="animate-appear">{bidder?.amount}</div>
+                  <div className="animate-appear">
+                    RM{numWithComma(bidder?.amount)}
+                  </div>
                 ) : (
-                  bidder?.amount
+                  <p>RM{numWithComma(bidder?.amount)}</p>
                 )}
               </div>
             </Fragment>
