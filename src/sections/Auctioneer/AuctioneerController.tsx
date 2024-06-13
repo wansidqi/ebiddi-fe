@@ -54,6 +54,7 @@ export function AuctioneerController() {
     publishEvent({ event_id: eventId, data: { ...payload, countdown } });
   };
 
+  ///comment for testing
   const sendAuditTrail = (log: LogAuditTrail) => {
     if (!USER) return;
     let data = `event_id=${log.event_id}`;
@@ -85,7 +86,7 @@ export function AuctioneerController() {
     if (isActive) {
       clickResume();
     } else {
-      setCountdown(11);
+      setCountdown(11); ///reset countdown
       setIsActive(true);
       setIsPaused(false);
       setNaviStatus(false);
@@ -141,7 +142,8 @@ export function AuctioneerController() {
     onWithdraw(payload.auction_id, {
       onSuccess: () => {
         setPayload((prev) => ({ ...prev, status: "WITHDRAW" }));
-        //stop timer
+
+        ///reset countdown
         setCountdown(11);
         setIsActive(false);
         setIsPaused(false);
@@ -154,12 +156,12 @@ export function AuctioneerController() {
         setBidStatus(BidStatus.WITHDRAW);
         setNaviStatus(true);
 
-        // sendAuditTrail({
-        //   event_id: Number(payload.event_id),
-        //   auction_id: Number(payload.auction_id),
-        //   status: "WITHDRAW",
-        //   bid_amount: 0,
-        // });
+        sendAuditTrail({
+          event_id: Number(payload.event_id),
+          auction_id: Number(payload.auction_id),
+          status: "WITHDRAW",
+          bid_amount: 0,
+        });
       },
     });
   };
@@ -347,11 +349,9 @@ export function AuctioneerController() {
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
-    // if (bidStatus === BidStatus.END || payload.status === "SOLD") {
-    //   setCountdown(0);
-    // } else {
-    //   setCountdown(payload.countdown);
-    // }
+    if (bidStatus === BidStatus.END || payload.status === "SOLD") {
+      setCountdown(11); ///reset countdown
+    }
 
     if (isActive && countdown > 0 && !isPaused) {
       interval = setInterval(() => {
@@ -367,7 +367,7 @@ export function AuctioneerController() {
       // setBidStatus(1);
       const timeout = setTimeout(() => {
         setIsActive(false);
-        setCountdown(11);
+        setCountdown(11); ///reset countdown
       }, 1000);
       return () => clearTimeout(timeout);
     }
