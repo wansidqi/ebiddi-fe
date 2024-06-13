@@ -299,11 +299,9 @@ export function Live() {
             updateFlag.current = true; // Set the flag to true after initial update
           }
 
-          // if (bidStatus === 3) {
-          //   setCountdown(0);
-          // } else {
-          //   setCountdown(payload.countdown);
-          // }
+          if (bidStatus === 3) {
+            setCountdown(11);
+          }
 
           if (isBidding) {
             if (payload.bidders.all.length >= data.bidders.all.length) return;

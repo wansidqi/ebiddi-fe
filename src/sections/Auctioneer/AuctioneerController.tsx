@@ -302,7 +302,8 @@ export function AuctioneerController() {
     };
     sendDisplay();
   }, [eventId, auction]);
-
+  
+///subscribe bid
   useEffect(() => {
     refetch();
 
