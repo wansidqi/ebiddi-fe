@@ -25,7 +25,7 @@ export function BidHeader() {
   const displayTime = () => {
     let display = "00:00";
 
-    // if (countdown === -1) return (display = "00:00");
+    if (countdown === -1) return (display = "00:00");
 
     if (countdown.toString().length === 2) {
       display = `00:${countdown}`;
