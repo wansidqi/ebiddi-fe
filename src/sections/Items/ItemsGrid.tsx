@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { EventsInterface, InventoryInterface } from "@/interfaces";
+import { InventoryInterface } from "@/interfaces";
 import { StepBack, StepForward } from "lucide-react";
 import { ItemDetail } from "./ItemDetail";
 import { useState } from "react";
@@ -8,7 +8,11 @@ import { VEHICLE_TYPE } from "@/interfaces/enum";
 
 export const gridCSS = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3";
 
-export function ItemsGrid({ events }: { events: undefined | EventsInterface }) {
+export function ItemsGrid({
+  inventories,
+}: {
+  inventories: undefined | InventoryInterface[];
+}) {
   const navigate = useNavigate();
   const itemsPerPage = 12;
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,7 +20,7 @@ export function ItemsGrid({ events }: { events: undefined | EventsInterface }) {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  const currentItems = events?.inventories.slice(
+  const currentItems = inventories?.slice(
     indexOfFirstItem,
     indexOfLastItem
   );
@@ -30,7 +34,7 @@ export function ItemsGrid({ events }: { events: undefined | EventsInterface }) {
     setCurrentPage(currentPage - 1);
   };
 
-  if (events?.inventories && events.inventories.length < 1)
+  if (inventories && inventories.length < 1)
     return (
       <div className="flexcenter-col mt-20">
         <p className="sm:text-5xl text-4xl">NO ITEM LISTED</p>
@@ -101,12 +105,16 @@ export function ItemsGrid({ events }: { events: undefined | EventsInterface }) {
           <span className="text-xl">{currentPage}</span>
           <span className="">of</span>
           <span className="text-xl">
-            {Math.ceil((events?.inventories.length as number) / itemsPerPage)}
+            {Math.ceil(
+              (inventories?.length as number) / itemsPerPage
+            )}
           </span>
         </div>
         <button
           onClick={nextPage}
-          disabled={indexOfLastItem >= (events?.inventories.length as number)}
+          disabled={
+            indexOfLastItem >= (inventories?.length as number)
+          }
         >
           <StepForward />
         </button>

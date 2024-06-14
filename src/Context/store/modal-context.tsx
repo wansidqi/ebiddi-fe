@@ -49,7 +49,7 @@ type Data = {
   >;
 
   swal: ModalDialog;
-  $swal: React.Dispatch<React.SetStateAction<ModalDialog>>;
+  $swal: (params: Omit<ModalDialog, "show">) => void;
   $swalClose: () => void;
 };
 
@@ -62,7 +62,7 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
   const [term, setTerm] = useState({ showTerm: false, eventId: "" });
   const [showDetailById, setShowDetailById] = useState<null | number>(null);
 
-  const [swal, $swal] = useState<ModalDialog>({
+  const [swal, set$swal] = useState<ModalDialog>({
     show: false,
     title: "",
     content: "",
@@ -72,13 +72,24 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
   });
 
   const $swalClose = () => {
-    $swal({
+    set$swal({
       show: false,
       title: "",
       content: "",
       timer: undefined,
       onClick: () => {},
       variant: undefined,
+    });
+  };
+
+  const $swal = (params: Omit<ModalDialog, "show">) => {
+    set$swal({
+      show: true,
+      title: params.title,
+      content: params.content,
+      timer: params.timer,
+      onClick: params.onClick,
+      variant: params.variant,
     });
   };
 

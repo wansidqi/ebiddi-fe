@@ -6,6 +6,7 @@ import {
   BidderList,
   LiveDetail,
   LiveDialog,
+  ReauctionList,
 } from "@/sections";
 import waiting from "@/assets/images/waiting.png";
 import { useStoreContext } from "@/Context";
@@ -233,7 +234,6 @@ export function LivePage() {
 
   const handleReauction = (auctionId: string) => {
     $swal({
-      show: true,
       title: "Reauction",
       content: "Please confirm if you want to reauction this lot",
       onClick: () => {
@@ -251,7 +251,7 @@ export function LivePage() {
         publishReauction({
           event_id: eventId,
           data: {
-            auction_event_id: auctionId,
+            auction_event_id: auctionId as string,
             event_id: eventId,
           },
         });
@@ -261,7 +261,6 @@ export function LivePage() {
           title: "Error Reauctioning",
           content: `${e}`,
           timer: 3000,
-          show: true,
         });
       },
     });
@@ -280,7 +279,6 @@ export function LivePage() {
         if (data.status === "CLOSE") {
           setIsBidding(false);
           $swal({
-            show: true,
             title: event ? event?.name : "",
             content: `Auction has been closed, that's all for this event`,
             onClick: () => navigate("/events"),
@@ -291,7 +289,6 @@ export function LivePage() {
         if (data.status === "REAUCTIONLIST") {
           reset();
           $swal({
-            show: true,
             title: "Redirecting to Reauction List",
             content: `Select lot you wish to be reauction`,
             timer: 3000,
@@ -303,7 +300,6 @@ export function LivePage() {
           setCurrentPage("reauctionlist");
           setPayload((prev) => ({ ...prev, expiryAt: data.expiryAt }));
           $swal({
-            show: true,
             title: `Reauction Expiry Updated`,
             timer: 3000,
             content: `The new reauction expiry is at ${moment(payload.expiryAt).format("HH:mm")}`,
@@ -338,7 +334,6 @@ export function LivePage() {
 
           if (bidStatus === 0 && !updateFlag.current) {
             $swal({
-              show: true,
               title: `Lot ${auction?.lot_no}`,
               content: "Bidding is starting",
               timer: 1500,
@@ -406,7 +401,6 @@ export function LivePage() {
 
         if (data.status === "REAUCTION") {
           $swal({
-            show: true,
             title: `Lot ${auction?.lot_no}`,
             content: `Reauction`,
             timer: 1000,
@@ -437,14 +431,12 @@ export function LivePage() {
           if (USER) {
             if (data.bidders.highest_user_id === USER.id) {
               $swal({
-                show: true,
                 title: `Lot ${auction?.lot_no}`,
                 content: `Congratulation, you have won the auction`,
                 timer: 3000,
               });
             } else {
               $swal({
-                show: true,
                 title: `Lot ${auction?.lot_no}`,
                 content: `${payload.bidders.highest_user_name} have won the auction`,
                 timer: 3000,
@@ -453,7 +445,6 @@ export function LivePage() {
           } else {
             //live view (without auth)
             $swal({
-              show: true,
               title: `Lot ${auction?.lot_no}`,
               content: `${payload.bidders.highest_user_name} have won the auction`,
               timer: 3000,
@@ -465,7 +456,6 @@ export function LivePage() {
 
         if (data.status === "PAUSE") {
           $swal({
-            show: true,
             title: `Lot ${auction?.lot_no}`,
             content: `Auctioneer hold auction`,
           });
@@ -475,7 +465,6 @@ export function LivePage() {
         if (data.status === "WITHDRAW") {
           setIsBidding(false);
           $swal({
-            show: true,
             title: `Lot ${auction?.lot_no}`,
             content: `This auction is withdraw`,
           });
@@ -486,7 +475,6 @@ export function LivePage() {
         if (data.status === "HOLD") {
           setIsBidding(false);
           $swal({
-            show: true,
             title: `Lot ${auction?.lot_no}`,
             content: `item #${payload.auction_event_id} request for reauction`,
             timer: 1000,
@@ -522,7 +510,6 @@ export function LivePage() {
 
         if (data.status === "REAUCTIONITEM") {
           $swal({
-            show: true,
             title: `Item Reauction`,
             content: `item #${payload.auction_event_id} request for reauction`,
             timer: 1000,
@@ -556,82 +543,96 @@ export function LivePage() {
 
   return (
     <div>
+      <LiveDialog />
       <Toaster />
       <Container>
-        <p className="text-3xl sm:text-5xl text-center text-primary">
-          AUCTIONS LIVE VIEW
-        </p>
+        <main className={currentPage === "bidding" ? "" : "hidden"}>
+          <p className="text-3xl sm:text-5xl text-center text-primary">
+            AUCTIONS LIVE VIEW
+          </p>
 
-        <main className="m-3 flexcenter gap-10">
-          <div className="flexcenter gap-2 ">
-            <div className="border-2 border-primary rounded-full p-2 text-primary">
-              <EyeIcon />
+          <main className="m-3 flexcenter gap-10">
+            <div className="flexcenter gap-2 ">
+              <div className="border-2 border-primary rounded-full p-2 text-primary">
+                <EyeIcon />
+              </div>
+              <p className="pt-1">888</p>
             </div>
-            <p className="pt-1">888</p>
-          </div>
-          <div className="flexcenter gap-2 ">
-            <div className="border-2 border-primary rounded-full p-2 text-primary">
-              <LucideGavel />
+            <div className="flexcenter gap-2 ">
+              <div className="border-2 border-primary rounded-full p-2 text-primary">
+                <LucideGavel />
+              </div>
+              <p className="pt-1">888</p>
             </div>
-            <p className="pt-1">888</p>
-          </div>
+          </main>
+
+          <DynamicRenderer>
+            <DynamicRenderer.When cond={isNotAuctioneer && isAuctionIdNotExist}>
+              <WaitingComponent />
+            </DynamicRenderer.When>
+            <DynamicRenderer.Else>
+              <Fragment>
+                <BidHeader />
+                <div className="flex sm:grid sm:grid-cols-2 w-full overflow-x-auto gap-4 my-8">
+                  <div
+                    id="bidding"
+                    className="flex-shrink-0 w-[92%] sm:order-1"
+                  >
+                    <BidderList />
+                  </div>
+                  <div
+                    id="details"
+                    className="flex-shrink-0 w-[92%] sm:order-2"
+                  >
+                    <LiveDetail auctionId={payload.auction_id} />
+                  </div>
+                </div>
+
+                {USER?.role === ROLE.BIDDER && (
+                  <div className="flexcenter gap-6">
+                    <button
+                      disabled={isBidDisabled()}
+                      onClick={clickBid}
+                      className={`${isBidDisabled() ? "bg-green-400" : "bg-green-600"}  py-3 rounded-md w-full relative sm:w-1/2`}
+                    >
+                      <p>
+                        {typeof showNumber() === "number"
+                          ? `RM${numWithComma(showNumber() as number)}`
+                          : showNumber()}
+                      </p>
+                      <div className="absolute right-10 top-[0.85rem]">
+                        <LucideGavel />
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setIsBtnDisabled((prev) => !prev)}
+                      className="flex gap-4"
+                    >
+                      {isBtnDisabled ? <LockKeyholeIcon /> : <UnlockKeyhole />}
+                    </button>
+                    {dev && (
+                      <button
+                        onClick={testBid}
+                        className="px-3 py-2 bg-blue-600 rounded-md"
+                      >
+                        test bid
+                      </button>
+                    )}
+                  </div>
+                )}
+                {!isNotAuctioneer && <AuctioneerController />}
+              </Fragment>
+            </DynamicRenderer.Else>
+          </DynamicRenderer>
         </main>
 
-        <DynamicRenderer>
-          <DynamicRenderer.When cond={isNotAuctioneer && isAuctionIdNotExist}>
-            <WaitingComponent />
-          </DynamicRenderer.When>
-          <DynamicRenderer.Else>
-            <Fragment>
-              <BidHeader />
-              <div className="flex sm:grid sm:grid-cols-2 w-full overflow-x-auto gap-4 my-8">
-                <div id="bidding" className="flex-shrink-0 w-[92%] sm:order-1">
-                  <BidderList />
-                </div>
-                <div id="details" className="flex-shrink-0 w-[92%] sm:order-2">
-                  <LiveDetail auctionId={payload.auction_id} />
-                </div>
-              </div>
-
-              {USER?.role === ROLE.BIDDER && (
-                <div className="flexcenter gap-6">
-                  <button
-                    disabled={isBidDisabled()}
-                    onClick={clickBid}
-                    className={`${isBidDisabled() ? "bg-green-400" : "bg-green-600"}  py-3 rounded-md w-full relative sm:w-1/2`}
-                  >
-                    <p>
-                      {typeof showNumber() === "number"
-                        ? `RM${numWithComma(showNumber() as number)}`
-                        : showNumber()}
-                    </p>
-                    <div className="absolute right-10 top-[0.85rem]">
-                      <LucideGavel />
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => setIsBtnDisabled((prev) => !prev)}
-                    className="flex gap-4"
-                  >
-                    {isBtnDisabled ? <LockKeyholeIcon /> : <UnlockKeyhole />}
-                  </button>
-                  {dev && (
-                    <button
-                      onClick={testBid}
-                      className="px-3 py-2 bg-blue-600 rounded-md"
-                    >
-                      test bid
-                    </button>
-                  )}
-                </div>
-              )}
-              {!isNotAuctioneer && <AuctioneerController />}
-            </Fragment>
-          </DynamicRenderer.Else>
-        </DynamicRenderer>
+        <main className={currentPage === "reauctionlist" ? "" : "hidden"}>
+          <ReauctionList
+            data={payload.holdItems}
+            onReauction={handleReauction}
+          />
+        </main>
       </Container>
-
-      <LiveDialog />
     </div>
   );
 }

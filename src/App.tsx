@@ -21,6 +21,7 @@ import {
   EventsPage,
   Items,
   Home,
+  ReauctionListAuctioneer,
 } from "./sections";
 
 function App() {
@@ -30,11 +31,11 @@ function App() {
   useEffect(() => {
     const userAuth = JSON.parse(getToken(TOKEN.user) as string);
     SET_USER(userAuth);
-    setLoading(false); // set loading to false after setting user
+    setLoading(false); 
   }, [SET_USER]);
 
   if (loading) {
-    return <div>Loading...</div>; // or a loading spinner
+    return <Spinner />;
   }
 
   return (
@@ -60,10 +61,8 @@ function App() {
         <Route element={<RequireAuctioneerAuth />}>
           <Route path={"/auctioneer/list/:eventId"} element={<AuctList />} />
           <Route path={"/contract/event/:eventId"} element={<AuctContract />} />
-          <Route
-            path={"/auctioneer/live/:eventId/:auctionId"}
-            element={<LivePage />}
-          />
+          <Route path={"/auctioneer/reauction-list/:eventId"} element={<ReauctionListAuctioneer />} /> 
+          <Route path={"/auctioneer/live/:eventId/:auctionId"} element={<LivePage />} />
         </Route>
 
         <Route path={"/profile"} element={<Profile />} />

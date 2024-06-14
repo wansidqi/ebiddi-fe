@@ -435,7 +435,6 @@ export function AuctioneerController() {
             <CondButton
               onClick={() =>
                 $swal({
-                  show: true,
                   title: `Are you sure?`,
                   content: `withdrawing LOT ${payload.auction_id}`,
                   variant: "destructive",

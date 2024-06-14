@@ -28,6 +28,9 @@ export * from "./Report/VehicleInspection";
 export * from "./Authentication/Login";
 export * from "./Authentication/TAC";
 
+export * from "./Reauction/ReauctionList";
+export * from "./Reauction/ReauctionListAuctioneer";
+
 export * from "./Rest/AuctContract";
 export * from "./Rest/AuctList";
 export * from "./Rest/Contract";

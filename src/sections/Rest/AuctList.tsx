@@ -5,7 +5,7 @@ import { useAPIServices } from "@/services";
 import { useNavigate, useParams } from "react-router-dom";
 import { ItemDetail, LiveDialog } from "..";
 import { useStoreContext } from "@/Context";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import { DynamicRenderer } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Status } from "@/interfaces/websocket";
@@ -25,8 +25,7 @@ export function AuctList() {
   const { eventId } = useParams();
   const navigate = useNavigate();
   const { useGetEventById, useCloseAuctionEvent } = useAPIServices();
-  const { setView, publishEvent, setPayload } = useStoreContext();
-  const [showDialog, setshowDialog] = useState(false);
+  const { setView, publishEvent, setPayload, $swal } = useStoreContext();
 
   const { data } = useGetEventById(eventId);
   const { mutateAsync: onCloseEventAPI } = useCloseAuctionEvent(eventId);
@@ -39,6 +38,10 @@ export function AuctList() {
 
   const navigateToLive = (auction_id: any) => {
     navigate(`/auctioneer/live/${eventId}/${auction_id}`);
+  };
+
+  const navigateToReauctionList = () => {
+    navigate(`/auctioneer/reauction-list/${eventId}`);
   };
 
   const closeEvent = () => {
@@ -59,7 +62,12 @@ export function AuctList() {
   };
 
   const confirmationDialog = () => {
-    setshowDialog(true);
+    $swal({
+      content: "Close this auction event?",
+      title: "Auction Event",
+      onClick: () => closeEvent(),
+      variant: "destructive",
+    });
   };
 
   useEffect(() => {
@@ -69,25 +77,24 @@ export function AuctList() {
 
   return (
     <Fragment>
-      <LiveDialog
-        state={showDialog}
-        handleState={setshowDialog}
-        title="Auction Event"
-        content="Close this auction event?"
-        variant="destructive"
-        onClick={() => closeEvent()}
-      />
+      <LiveDialog />
       <Container className="sm:mx-28 pt-5">
-        <div className="my-5 flex w-full justify-end items-center">
-          {data?.status === "Approved" ||
-            (data?.status === "Deactive" && (
-              <button
-                onClick={confirmationDialog}
-                className="bg-yellow-500 px-3 py-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-xl"
-              >
-                Close Auction
-              </button>
-            ))}
+        <div className="my-5 flex gap-8 w-full justify-end items-center">
+          <button
+            onClick={navigateToReauctionList}
+            className="bg-cyan-500 px-3 pt-1 pb-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg"
+          >
+            Reauction List
+          </button>
+
+          {(data?.status === "Approved" || data?.status === "Deactive") && (
+            <button
+              onClick={confirmationDialog}
+              className="bg-yellow-500 px-3 pt-1 pb-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg"
+            >
+              Close Auction
+            </button>
+          )}
         </div>
         <div className="sm:w-full overflow-x-auto text-center py-2 custom-scrollbar">
           <div className="inline-block min-w-full">

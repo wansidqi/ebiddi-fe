@@ -20,7 +20,13 @@ export function Items() {
       {view === "List" ? (
         <ItemsList events={data} />
       ) : (
-        <>{isLoading ? <ItemGridLoading /> : <ItemsGrid events={data} />}</>
+        <>
+          {isLoading ? (
+            <ItemGridLoading />
+          ) : (
+            <ItemsGrid inventories={data?.inventories} />
+          )}
+        </>
       )}
     </Container>
   );
