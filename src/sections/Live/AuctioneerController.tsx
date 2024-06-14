@@ -14,8 +14,6 @@ export function AuctioneerController() {
 
   const {
     USER,
-    setCountdown,
-    countdown,
     publishEvent,
     setPayload,
     payload,
@@ -26,6 +24,7 @@ export function AuctioneerController() {
     setBidListIndex,
     $swal,
   } = useStoreContext();
+  const { countdown } = payload;
 
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -100,7 +99,6 @@ export function AuctioneerController() {
       clickResume();
     } else {
       onInitial();
-      setCountdown(11); ///reset countdown
       setIsActive(true);
       setIsPaused(false);
       setNaviStatus(false);
@@ -114,6 +112,7 @@ export function AuctioneerController() {
         let data = {
           ...prev,
           status: "AUCTION" as Status,
+          countdown: 10, ///start cd
         };
         publishEvent({ event_id: eventId, data });
         return data;
@@ -165,7 +164,7 @@ export function AuctioneerController() {
         setPayload((prev) => ({ ...prev, status: "WITHDRAW" }));
 
         ///reset countdown
-        setCountdown(11);
+        setPayload((prev) => ({ ...prev, countdown: -1 })); ///reset countdown
         setIsActive(false);
         setIsPaused(false);
         if (!eventId) return;
@@ -369,15 +368,12 @@ export function AuctioneerController() {
     let interval: NodeJS.Timeout;
 
     if (bidStatus === BidStatus.END || payload.status === "SOLD") {
-      setCountdown(11); ///reset countdown
+      setPayload((prev) => ({ ...prev, countdown: -1 })); ///reset countdown
     }
 
     if (isActive && countdown > 0 && !isPaused) {
       interval = setInterval(() => {
-        setCountdown((prevCountdown) => {
-          let cd = prevCountdown - 1;
-          return cd;
-        });
+        setPayload((prev) => ({ ...prev, countdown: prev.countdown - 1 })); ///reset countdown
       }, 1000);
     }
     publishTimer();
@@ -386,7 +382,7 @@ export function AuctioneerController() {
       // setBidStatus(1);
       const timeout = setTimeout(() => {
         setIsActive(false);
-        setCountdown(11); ///reset countdown
+        setPayload((prev) => ({ ...prev, countdown: -1 })); ///reset countdown
       }, 1000);
       return () => clearTimeout(timeout);
     }

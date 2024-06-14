@@ -18,8 +18,6 @@ type Data = {
   selectEvent: EventsInterface | null;
   setSelectEvent: React.Dispatch<React.SetStateAction<EventsInterface | null>>;
 
-  countdown: number;
-  setCountdown: React.Dispatch<React.SetStateAction<number>>;
   timer: number;
   setTimer: React.Dispatch<React.SetStateAction<number>>;
 
@@ -34,7 +32,6 @@ function AuctionContext(props: React.PropsWithChildren<{}>) {
 
   const [view, setView] = useState<"Grid" | "List">("Grid");
   const [selectEvent, setSelectEvent] = useState<EventsInterface | null>(null);
-  const [countdown, setCountdown] = useState(11);
   const [timer, setTimer] = useState(0);
 
   const dev = true;
@@ -44,8 +41,6 @@ function AuctionContext(props: React.PropsWithChildren<{}>) {
     setView,
     selectEvent,
     setSelectEvent,
-    countdown,
-    setCountdown,
     dev,
     USER,
     SET_USER,

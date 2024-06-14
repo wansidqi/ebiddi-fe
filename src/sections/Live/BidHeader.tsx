@@ -12,8 +12,8 @@ import { useParams } from "react-router-dom";
 export function BidHeader() {
   const { eventId } = useParams();
 
-  const { countdown, USER, bidStatus, setBidStatus, payload } =
-    useStoreContext();
+  const { USER, bidStatus, setBidStatus, payload } = useStoreContext();
+  const { countdown } = payload;
 
   const queryKeyEvent = [KEY.credit, eventId];
   const event = useGetQueryData<EventsInterface>(queryKeyEvent);
@@ -25,7 +25,7 @@ export function BidHeader() {
   const displayTime = () => {
     let display = "00:00";
 
-    if (countdown === 11) return (display = "00:00");
+    // if (countdown === -1) return (display = "00:00");
 
     if (countdown.toString().length === 2) {
       display = `00:${countdown}`;

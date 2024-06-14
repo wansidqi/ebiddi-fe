@@ -34,7 +34,6 @@ export function LivePage() {
     socket,
     setPayload,
     payload,
-    setCountdown,
     publishBid,
     subscribeStatus,
     bidStatus,
@@ -273,7 +272,6 @@ export function LivePage() {
     subscribeEvent({
       event_id: eventId,
       onData: (data) => {
-        setCountdown(data.countdown);
         setPayload(data);
 
         if (data.status === "CLOSE") {
@@ -345,7 +343,7 @@ export function LivePage() {
           }
 
           if (bidStatus === 3) {
-            setCountdown(11);
+            setPayload((prev) => ({ ...prev, countdown: -1 }));
           }
 
           if (isBidding) {
