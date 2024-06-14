@@ -22,6 +22,7 @@ import {
 import { useAPIServices } from "@/services";
 import { playAudio } from "@/assets/audio";
 import { numWithComma } from "@/lib/utils";
+import moment from "moment";
 
 export function LivePage() {
   const { eventId } = useParams();
@@ -35,32 +36,17 @@ export function LivePage() {
     setCountdown,
     publishBid,
     subscribeStatus,
-    biddingModal,
     bidStatus,
     setBidStatus,
     setBidListIndex,
     dev,
     unsubscribeEvent,
+    currentPage,
+    setCurrentPage,
+    subscribeReauction,
+    publishReauction,
+    $swal,
   } = useStoreContext();
-
-  const {
-    closeModal,
-    setCloseModal,
-    startModal,
-    setStartModal,
-    reauctionModal,
-    setReauctionModal,
-    otherWinner,
-    selfWinner,
-    setOtherWinner,
-    setSelfWinner,
-    pause,
-    setPause,
-    withdraw,
-    setWithdraw,
-    hold,
-    setHold,
-  } = biddingModal;
 
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
   const isAuctionIdNotExist = payload.auction_id === "";
@@ -74,11 +60,13 @@ export function LivePage() {
     useGetEventById,
     useGetLiveAuction,
     usePostAuditTrail,
+    usePostReauctionItem,
   } = useAPIServices();
   const { data: event } = useGetEventById(eventId);
   const { data: credits } = useGetCredit(event?.auction_house.id);
   const { data: auction, refetch } = useGetLiveAuction(payload.auction_id);
   const { mutateAsync: postTrail } = usePostAuditTrail();
+  const { mutateAsync: onReautionItem } = usePostReauctionItem();
 
   const testBid = () => {
     if (!eventId || !USER) return;
@@ -186,19 +174,12 @@ export function LivePage() {
     }));
   };
 
+  // prettier-ignore
   const canBid = () => {
     if (auction) {
       return (
-        (payload.bid.next < 100000 &&
-          getAvailableCredit() >=
-            auction.deposit +
-              auction.buyer_premium +
-              auction.security_deposit) ||
-        (payload.bid.next >= 100000 &&
-          getAvailableCredit() >=
-            0.05 * payload.bid.current +
-              auction.buyer_premium +
-              auction.security_deposit)
+        (payload.bid.next < 100000 && getAvailableCredit() >= auction.deposit + auction.buyer_premium +  auction.security_deposit) ||
+        (payload.bid.next >= 100000 && getAvailableCredit() >=  0.05 * payload.bid.current +  auction.buyer_premium + auction.security_deposit)
       );
     }
   };
@@ -250,6 +231,42 @@ export function LivePage() {
     postTrail({ data });
   };
 
+  const handleReauction = (auctionId: string) => {
+    $swal({
+      show: true,
+      title: "Reauction",
+      content: "Please confirm if you want to reauction this lot",
+      onClick: () => {
+        reauctionItem(auctionId);
+      },
+    });
+  };
+
+  const reauctionItem = (auctionId: string) => {
+    if (!eventId) return;
+    const id = { auctionId, eventId };
+
+    onReautionItem(id, {
+      onSuccess: () => {
+        publishReauction({
+          event_id: eventId,
+          data: {
+            auction_event_id: auctionId,
+            event_id: eventId,
+          },
+        });
+      },
+      onError: (e: any) => {
+        $swal({
+          title: "Error Reauctioning",
+          content: `${e}`,
+          timer: 3000,
+          show: true,
+        });
+      },
+    });
+  };
+
   ///subscribe event
   useEffect(() => {
     if (!eventId) return;
@@ -262,14 +279,40 @@ export function LivePage() {
 
         if (data.status === "CLOSE") {
           setIsBidding(false);
-          setCloseModal(true);
+          $swal({
+            show: true,
+            title: event ? event?.name : "",
+            content: `Auction has been closed, that's all for this event`,
+            onClick: () => navigate("/events"),
+          });
           // navigate("/events");
         }
 
-        if (
-          data.status !== "CLOSE" &&
-          auction?.auction_id !== Number(data.auction_id)
-        ) {
+        if (data.status === "REAUCTIONLIST") {
+          reset();
+          $swal({
+            show: true,
+            title: "Redirecting to Reauction List",
+            content: `Select lot you wish to be reauction`,
+            timer: 3000,
+          });
+          setCurrentPage("reauctionlist");
+        }
+
+        if (data.status === "REAUCTIONLISTUPDATETIMER") {
+          setCurrentPage("reauctionlist");
+          setPayload((prev) => ({ ...prev, expiryAt: data.expiryAt }));
+          $swal({
+            show: true,
+            title: `Reauction Expiry Updated`,
+            timer: 3000,
+            content: `The new reauction expiry is at ${moment(payload.expiryAt).format("HH:mm")}`,
+          });
+          reset();
+        }
+
+        // prettier-ignore
+        if (data.status !== "CLOSE" && auction?.auction_id !== Number(data.auction_id)) {
           payload.auction_id !== "" && refetch();
           setPayload((prev) => ({
             ...prev,
@@ -294,7 +337,13 @@ export function LivePage() {
           setIsBidding(true);
 
           if (bidStatus === 0 && !updateFlag.current) {
-            setStartModal(true);
+            $swal({
+              show: true,
+              title: `Lot ${auction?.lot_no}`,
+              content: "Bidding is starting",
+              timer: 1500,
+            });
+
             playAudio("start");
             setBidStatus(2);
             updateFlag.current = true; // Set the flag to true after initial update
@@ -356,7 +405,13 @@ export function LivePage() {
         }
 
         if (data.status === "REAUCTION") {
-          setReauctionModal(true);
+          $swal({
+            show: true,
+            title: `Lot ${auction?.lot_no}`,
+            content: `Reauction`,
+            timer: 1000,
+          });
+
           playAudio("reauction");
           reset();
           setIsBidding(false);
@@ -381,33 +436,61 @@ export function LivePage() {
 
           if (USER) {
             if (data.bidders.highest_user_id === USER.id) {
-              setSelfWinner(true);
+              $swal({
+                show: true,
+                title: `Lot ${auction?.lot_no}`,
+                content: `Congratulation, you have won the auction`,
+                timer: 3000,
+              });
             } else {
-              setOtherWinner(true);
+              $swal({
+                show: true,
+                title: `Lot ${auction?.lot_no}`,
+                content: `${payload.bidders.highest_user_name} have won the auction`,
+                timer: 3000,
+              });
             }
           } else {
             //live view (without auth)
-            setOtherWinner(true);
+            $swal({
+              show: true,
+              title: `Lot ${auction?.lot_no}`,
+              content: `${payload.bidders.highest_user_name} have won the auction`,
+              timer: 3000,
+            });
           }
 
           reset();
         }
 
         if (data.status === "PAUSE") {
-          setPause(true);
+          $swal({
+            show: true,
+            title: `Lot ${auction?.lot_no}`,
+            content: `Auctioneer hold auction`,
+          });
           playAudio("hold");
         }
 
         if (data.status === "WITHDRAW") {
           setIsBidding(false);
-          setWithdraw(true);
+          $swal({
+            show: true,
+            title: `Lot ${auction?.lot_no}`,
+            content: `This auction is withdraw`,
+          });
           playAudio("withdraw");
           reset();
         }
 
         if (data.status === "HOLD") {
           setIsBidding(false);
-          setHold(true);
+          $swal({
+            show: true,
+            title: `Lot ${auction?.lot_no}`,
+            content: `item #${payload.auction_event_id} request for reauction`,
+            timer: 1000,
+          });
           playAudio("withdraw");
           reset();
         }
@@ -417,6 +500,36 @@ export function LivePage() {
     return () => {
       unsubscribeEvent(eventId);
     };
+  }, [socket, payload]);
+
+  ///subscribe reauction
+  useEffect(() => {
+    if (!eventId) return;
+
+    subscribeReauction({
+      event_id: eventId,
+      onData: (data) => {
+        if (data.status === "REAUCTIONLISTUPDATE") {
+          reset();
+          setCurrentPage("reauctionlist");
+
+          setPayload((prev) => ({
+            ...prev,
+            holdItems: data.items ?? [],
+            expiryAt: data.expiryAt ?? "",
+          }));
+        }
+
+        if (data.status === "REAUCTIONITEM") {
+          $swal({
+            show: true,
+            title: `Item Reauction`,
+            content: `item #${payload.auction_event_id} request for reauction`,
+            timer: 1000,
+          });
+        }
+      },
+    });
   }, [socket, payload]);
 
   ///subscribe status
@@ -518,66 +631,7 @@ export function LivePage() {
         </DynamicRenderer>
       </Container>
 
-      <LiveDialog
-        state={closeModal}
-        handleState={setCloseModal}
-        title={event ? event?.name : ""}
-        content={`Auction has been closed, that's all for this event`}
-        onClick={() => navigate("/events")}
-      />
-      <LiveDialog
-        state={startModal}
-        handleState={setStartModal}
-        title={`Lot ${auction?.lot_no}`}
-        content={`Bidding is starting`}
-        timer={1500}
-        onClick={() => {}}
-      />
-      <LiveDialog
-        state={reauctionModal}
-        handleState={setReauctionModal}
-        title={`Lot ${auction?.lot_no}`}
-        content={`Reauction`}
-        timer={1000}
-        onClick={() => {}}
-      />
-      <LiveDialog
-        state={selfWinner}
-        handleState={setSelfWinner}
-        title={`Lot ${auction?.lot_no}`}
-        content={`Congratulation, you have won the auction`}
-        timer={3000}
-        onClick={() => {}}
-      />
-      <LiveDialog
-        state={otherWinner}
-        handleState={setOtherWinner}
-        title={`Lot ${auction?.lot_no}`}
-        content={`${payload.bidders.highest_user_name} have won the auction`}
-        timer={3000}
-        onClick={() => {}}
-      />
-      <LiveDialog
-        state={pause}
-        handleState={setPause}
-        title={`Lot ${auction?.lot_no}`}
-        content={`Auctioneer hold auction`}
-        onClick={() => {}}
-      />
-      <LiveDialog
-        state={withdraw}
-        handleState={setWithdraw}
-        title={`Lot ${auction?.lot_no}`}
-        content={`This auction is withdraw`}
-        onClick={() => {}}
-      />
-      <LiveDialog
-        state={hold}
-        handleState={setHold}
-        title={`Lot ${auction?.lot_no}`}
-        content={`No Bid`}
-        onClick={() => {}}
-      />
+      <LiveDialog />
     </div>
   );
 }

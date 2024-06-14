@@ -5,7 +5,7 @@ import {
   SubBid,
   Publication,
   Subscription,
-  BidData,
+  ReauctionData,
 } from "@/interfaces/websocket";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as socketClusterClient from "socketcluster-client";
@@ -34,9 +34,8 @@ type Data = {
   subscribeEvent: (params: Subscription<EventData>) => Promise<void>;
   subscribeStatus: (params: Subscription<StatusData>) => Promise<void>;
   unsubscribeEvent: (event_id: string) => void;
-
-  bidData: BidData;
-  setBidData: React.Dispatch<React.SetStateAction<BidData>>;
+  subscribeReauction: (params: Subscription<ReauctionData>) => Promise<void>;
+  publishReauction: (params: Publication<ReauctionData>) => void;
 
   payload: EventData;
   setPayload: React.Dispatch<React.SetStateAction<EventData>>;
@@ -46,17 +45,17 @@ type Data = {
 
   bidListIndex: number;
   setBidListIndex: React.Dispatch<React.SetStateAction<number>>;
+
+  currentPage: "bidding" | "reauctionlist";
+  setCurrentPage: React.Dispatch<
+    React.SetStateAction<"bidding" | "reauctionlist">
+  >;
 };
 
 function WsContext(props: React.PropsWithChildren<{}>) {
   const { USER, dev } = useAuctionContext();
 
   const [socket, setSocket] = useState<ws>(null);
-  const [bidData, setBidData] = useState<BidData>({
-    amount: 0,
-    name: "",
-    user_id: 0,
-  });
   const [payload, setPayload] = useState<EventData>({
     auction_id: "",
     event_id: "",
@@ -74,11 +73,13 @@ function WsContext(props: React.PropsWithChildren<{}>) {
       highest_user_id: 0,
       highest_user_name: "",
     },
+    expiryAt: "",
+    holdItems: [],
+    auction_event_id: "",
   });
   const [bidStatus, setBidStatus] = useState<BidStatus>(0);
   const [bidListIndex, setBidListIndex] = useState(-1);
-
-  // console.log("bid status:", bidStatus);
+  const [currentPage, setCurrentPage] = useState<"bidding" | "reauctionlist">("bidding"); //prettier-ignore
 
   const isAuctioneer = USER?.role === ROLE.AUCTIONEER;
 
@@ -160,40 +161,28 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     socket.unsubscribe(dev ? test_url : url);
   };
 
-  // useEffect(() => {
-  //   async function sub() {
-  //     if (!socket) return;
-  //     const url = `event/1160/status`;
-  //     const channel = socket.subscribe(url);
+  const subscribeReauction = async (params: Subscription<ReauctionData>) => {
+    if (!socket) return;
 
-  //     for await (const data of channel) {
-  //       try {
-  //         console.log(data);
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //   }
-  //   sub();
-  // }, []);
+    const url = `event/${params.event_id}/reauction`;
+    const test_url = `test/event/${params.event_id}/reauction`;
+    const channel = socket.subscribe(dev ? test_url : url);
 
-  // useEffect(() => {
-  //   const testSubPub = async () => {
-  //     if (!socket) return;
-  //     let channel = "mychannel";
-  //     socket.invokePublish(channel, { message: "hello" });
+    for await (const data of channel) {
+      try {
+        params.onData && params.onData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
-  //     let myChannel = socket.subscribe(channel);
-  //     for await (const data of myChannel) {
-  //       try {
-  //         console.log(data);
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //   };
-  //   testSubPub();
-  // }, [socket]);
+  const publishReauction = (params: Publication<ReauctionData>) => {
+    if (!socket) return;
+    const channel = `event/${params.event_id}/reauction`;
+    const test_channel = `test/event/${params.event_id}/reauction`;
+    socket.invokePublish(dev ? test_channel : channel, params.data);
+  };
 
   useEffect(() => {
     const init = () => {
@@ -219,8 +208,6 @@ function WsContext(props: React.PropsWithChildren<{}>) {
 
   const contextValue: Data = {
     socket,
-    bidData,
-    setBidData,
     payload,
     setPayload,
     subscribeBid,
@@ -233,6 +220,10 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     bidListIndex,
     setBidListIndex,
     unsubscribeEvent,
+    currentPage,
+    setCurrentPage,
+    subscribeReauction,
+    publishReauction,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;

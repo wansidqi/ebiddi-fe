@@ -24,11 +24,11 @@ export function AuctioneerController() {
     bidStatus,
     setBidStatus,
     setBidListIndex,
+    $swal,
   } = useStoreContext();
 
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [withdrawModal, setWithdrawModal] = useState(false);
   const [naviStatus, setNaviStatus] = useState(false);
 
   const {
@@ -310,6 +310,10 @@ export function AuctioneerController() {
     }
   };
 
+  // const clickReauctionList = () => {
+  /* navigation to reauction list page */
+  // };
+
   ///reset bid
   useEffect(() => {
     setBidStatus(1);
@@ -392,14 +396,7 @@ export function AuctioneerController() {
 
   return (
     <>
-      <LiveDialog
-        state={withdrawModal}
-        handleState={setWithdrawModal}
-        title={`Are you sure?`}
-        content={`withdrawing LOT ${payload.auction_id}`}
-        variant="destructive"
-        onClick={() => clickWithdraw()}
-      />
+      <LiveDialog />
       <div>
         {USER?.role === ROLE.AUCTIONEER && (
           <div className="flexcenter gap-6">
@@ -436,7 +433,16 @@ export function AuctioneerController() {
             </CondButton>
 
             <CondButton
-              onClick={() => setWithdrawModal(true)}
+              onClick={() =>
+                $swal({
+                  show: true,
+                  title: `Are you sure?`,
+                  content: `withdrawing LOT ${payload.auction_id}`,
+                  variant: "destructive",
+                  timer: undefined,
+                  onClick: () => clickWithdraw(),
+                })
+              }
               show={bidStatus === 1 || bidStatus === 4}
               className="bg-green-600"
             >

@@ -10,10 +10,16 @@ export function useModalContext() {
   return context;
 }
 
-type Data = {
-  showLiveDialog: boolean;
-  setShowLiveDialog: React.Dispatch<React.SetStateAction<boolean>>;
+interface ModalDialog {
+  show: boolean;
+  title: string;
+  content: string;
+  variant?: "destructive" | "outline" | "secondary" | "ghost" | "link";
+  onClick?: () => any;
+  timer?: number;
+}
 
+type Data = {
   showDetailById: number | null;
   openDetailModal: (number: number) => void;
   closeDetailModal: () => void;
@@ -42,29 +48,12 @@ type Data = {
     }>
   >;
 
-  biddingModal: {
-    closeModal: boolean;
-    setCloseModal: React.Dispatch<React.SetStateAction<boolean>>;
-    startModal: boolean;
-    setStartModal: React.Dispatch<React.SetStateAction<boolean>>;
-    reauctionModal: boolean;
-    setReauctionModal: React.Dispatch<React.SetStateAction<boolean>>;
-    selfWinner: boolean;
-    setSelfWinner: React.Dispatch<React.SetStateAction<boolean>>;
-    otherWinner: boolean;
-    setOtherWinner: React.Dispatch<React.SetStateAction<boolean>>;
-    pause: boolean;
-    setPause: React.Dispatch<React.SetStateAction<boolean>>;
-    withdraw: boolean;
-    setWithdraw: React.Dispatch<React.SetStateAction<boolean>>;
-    hold: boolean;
-    setHold: React.Dispatch<React.SetStateAction<boolean>>;
-  };
+  swal: ModalDialog;
+  $swal: React.Dispatch<React.SetStateAction<ModalDialog>>;
+  $swalClose: () => void;
 };
 
 function ModalContext(props: React.PropsWithChildren<{}>) {
-  const [showLiveDialog, setShowLiveDialog] = useState(false);
-
   const [alert, setAlert] = useState({
     showAlert: false,
     messsage: "",
@@ -73,32 +62,24 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
   const [term, setTerm] = useState({ showTerm: false, eventId: "" });
   const [showDetailById, setShowDetailById] = useState<null | number>(null);
 
-  const [closeModal, setCloseModal] = useState(false);
-  const [startModal, setStartModal] = useState(false);
-  const [reauctionModal, setReauctionModal] = useState(false);
-  const [selfWinner, setSelfWinner] = useState(false);
-  const [otherWinner, setOtherWinner] = useState(false);
-  const [pause, setPause] = useState(false);
-  const [withdraw, setWithdraw] = useState(false);
-  const [hold, setHold] = useState(false);
+  const [swal, $swal] = useState<ModalDialog>({
+    show: false,
+    title: "",
+    content: "",
+    timer: undefined,
+    onClick: undefined,
+    variant: undefined,
+  });
 
-  const biddingModal = {
-    closeModal,
-    setCloseModal,
-    startModal,
-    setStartModal,
-    reauctionModal,
-    setReauctionModal,
-    selfWinner,
-    setSelfWinner,
-    otherWinner,
-    setOtherWinner,
-    pause,
-    setPause,
-    withdraw,
-    setWithdraw,
-    hold,
-    setHold,
+  const $swalClose = () => {
+    $swal({
+      show: false,
+      title: "",
+      content: "",
+      timer: undefined,
+      onClick: () => {},
+      variant: undefined,
+    });
   };
 
   const openDetailModal = (number: number) => {
@@ -109,8 +90,8 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
   };
 
   const contextValue: Data = {
-    showLiveDialog,
-    setShowLiveDialog,
+    swal,
+    $swal,
     alert,
     setAlert,
     term,
@@ -118,7 +99,7 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
     showDetailById,
     openDetailModal,
     closeDetailModal,
-    biddingModal,
+    $swalClose,
   };
 
   useEffect(() => {

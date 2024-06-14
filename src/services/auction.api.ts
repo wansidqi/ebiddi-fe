@@ -169,6 +169,25 @@ const useCloseAuctionEvent = (eventId: string | undefined) => {
   });
 };
 
+const usePostReauctionItem = (options = {}) => {
+  return useMutation({
+    mutationFn: async ({
+      eventId,
+      auctionId,
+    }: {
+      eventId: string | number;
+      auctionId: string | number;
+    }) => {
+      const response = await datasource({
+        url: `/auction/reauctioneventitem`,
+        data: `event_id=${eventId}&auction_event_id=${auctionId}`,
+      });
+      return response.data;
+    },
+    ...options,
+  });
+};
+
 export const AuctionService = {
   useGetLiveAuction,
   useGetCredit,
@@ -179,4 +198,5 @@ export const AuctionService = {
   usePostItemSold,
   usePostAuditTrail,
   useCloseAuctionEvent,
+  usePostReauctionItem,
 };

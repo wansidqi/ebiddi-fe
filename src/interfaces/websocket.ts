@@ -1,8 +1,14 @@
+import { AuctionInterface } from ".";
+
 // START(1), RUN(2), END(3), PAUSE(4), WITHDRAW(5), CLOSE(6), HOLD(7)
 export type Status =
   | ""
   | "SOLD"
+  | "REAUCTIONLIST"
   | "REAUCTION"
+  | "REAUCTIONITEM"
+  | "REAUCTIONLISTUPDATE"
+  | "REAUCTIONLISTUPDATETIMER"
   | "AUCTION"
   | "START"
   | "RUN"
@@ -30,6 +36,9 @@ export interface EventData {
     highest_user_id: number;
     highest_user_name: string;
   };
+  auction_event_id: string;
+  expiryAt: string;
+  holdItems: AuctionInterface[];
 }
 
 export interface StatusData {
@@ -44,6 +53,14 @@ export interface BidData {
   user_id: number;
   name: string;
   amount: number;
+}
+
+export interface ReauctionData {
+  auction_event_id?: string;
+  expiryAt?: string;
+  status?: Status;
+  event_id?: string;
+  items?: AuctionInterface[];
 }
 
 export interface Subscription<T> {
