@@ -61,4 +61,11 @@ Content-Type: application/x-www-form-urlencoded
 email=dev@tes1t.com,
 
 
+#REAUCTION
 
+###GET REAUCTION LIST
+GET https://api.e-biddi.com/api/auction/reauction/item/event/1146
+###GET REAUCTION STATUS
+GET https://api.e-biddi.com/api/auction/reauctionevent/event/1146
+###GET REAUCTION HOLD ITEM
+GET https://api.e-biddi.com/api/auction/item/event/1146/hold
