@@ -29,7 +29,7 @@ export * from "./Authentication/Login";
 export * from "./Authentication/TAC";
 
 export * from "./Reauction/ReauctionList";
-export * from "./Reauction/ReauctionListAuctioneer";
+export * from "./Reauction/ReauctionTimer";
 
 export * from "./Rest/AuctContract";
 export * from "./Rest/AuctList";

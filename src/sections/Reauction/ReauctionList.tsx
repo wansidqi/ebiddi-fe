@@ -1,4 +1,4 @@
-import { InventoryInterface } from "@/interfaces";
+import { ReauctionList as ReauctionListInterface } from "@/interfaces";
 import { gridCSS } from "..";
 import { Button } from "@/components/ui/button";
 import { useStoreContext } from "@/Context";
@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import moment from "moment";
 
 interface Props {
-  data: InventoryInterface[] | undefined;
+  data: ReauctionListInterface[] | undefined;
   onReauction: (auctionId: string) => any;
 }
 
@@ -104,7 +104,9 @@ export function ReauctionList({ data, onReauction }: Props) {
                     </div> */}
                 {item.status === "HOLD" && (
                   <Button
-                    onClick={() => onClickReauction(item?.auction_id as any)}
+                    onClick={() =>
+                      onClickReauction(item?.auction_event_id as any)
+                    }
                   >
                     REAUCTION
                   </Button>

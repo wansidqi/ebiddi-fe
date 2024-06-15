@@ -1,4 +1,4 @@
-import { AuctionInterface } from ".";
+import { ReauctionList } from ".";
 
 // START(1), RUN(2), END(3), PAUSE(4), WITHDRAW(5), CLOSE(6), HOLD(7)
 export type Status =
@@ -38,7 +38,7 @@ export interface EventData {
   };
   auction_event_id: string;
   expiryAt: string;
-  holdItems: AuctionInterface[];
+  holdItems: ReauctionList[];
 }
 
 export interface StatusData {
@@ -60,7 +60,7 @@ export interface ReauctionData {
   expiryAt?: string;
   status?: Status;
   event_id?: string;
-  items?: AuctionInterface[];
+  items?: ReauctionList[];
 }
 
 export interface Subscription<T> {

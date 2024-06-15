@@ -3,7 +3,7 @@ import { InventoryInterface } from "@/interfaces";
 import { numWithComma } from "@/lib/utils";
 import { useAPIServices } from "@/services";
 import { useNavigate, useParams } from "react-router-dom";
-import { ItemDetail, LiveDialog } from "..";
+import { ItemDetail, LiveDialog, ReauctionTimer } from "..";
 import { useStoreContext } from "@/Context";
 import { Fragment, useEffect } from "react";
 import { DynamicRenderer } from "@/components";
@@ -38,10 +38,6 @@ export function AuctList() {
 
   const navigateToLive = (auction_id: any) => {
     navigate(`/auctioneer/live/${eventId}/${auction_id}`);
-  };
-
-  const navigateToReauctionList = () => {
-    navigate(`/auctioneer/reauction-list/${eventId}`);
   };
 
   const closeEvent = () => {
@@ -80,20 +76,16 @@ export function AuctList() {
       <LiveDialog />
       <Container className="sm:mx-28 pt-5">
         <div className="my-5 flex gap-8 w-full justify-end items-center">
-          <button
-            onClick={navigateToReauctionList}
-            className="bg-cyan-500 px-3 pt-1 pb-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg"
-          >
-            Reauction List
-          </button>
-
           {(data?.status === "Approved" || data?.status === "Deactive") && (
-            <button
-              onClick={confirmationDialog}
-              className="bg-yellow-500 px-3 pt-1 pb-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg"
-            >
-              Close Auction
-            </button>
+            <>
+              <ReauctionTimer />
+              <button
+                onClick={confirmationDialog}
+                className="bg-yellow-500 px-3 pt-1 pb-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg"
+              >
+                Close Auction
+              </button>
+            </>
           )}
         </div>
         <div className="sm:w-full overflow-x-auto text-center py-2 custom-scrollbar">

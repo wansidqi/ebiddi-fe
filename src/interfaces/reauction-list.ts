@@ -1,4 +1,4 @@
-export interface ReauctionLsit {
+export interface ReauctionList {
   auction_event_id: number;
   status: string;
   lot_no: string;
