@@ -9,7 +9,7 @@ import {
 } from "@/interfaces/websocket";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as socketClusterClient from "socketcluster-client";
-import { BidStatus, ROLE } from "@/interfaces/enum";
+import { BidStatus, ROLE } from "@/enum";
 import { useAuctionContext } from "./auction-context";
 
 export function useWsContext() {

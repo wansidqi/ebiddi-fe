@@ -3,7 +3,7 @@ import { DynamicRenderer } from "@/components";
 import { toast } from "@/components/ui/use-toast";
 import { CallMessage } from "@/data/call-alert";
 import { CreditInterface, EventsInterface } from "@/interfaces";
-import { BidStatus, ROLE } from "@/interfaces/enum";
+import { BidStatus, ROLE } from "@/enum";
 import { numWithComma, playAudio } from "@/lib/utils";
 import { KEY, useGetQueryData } from "@/services";
 import { useEffect } from "react";

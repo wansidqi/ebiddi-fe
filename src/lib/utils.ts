@@ -1,4 +1,4 @@
-import { ROLE } from "@/interfaces/enum";
+import { ROLE } from "@/enum";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 

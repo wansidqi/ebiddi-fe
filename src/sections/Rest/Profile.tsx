@@ -2,7 +2,7 @@ import { useStoreContext } from "@/Context";
 import { DynamicDrawer } from "@/components";
 import { Container } from "@/components/Container";
 import { Input } from "@/components/ui/input";
-import { ROLE } from "@/interfaces/enum";
+import { ROLE } from "@/enum";
 import { convertDateTime, numWithComma } from "@/lib/utils";
 import { useAPIServices } from "@/services";
 import { Fragment, useEffect, useState } from "react";

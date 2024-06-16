@@ -13,7 +13,7 @@ import icon from "@/assets/images/e-biddi icon.png";
 import { useStoreContext } from "@/Context";
 import { DynamicRenderer, Hamburger } from "@/components";
 import { useAPIServices } from "@/services";
-import { ROLE } from "@/interfaces/enum";
+import { ROLE } from "@/enum";
 
 export function Navigation() {
   const navigate = useNavigate();

@@ -5,7 +5,7 @@ import { Fragment, useEffect, useState } from "react";
 import { TOKEN, getToken } from "./datasource/sessionStorage.datasource";
 import { useStoreContext } from "./Context";
 import { AlertDialog } from "./components";
-import { ROLE } from "./interfaces/enum";
+import { ROLE } from "./enum";
 import { LoaderCircle } from "lucide-react";
 import {
   TAC,
@@ -21,7 +21,6 @@ import {
   EventsPage,
   Items,
   Home,
-  ReauctionListAuctioneer,
 } from "./sections";
 
 function App() {
@@ -31,7 +30,7 @@ function App() {
   useEffect(() => {
     const userAuth = JSON.parse(getToken(TOKEN.user) as string);
     SET_USER(userAuth);
-    setLoading(false); 
+    setLoading(false);
   }, [SET_USER]);
 
   if (loading) {
@@ -61,8 +60,10 @@ function App() {
         <Route element={<RequireAuctioneerAuth />}>
           <Route path={"/auctioneer/list/:eventId"} element={<AuctList />} />
           <Route path={"/contract/event/:eventId"} element={<AuctContract />} />
-          <Route path={"/auctioneer/reauction-list/:eventId"} element={<ReauctionListAuctioneer />} /> 
-          <Route path={"/auctioneer/live/:eventId/:auctionId"} element={<LivePage />} />
+          <Route
+            path={"/auctioneer/live/:eventId/:auctionId"}
+            element={<LivePage />}
+          />
         </Route>
 
         <Route path={"/profile"} element={<Profile />} />
@@ -79,24 +80,28 @@ function App() {
 function RequireNoAuth() {
   const { USER } = useStoreContext();
   if (USER === undefined) return <Spinner />;
+  return <Outlet />;
   return !USER ? <Outlet /> : <Navigate to="/events" />;
 }
 
 function RequireBidderAuth() {
   const { USER } = useStoreContext();
   if (USER === undefined) return <Spinner />;
+  return <Outlet />;
   return USER?.role === ROLE.BIDDER ? <Outlet /> : <Navigate to="/login" />;
 }
 
 function RequireAuctioneerAuth() {
   const { USER } = useStoreContext();
   if (USER === undefined) return <Spinner />;
+  return <Outlet />;
   return USER?.role === ROLE.AUCTIONEER ? <Outlet /> : <Navigate to="/login" />;
 }
 
 function RequireVerificationToken() {
   const token = getToken(TOKEN.auth);
   if (token === undefined) return <Spinner />;
+  return <Outlet />;
   return token ? <Outlet /> : <Navigate to="/login" />;
 }
 

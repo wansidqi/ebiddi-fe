@@ -1,6 +1,6 @@
 import { useStoreContext } from "@/Context";
 import { LogAuditTrail } from "@/interfaces/API";
-import { BidStatus, ROLE } from "@/interfaces/enum";
+import { BidStatus, ROLE } from "@/enum";
 import { EventData, Status } from "@/interfaces/websocket";
 import { useAPIServices } from "@/services";
 import { ArrowLeftSquare, ArrowRightSquare } from "lucide-react";

@@ -4,7 +4,7 @@ import { StepBack, StepForward } from "lucide-react";
 import { ItemDetail } from "./ItemDetail";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { VEHICLE_TYPE } from "@/interfaces/enum";
+import { VEHICLE_TYPE } from "@/enum";
 
 export const gridCSS = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3";
 
@@ -20,10 +20,7 @@ export function ItemsGrid({
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  const currentItems = inventories?.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
+  const currentItems = inventories?.slice(indexOfFirstItem, indexOfLastItem);
 
   const nextPage = () => {
     setCurrentPage(currentPage + 1);
@@ -105,16 +102,12 @@ export function ItemsGrid({
           <span className="text-xl">{currentPage}</span>
           <span className="">of</span>
           <span className="text-xl">
-            {Math.ceil(
-              (inventories?.length as number) / itemsPerPage
-            )}
+            {Math.ceil((inventories?.length as number) / itemsPerPage)}
           </span>
         </div>
         <button
           onClick={nextPage}
-          disabled={
-            indexOfLastItem >= (inventories?.length as number)
-          }
+          disabled={indexOfLastItem >= (inventories?.length as number)}
         >
           <StepForward />
         </button>

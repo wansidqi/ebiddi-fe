@@ -3,7 +3,7 @@ import { SingleEvent, EventLoading, Term } from "@/sections";
 import { useAPIServices } from "@/services";
 import { DynamicRenderer } from "@/components";
 import { useStoreContext } from "@/Context";
-import { ROLE } from "@/interfaces/enum";
+import { ROLE } from "@/enum";
 
 export function EventsPage() {
   const { useGetAllEvents, useGetAuctioneerEvent } = useAPIServices();

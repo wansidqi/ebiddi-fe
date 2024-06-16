@@ -11,7 +11,7 @@ import {
 import waiting from "@/assets/images/waiting.png";
 import { useStoreContext } from "@/Context";
 import { DynamicRenderer } from "@/components";
-import { ROLE } from "@/interfaces/enum";
+import { ROLE } from "@/enum";
 import { Toaster } from "@/components/ui/toaster";
 import { useNavigate, useParams } from "react-router-dom";
 import {

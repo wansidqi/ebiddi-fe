@@ -3,7 +3,7 @@ import { KEY } from ".";
 import datasource from "@/datasource/axiosInstance";
 import { AuctionInterface, CreditInterface } from "@/interfaces";
 import { useStoreContext } from "@/Context";
-import { ROLE } from "@/interfaces/enum";
+import { ROLE } from "@/enum";
 import { useNavigate } from "react-router-dom";
 
 interface AgreementResponse {

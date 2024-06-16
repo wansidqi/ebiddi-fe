@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { EventsInterface } from "@/interfaces";
 import { ItemDetail } from "..";
 import { Link, useNavigate } from "react-router-dom";
-import { VEHICLE_TYPE } from "@/interfaces/enum";
+import { VEHICLE_TYPE } from "@/enum";
 
 export function ItemsList({ events }: { events: undefined | EventsInterface }) {
   const navigate = useNavigate();
