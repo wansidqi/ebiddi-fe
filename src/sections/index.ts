@@ -30,6 +30,7 @@ export * from "./Authentication/TAC";
 
 export * from "./Reauction/ReauctionList";
 export * from "./Reauction/ReauctionTimer";
+export * from "./Reauction/UseCountdown";
 
 export * from "./Rest/AuctContract";
 export * from "./Rest/AuctList";

@@ -3,13 +3,14 @@ import { InventoryInterface } from "@/interfaces";
 import { numWithComma } from "@/lib/utils";
 import { useAPIServices } from "@/services";
 import { useNavigate, useParams } from "react-router-dom";
-import { ItemDetail, LiveDialog, ReauctionTimer } from "..";
+import { ItemDetail, LiveDialog, ReauctionTimer, UseCountdown } from "..";
 import { useStoreContext } from "@/Context";
 import { Fragment, useEffect } from "react";
 import { DynamicRenderer } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Status } from "@/interfaces/websocket";
 
+//TODO call countdown from hook
 export function AuctList() {
   const columns = [
     "#",
@@ -29,6 +30,8 @@ export function AuctList() {
 
   const { data } = useGetEventById(eventId);
   const { mutateAsync: onCloseEventAPI } = useCloseAuctionEvent(eventId);
+
+  const { countdown } = UseCountdown();
 
   const auctions = data?.inventories;
 
@@ -78,6 +81,7 @@ export function AuctList() {
         <div className="my-5 flex gap-8 w-full justify-end items-center">
           {(data?.status === "Approved" || data?.status === "Deactive") && (
             <>
+              <p className="digital text-4xl font-extrabold">{countdown}</p>
               <ReauctionTimer />
               <button
                 onClick={confirmationDialog}
