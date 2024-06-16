@@ -13,7 +13,7 @@ import {
   Profile,
   Contract,
   Policies,
-  AuctList,
+  AuctioneerList,
   AuctContract,
   LivePage,
   ReportMotor,
@@ -58,12 +58,9 @@ function App() {
         </Route>
 
         <Route element={<RequireAuctioneerAuth />}>
-          <Route path={"/auctioneer/list/:eventId"} element={<AuctList />} />
+          <Route path={"/auctioneer/list/:eventId"} element={<AuctioneerList />} />
           <Route path={"/contract/event/:eventId"} element={<AuctContract />} />
-          <Route
-            path={"/auctioneer/live/:eventId/:auctionId"}
-            element={<LivePage />}
-          />
+          <Route path={"/auctioneer/live/:eventId/:auctionId"} element={<LivePage />} />
         </Route>
 
         <Route path={"/profile"} element={<Profile />} />

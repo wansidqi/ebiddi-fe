@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Status } from "@/interfaces/websocket";
 
 //TODO call countdown from hook
-export function AuctList() {
+export function AuctioneerList() {
   const columns = [
     "#",
     "Registration Number",

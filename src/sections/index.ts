@@ -33,7 +33,7 @@ export * from "./Reauction/ReauctionTimer";
 export * from "./Reauction/UseCountdown";
 
 export * from "./Rest/AuctContract";
-export * from "./Rest/AuctList";
+export * from "./Rest/AuctioneerList";
 export * from "./Rest/Contract";
 export * from "./Rest/Home";
 export * from "./Rest/Policies";
