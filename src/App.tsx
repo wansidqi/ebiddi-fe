@@ -75,31 +75,52 @@ function App() {
 }
 
 function RequireNoAuth() {
-  const { USER } = useStoreContext();
+  const { USER, dev } = useStoreContext();
   if (USER === undefined) return <Spinner />;
-  return <Outlet />;
-  return !USER ? <Outlet /> : <Navigate to="/events" />;
+
+  if (dev) {
+    return <Outlet />;
+  } else {
+    return !USER ? <Outlet /> : <Navigate to="/events" />;
+  }
 }
 
 function RequireBidderAuth() {
-  const { USER } = useStoreContext();
+  const { USER, dev } = useStoreContext();
   if (USER === undefined) return <Spinner />;
-  return <Outlet />;
-  return USER?.role === ROLE.BIDDER ? <Outlet /> : <Navigate to="/login" />;
+
+  if (dev) {
+    return <Outlet />;
+  } else {
+    return USER?.role === ROLE.BIDDER ? <Outlet /> : <Navigate to="/login" />;
+  }
 }
 
 function RequireAuctioneerAuth() {
-  const { USER } = useStoreContext();
+  const { USER, dev } = useStoreContext();
   if (USER === undefined) return <Spinner />;
-  return <Outlet />;
-  return USER?.role === ROLE.AUCTIONEER ? <Outlet /> : <Navigate to="/login" />;
+
+  if (dev) {
+    return <Outlet />;
+  } else {
+    return USER?.role === ROLE.AUCTIONEER ? (
+      <Outlet />
+    ) : (
+      <Navigate to="/login" />
+    );
+  }
 }
 
 function RequireVerificationToken() {
+  const { dev } = useStoreContext();
   const token = getToken(TOKEN.auth);
   if (token === undefined) return <Spinner />;
-  return <Outlet />;
-  return token ? <Outlet /> : <Navigate to="/login" />;
+
+  if (dev) {
+    return <Outlet />;
+  } else {
+    return token ? <Outlet /> : <Navigate to="/login" />;
+  }
 }
 
 function Spinner() {

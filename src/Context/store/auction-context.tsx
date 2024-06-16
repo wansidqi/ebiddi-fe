@@ -34,6 +34,7 @@ function AuctionContext(props: React.PropsWithChildren<{}>) {
   const [selectEvent, setSelectEvent] = useState<EventsInterface | null>(null);
   const [timer, setTimer] = useState(0);
 
+  //TODO change to false when to deploy
   const dev = true;
 
   const contextValue: Data = {
