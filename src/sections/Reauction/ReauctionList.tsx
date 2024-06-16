@@ -1,9 +1,7 @@
 import { ReauctionList as ReauctionListInterface } from "@/interfaces";
-import { gridCSS } from "..";
+import { UseCountdown, gridCSS } from "..";
 import { Button } from "@/components/ui/button";
 import { useStoreContext } from "@/Context";
-import { useEffect } from "react";
-import moment from "moment";
 
 interface Props {
   data: ReauctionListInterface[] | undefined;
@@ -11,49 +9,22 @@ interface Props {
 }
 
 export function ReauctionList({ data, onReauction }: Props) {
-  const { USER, payload, setPayload } = useStoreContext();
+  const { USER, payload } = useStoreContext();
   const { expiryAt } = payload;
+
+  const { countdown } = UseCountdown();
 
   const onClickReauction = (auctionId: string) => {
     if (!USER) return;
     onReauction(auctionId);
   };
 
-  useEffect(() => {
-    if (!expiryAt) {
-      return;
-    }
-
-    const endTime = moment(expiryAt);
-    const intervalId = setInterval(() => {
-      const now = moment();
-      const diff = endTime.diff(now);
-
-      if (diff <= 0) {
-        ///reset expiryAt
-        setPayload((prev) => ({ ...prev, expiryAt: "" }));
-        console.log("00:00:00");
-        clearInterval(intervalId);
-        return;
-      }
-
-      const duration = moment.duration(diff);
-      const hours = String(duration.hours()).padStart(2, "0");
-      const minutes = String(duration.minutes()).padStart(2, "0");
-      const seconds = String(duration.seconds()).padStart(2, "0");
-
-      console.log(`${hours}:${minutes}:${seconds}`); // Display the countdown
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, [expiryAt]);
-
   return (
     <div className="relative">
       {expiryAt !== "" && (
         <div className="text-5xl fixed z-50 left-1/2 -translate-x-1/2 top-16">
-          <p className="rounded-md digital font-extrabold flex items-center justify-center bg-blue-600 py-3 px-8">
-            {expiryAt}
+          <p className="text-black digital rounded-md digital font-extrabold flex items-center justify-center bg-cyan-500 py-3 px-8">
+            {countdown}
           </p>
         </div>
       )}
