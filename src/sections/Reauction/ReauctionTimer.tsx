@@ -201,7 +201,7 @@ const Content = ({
 
   return (
     <div>
-      <div className="my-6">
+      <div className="my-8">
         <Select onValueChange={convStrToNum}>
           <SelectTrigger className="">
             <SelectValue placeholder="Select a duration" />
@@ -216,7 +216,7 @@ const Content = ({
         </Select>
       </div>
       <div>
-        <div className="text-left w-full my-3">
+        <div className="text-left w-full my-3 mt-10">
           {expiryAt === "" ? (
             <Button className="w-full" onClick={() => handleClick(true)}>
               Start Reauction
