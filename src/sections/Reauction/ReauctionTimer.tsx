@@ -50,8 +50,6 @@ export function ReauctionTimer() {
   } = useStoreContext();
   const { expiryAt } = payload;
 
-  console.log(expiryAt);
-
   const {
     useGetReauctionList,
     useGetReauctionStatus,
