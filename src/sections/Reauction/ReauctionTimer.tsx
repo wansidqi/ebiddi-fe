@@ -318,11 +318,11 @@ const Content = ({
       <div>
         <div className="text-left w-full my-3">
           {expiryAt === "" ? (
-            <Button className="w-full" onClick={() => handleClick(false)}>
+            <Button className="w-full" onClick={() => handleClick(true)}>
               Start Reauction
             </Button>
           ) : (
-            <Button className="w-full" onClick={() => handleClick(true)}>
+            <Button className="w-full" onClick={() => handleClick(false)}>
               Update timer
             </Button>
           )}
