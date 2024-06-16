@@ -10,7 +10,6 @@ import { DynamicRenderer } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Status } from "@/interfaces/websocket";
 
-//TODO call countdown from hook
 export function AuctioneerList() {
   const columns = [
     "#",
