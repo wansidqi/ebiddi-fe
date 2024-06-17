@@ -1,12 +1,9 @@
 import "./custom.css";
-import { Route, Routes, Navigate, Outlet } from "react-router-dom";
-
+import { Route, Routes } from "react-router-dom";
 import { Fragment, useEffect, useState } from "react";
 import { TOKEN, getToken } from "./datasource/sessionStorage.datasource";
 import { useStoreContext } from "./Context";
-import { AlertDialog } from "./components";
-import { ROLE } from "./enum";
-import { LoaderCircle } from "lucide-react";
+import { AlertDialog, LoadingPage } from "./components";
 import {
   TAC,
   Login,
@@ -22,6 +19,12 @@ import {
   Items,
   Home,
 } from "./sections";
+import {
+  RequireVerificationToken,
+  RequireNoAuth,
+  RequireBidderAuth,
+  RequireAuctioneerAuth,
+} from "./routes";
 
 function App() {
   const { SET_USER } = useStoreContext();
@@ -34,7 +37,7 @@ function App() {
   }, [SET_USER]);
 
   if (loading) {
-    return <Spinner />;
+    return <LoadingPage />;
   }
 
   return (
@@ -71,63 +74,6 @@ function App() {
         <Route path={"/live/:eventId"} element={<LivePage />} />
       </Routes>
     </Fragment>
-  );
-}
-
-function RequireNoAuth() {
-  const { USER, dev } = useStoreContext();
-  if (USER === undefined) return <Spinner />;
-
-  if (dev) {
-    return <Outlet />;
-  } else {
-    return !USER ? <Outlet /> : <Navigate to="/events" />;
-  }
-}
-
-function RequireBidderAuth() {
-  const { USER, dev } = useStoreContext();
-  if (USER === undefined) return <Spinner />;
-
-  if (dev) {
-    return <Outlet />;
-  } else {
-    return USER?.role === ROLE.BIDDER ? <Outlet /> : <Navigate to="/login" />;
-  }
-}
-
-function RequireAuctioneerAuth() {
-  const { USER, dev } = useStoreContext();
-  if (USER === undefined) return <Spinner />;
-
-  if (dev) {
-    return <Outlet />;
-  } else {
-    return USER?.role === ROLE.AUCTIONEER ? (
-      <Outlet />
-    ) : (
-      <Navigate to="/login" />
-    );
-  }
-}
-
-function RequireVerificationToken() {
-  const { dev } = useStoreContext();
-  const token = getToken(TOKEN.auth);
-  if (token === undefined) return <Spinner />;
-
-  if (dev) {
-    return <Outlet />;
-  } else {
-    return token ? <Outlet /> : <Navigate to="/login" />;
-  }
-}
-
-function Spinner() {
-  return (
-    <div className="flexcenter h-screen">
-      <LoaderCircle size={"100px"} className="animate-spin" />
-    </div>
   );
 }
 
