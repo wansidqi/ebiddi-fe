@@ -20,7 +20,7 @@ import { XCircleIcon } from "lucide-react";
 import { InventoryInterface } from "@/interfaces";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ItemsCarousel } from "..";
+import { ItemsCarouselDesktop, ItemsCarouselMobile } from "..";
 import { useStoreContext } from "@/Context";
 
 export function ItemDetail(props: InventoryInterface) {
@@ -42,13 +42,13 @@ export function ItemDetail(props: InventoryInterface) {
             </Button>
           )}
         </DialogTrigger>
-        <DialogContent className="max-w-xl">
+        <DialogContent className="">
           <DialogHeader>
             <DialogTitle className="text-center text-2xl">
               LOT {props.lot_no}
             </DialogTitle>
           </DialogHeader>
-          <Detail {...props} />
+          <DetailDesktop {...props} />
         </DialogContent>
       </Dialog>
     );
@@ -73,7 +73,7 @@ export function ItemDetail(props: InventoryInterface) {
             LOT {props.lot_no}
           </DrawerTitle>
         </DrawerHeader>
-        <Detail {...props} />
+        <DetailMobile {...props} />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild className="absolute top-5 right-5">
             <button>
@@ -86,7 +86,80 @@ export function ItemDetail(props: InventoryInterface) {
   );
 }
 
-function Detail(props: InventoryInterface) {
+function DetailDesktop(props: InventoryInterface) {
+  return (
+    <div
+      className={cn(
+        "text-center text-[14px] flex flex-col items-center gap-3"
+      )}
+    >
+      <div className="flex sm:grid sm:grid-cols-1 w-full">
+        <ItemsCarouselDesktop images={props.images} />
+      </div>
+      <div className="grid grid-cols-4 text-left my-5 gap-x-1 gap-y-2 text-sm w-full">
+        <span className="text-primary">LEGAL OWNER</span>
+        <p className="flex gap-2">
+          {" "}
+          <span className="text-primary">:</span> {props.legal_owner || "n/a"}
+        </p>
+        <span className="text-primary">MODEL</span>
+        <p className="flex gap-2">
+          {" "}
+          <span className="text-primary">:</span> {props.model || "n/a"}
+        </p>
+        <span className="text-primary">RESERVED PRICE</span>
+        <p className="flex gap-2">
+          {" "}
+          <span className="text-primary">:</span> {props.reserve_price || "n/a"}
+        </p>
+        <span className="text-primary">ENGINE NUMBER</span>
+        <p className="flex gap-2">
+          {" "}
+          <span className="text-primary">:</span> {props.engine_number || "n/a"}
+        </p>
+        <span className="text-primary">TRANSMISSION TYPE</span>
+        <p className="flex gap-2">
+          {" "}
+          <span className="text-primary">:</span> {props.transmission || "n/a"}
+        </p>
+        <span className="text-primary">REGISTRATION CARD</span>
+        <p className="flex gap-2">
+          {" "}
+          <span className="text-primary">:</span> :{" "}
+          {props.has_registration_card ? "Yes" : "No"}
+        </p>
+        <span className="text-primary">REGISTRATION NUMBER</span>
+        <p className="flex gap-2">
+          {" "}
+          <span className="text-primary">:</span>{" "}
+          {props.registration_number || "n/a"}
+        </p>
+        <span className="text-primary">YEAR MADE</span>
+        <p className="flex gap-2">
+          {" "}
+          <span className="text-primary">:</span> {props.year || "n/a"}
+        </p>
+        <span className="text-primary">KEY:</span>
+        <p className="flex gap-2">
+          {" "}
+          <span className="text-primary">:</span> {props.has_key ? "Yes" : "No"}
+        </p>
+        <span className="text-primary">CHASIS NUMBER</span>
+        <p className="flex gap-2">
+          {" "}
+          <span className="text-primary">:</span> {props.chasis_number || "n/a"}
+        </p>
+        <span className="text-primary">REMARKS</span>
+        <p className="flex gap-2">
+          {" "}
+          <span className="text-primary">:</span> {props.remarks || "n/a"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function DetailMobile(props: InventoryInterface) {
   return (
     <div
       className={cn(
@@ -94,7 +167,7 @@ function Detail(props: InventoryInterface) {
       )}
     >
       <div className="flex sm:grid sm:grid-cols-1">
-        <ItemsCarousel images={props.images} />
+        <ItemsCarouselMobile images={props.images} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-1 text-left sm:my-5 gap-1 text-sm">
         <p className="flex gap-2">
