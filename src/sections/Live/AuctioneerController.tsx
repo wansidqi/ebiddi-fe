@@ -370,8 +370,6 @@ export function AuctioneerController() {
 
         return update;
       });
-
-      console.log("unomount controller");
     };
   }, [auctionId]);
 
