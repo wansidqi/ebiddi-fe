@@ -318,6 +318,23 @@ export function AuctioneerController() {
   useEffect(() => {
     setBidStatus(1);
     onInitial();
+
+    return () => {
+      setPayload((prev) => {
+        let update = {
+          ...prev,
+          auctionId: "",
+          status: "DISPLAY" as Status,
+        };
+
+        publishEvent({
+          event_id: eventId!,
+          data: update,
+        });
+
+        return update;
+      });
+    };
   }, [auctionId]);
 
   ///subscribe bid
