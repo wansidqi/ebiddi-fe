@@ -85,8 +85,6 @@ export function BidHeader() {
           setBidStatus(BidStatus.END);
         }
 
-        //TODO: remove settimeout, replace with state (3 =- 1) when cd == 0
-
         break;
 
       default:

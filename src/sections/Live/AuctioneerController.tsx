@@ -142,7 +142,11 @@ export function AuctioneerController() {
   const clickPause = () => {
     setIsPaused(true);
     setBidStatus(BidStatus.PAUSE);
-    const newPayload: EventData = { ...payload, status: "PAUSE" };
+    const newPayload: EventData = {
+      ...payload,
+      status: "PAUSE",
+      auction_id: "",
+    };
     if (!eventId) return;
 
     setPayload(newPayload);
@@ -158,7 +162,11 @@ export function AuctioneerController() {
   const clickResume = () => {
     setBidStatus(BidStatus.RUN);
     setIsPaused(false);
-    const newPayload: EventData = { ...payload, status: "AUCTION" };
+    const newPayload: EventData = {
+      ...payload,
+      status: "AUCTION",
+      auction_id: auctionId!,
+    };
     setPayload(newPayload);
     publishEvent({ event_id: "", data: newPayload });
 

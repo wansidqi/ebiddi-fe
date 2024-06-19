@@ -1,18 +1,16 @@
-import { ReauctionList as ReauctionListInterface } from "@/interfaces";
 import { UseCountdown, gridCSS } from "..";
 import { Button } from "@/components/ui/button";
 import { useStoreContext } from "@/Context";
 
 interface Props {
-  data: ReauctionListInterface[] | undefined;
   onReauction: (auctionId: string) => any;
 }
 
-export function ReauctionList({ data, onReauction }: Props) {
+export function ReauctionList({ onReauction }: Props) {
   const { USER, payload } = useStoreContext();
   const { expiryAt } = payload;
 
-  const { countdown } = UseCountdown();
+  const { countdown, holdItemAuction } = UseCountdown();
 
   const onClickReauction = (auctionId: string) => {
     if (!USER) return;
@@ -31,7 +29,7 @@ export function ReauctionList({ data, onReauction }: Props) {
 
       <div className="my-10">
         <div className={gridCSS}>
-          {data?.map((item, i: number) => (
+          {holdItemAuction?.map((item, i: number) => (
             <div key={i} className="border-2 border-secondary rounded-sm pb-4">
               <div className="relative h-[280px] w-full">
                 <img

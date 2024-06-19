@@ -11,7 +11,7 @@ import {
 import waiting from "@/assets/images/waiting.png";
 import { useStoreContext } from "@/Context";
 import { DynamicRenderer } from "@/components";
-import { ROLE } from "@/enum";
+import { COUNTDOWN, ROLE } from "@/enum";
 import { Toaster } from "@/components/ui/toaster";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -343,7 +343,7 @@ export function LivePage() {
           }
 
           if (bidStatus === 3) {
-            setPayload((prev) => ({ ...prev, countdown: -1 }));
+            setPayload((prev) => ({ ...prev, countdown: COUNTDOWN.initial }));
           }
 
           if (isBidding) {
@@ -627,10 +627,7 @@ export function LivePage() {
         </main>
 
         <main className={currentPage === "reauctionlist" ? "" : "hidden"}>
-          <ReauctionList
-            data={payload.holdItems}
-            onReauction={handleReauction}
-          />
+          <ReauctionList onReauction={handleReauction} />
         </main>
       </Container>
     </div>
