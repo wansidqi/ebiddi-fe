@@ -29,7 +29,7 @@ export function ItemsCarouselDesktop({ images }: { images: string[] }) {
             <div className="p-1 w-full h-[20rem] pt-4 sm:scale-[1.5] sm:pt-8 mx-auto">
               <Card>
                 <CardContent className="flex items-center justify-center p-0">
-                  <img className="w-full h-full " src={img} alt="" />
+                  <img className="w-full h-full object-cover" src={img} alt="" />
                 </CardContent>
               </Card>
             </div>
@@ -61,7 +61,7 @@ export function ItemsCarouselMobile({ images }: { images: string[] }) {
             <div className="p-1 w-56 h-56 scale-[1.2] pt-4 sm:scale-[1.5] sm:pt-8 mx-auto">
               <Card>
                 <CardContent className="flex items-center justify-center p-0">
-                  <img className="w-full h-full " src={img} alt="" />
+                  <img className="w-full h-full object-cover" src={img} alt="" />
                 </CardContent>
               </Card>
             </div>
