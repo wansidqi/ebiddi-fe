@@ -73,6 +73,17 @@ export function AuctioneerController() {
       ...prev,
       event_id: eventId,
       auction_id: auctionId,
+      countdown: -1,
+      status: "DISPLAY",
+      bidders: {
+        all: [],
+        highest_amount: 0,
+        highest_user_id: 0,
+        highest_user_name: "",
+      },
+      expiryAt: "",
+      holdItems: [],
+      auction_event_id: "",
     }));
   };
 
@@ -325,6 +336,16 @@ export function AuctioneerController() {
           ...prev,
           auctionId: "",
           status: "DISPLAY" as Status,
+          bidders: {
+            all: [],
+            highest_amount: 0,
+            highest_user_id: 0,
+            highest_user_name: "",
+          },
+          countdown: -1,
+          expiryAt: "",
+          holdItems: [],
+          auction_event_id: "",
         };
 
         publishEvent({

@@ -63,8 +63,8 @@ export function LivePage() {
     usePostReauctionItem,
   } = useAPIServices();
   const { data: event } = useGetEventById(eventId);
-  const { data: credits } = useGetCredit(event?.auction_house.id);
-  const { data: auction, refetch } = useGetLiveAuction(payload.auction_id);
+  const { data: credits, refetch: getCredit } = useGetCredit( event?.auction_house.id); //prettier-ignore
+  const { data: auction, refetch: getAuction } = useGetLiveAuction(payload.auction_id); //prettier-ignore
   const { mutateAsync: postTrail } = usePostAuditTrail();
   const { mutateAsync: onReautionItem } = usePostReauctionItem();
 
@@ -154,7 +154,7 @@ export function LivePage() {
   };
 
   const reset = () => {
-    refetch();
+    getAuction();
     setBidStatus(0);
 
     setPayload((prev) => ({
@@ -307,7 +307,7 @@ export function LivePage() {
 
         // prettier-ignore
         if (data.status !== "CLOSE" && auction?.auction_id !== Number(data.auction_id)) {
-          payload.auction_id !== "" && refetch();
+          // payload.auction_id !== "" && getAuction();
           setPayload((prev) => ({
             ...prev,
             bid: {
@@ -533,8 +533,9 @@ export function LivePage() {
 
   ///render when change auctionId
   useEffect(() => {
-    if (payload.auction_id) {
-      refetch();
+    if (payload.auction_id !== "") {
+      getAuction();
+      getCredit();
       updateFlag.current = false;
     }
   }, [payload.auction_id]);
