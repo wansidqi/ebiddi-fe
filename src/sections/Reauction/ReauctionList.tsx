@@ -10,7 +10,7 @@ export function ReauctionList({ onReauction }: Props) {
   const { USER, payload } = useStoreContext();
   const { expiryAt } = payload;
 
-  const { countdown, holdItemAuction } = UseCountdown();
+  const { countdown } = UseCountdown();
 
   const onClickReauction = (auctionId: string) => {
     if (!USER) return;
@@ -29,7 +29,7 @@ export function ReauctionList({ onReauction }: Props) {
 
       <div className="my-10">
         <div className={gridCSS}>
-          {holdItemAuction?.map((item, i: number) => (
+          {payload.holdItems?.map((item, i: number) => (
             <div key={i} className="border-2 border-secondary rounded-sm pb-4">
               <div className="relative h-[280px] w-full">
                 <img

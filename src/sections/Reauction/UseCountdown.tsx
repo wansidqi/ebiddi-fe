@@ -110,11 +110,5 @@ export function UseCountdown() {
     };
   }, [expiryAt]);
 
-  ///assign hold Item
-  //TODO: check which API is for hold Items (getReauctionList or getHoldItems)
-  useEffect(() => {
-    setPayload((prev) => ({ ...prev, holdItems: auctions || [] }));
-  }, [auctions]);
-
-  return { countdown, isCdLoading, holdItemAuction: auctions };
+  return { countdown, isCdLoading };
 }

@@ -36,7 +36,7 @@ const useGetReauctionStatus = (eventId: string | undefined) => {
 
 const useGetHoldItems = (eventId: string | undefined) => {
   return useQuery({
-    queryKey: [KEY.reauctions_status, eventId],
+    queryKey: [KEY.reauctions_holdItem, eventId],
     enabled: !!eventId,
     refetchOnWindowFocus: false,
     queryFn: async () => {

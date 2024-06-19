@@ -33,7 +33,7 @@ export function AuctioneerList() {
 
   //TODO: check which API is for hold Items (getReauctionList or getHoldItems)
   const qryKey = [KEY.reauction, eventId];
-  const holdedItems = useGetQueryData<ReauctionList[]>(qryKey);
+  const reauctions = useGetQueryData<ReauctionList[]>(qryKey);
 
   const auctions = data?.inventories;
 
@@ -144,7 +144,7 @@ export function AuctioneerList() {
                   <tr key={i}>
                     <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap flexcenter">
                       <ItemDetail {...auction} />
-                      {holdedItems?.find(
+                      {reauctions?.find(
                         (item) => item.lot_no === auction.lot_no
                       ) && <BlinkAnimation />}
                     </td>
