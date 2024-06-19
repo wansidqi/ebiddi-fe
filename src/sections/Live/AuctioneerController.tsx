@@ -173,16 +173,25 @@ export function AuctioneerController() {
   const clickWithdraw = () => {
     onWithdraw(payload.auction_id, {
       onSuccess: () => {
-        setPayload((prev) => ({ ...prev, status: "WITHDRAW" }));
-
         ///reset countdown
-        setPayload((prev) => ({ ...prev, countdown: -1 })); ///reset countdown
         setIsActive(false);
         setIsPaused(false);
         if (!eventId) return;
-        publishEvent({
-          event_id: eventId,
-          data: { ...payload, status: "WITHDRAW" },
+
+        setPayload((prev) => {
+          let update = {
+            ...prev,
+            status: "WITHDRAW" as Status,
+            countdown: -1,
+            // auction_id: "",
+          };
+
+          publishEvent({
+            event_id: eventId,
+            data: { ...payload, status: "WITHDRAW" },
+          });
+
+          return update;
         });
 
         setBidStatus(BidStatus.WITHDRAW);
@@ -334,13 +343,19 @@ export function AuctioneerController() {
       setPayload((prev) => {
         let update = {
           ...prev,
-          auctionId: "",
+          auction_id: "",
           status: "DISPLAY" as Status,
           bidders: {
             all: [],
             highest_amount: 0,
             highest_user_id: 0,
             highest_user_name: "",
+          },
+          bid: {
+            current: 0,
+            next: 0,
+            start: 0,
+            up: 0,
           },
           countdown: -1,
           expiryAt: "",
@@ -355,6 +370,8 @@ export function AuctioneerController() {
 
         return update;
       });
+
+      console.log("unomount controller");
     };
   }, [auctionId]);
 
