@@ -423,7 +423,7 @@ export function AuctioneerController() {
             <CondButton
               onClick={clickBackToAuction}
               show={naviStatus}
-              className="bg-green-600"
+              className="bg-blue-600"
             >
               BACK TO AUCTION LIST
             </CondButton>
@@ -439,7 +439,7 @@ export function AuctioneerController() {
                 })
               }
               show={bidStatus === 1 || bidStatus === 4}
-              className="bg-green-600"
+              className="bg-rose-800"
             >
               WITHDRAW CURRENT VEHICLE
             </CondButton>
@@ -447,7 +447,7 @@ export function AuctioneerController() {
             <CondButton
               onClick={clickReauction}
               show={bidStatus === 4}
-              className="bg-green-600"
+              className="bg-lime-500"
             >
               RE-AUCTION
             </CondButton>
@@ -455,7 +455,7 @@ export function AuctioneerController() {
             <CondButton
               onClick={clickSold}
               show={bidStatus == 3 && payload.bidders.all.length > 0}
-              className="bg-green-600"
+              className="bg-amber-600"
             >
               SOLD
             </CondButton>
@@ -463,7 +463,7 @@ export function AuctioneerController() {
             <CondButton
               onClick={clickHold}
               show={bidStatus == 3 && payload.bidders.all.length == 0}
-              className="bg-green-600"
+              className="bg-black text-white"
             >
               NO BID
             </CondButton>
@@ -471,7 +471,7 @@ export function AuctioneerController() {
             <CondButton
               onClick={clickEnd}
               show={bidStatus == 6}
-              className="bg-green-600"
+              className="bg-emerald-600"
             >
               END
             </CondButton>
@@ -506,7 +506,7 @@ const CondButton: React.FC<CondBtn> = ({
     <>
       {show && (
         <button
-          className={`${isIcon ? "flexcenter" : "py-3 rounded-md"}  w-full sm:w-1/2  ${className}`}
+          className={`${isIcon ? "flexcenter" : "py-3 rounded-md"}  w-full sm:w-1/4  ${className}`}
           {...rest}
         >
           {children}
