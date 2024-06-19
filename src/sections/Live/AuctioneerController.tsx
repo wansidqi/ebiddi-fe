@@ -399,6 +399,7 @@ export function AuctioneerController() {
               highest_user_id: data.user_id,
               highest_user_name: data.name,
             },
+            countdown: 10,
             bid: {
               current: data.amount,
               next: getCurrentBid(data.amount),
