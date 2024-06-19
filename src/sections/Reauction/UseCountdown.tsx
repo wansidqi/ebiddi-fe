@@ -110,5 +110,10 @@ export function UseCountdown() {
     };
   }, [expiryAt]);
 
+  ///assign hold Item
+  useEffect(() => {
+    setPayload((prev) => ({ ...prev, holdItems: holdedItems || [] }));
+  }, [holdedItems]);
+
   return { countdown, isCdLoading };
 }

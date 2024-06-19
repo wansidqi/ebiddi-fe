@@ -9,7 +9,7 @@ import {
 } from "@/interfaces/websocket";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as socketClusterClient from "socketcluster-client";
-import { BidStatus, ROLE } from "@/enum";
+import { BidStatus, COUNTDOWN, ROLE } from "@/enum";
 import { useAuctionContext } from "./auction-context";
 
 export function useWsContext() {
@@ -65,7 +65,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
       start: 0,
       up: 0,
     },
-    countdown: -1,
+    countdown: COUNTDOWN.initial,
     status: "DISPLAY",
     bidders: {
       all: [],

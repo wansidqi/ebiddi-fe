@@ -6,7 +6,7 @@ import { CreditInterface, EventsInterface } from "@/interfaces";
 import { BidStatus, ROLE } from "@/enum";
 import { numWithComma } from "@/lib/utils";
 import { KEY, useGetQueryData } from "@/services";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { playAudio } from "@/assets/audio";
 
@@ -15,6 +15,8 @@ export function BidHeader() {
 
   const { USER, bidStatus, setBidStatus, payload } = useStoreContext();
   const { countdown } = payload;
+
+  const [finalCall, setFinalCall] = useState(0);
 
   const queryKeyEvent = [KEY.credit, eventId];
   const event = useGetQueryData<EventsInterface>(queryKeyEvent);
@@ -52,6 +54,7 @@ export function BidHeader() {
   useEffect(() => {
     switch (countdown) {
       case 10:
+        setFinalCall(0);
         setBidStatus(2);
         break;
       case 8:
@@ -70,6 +73,7 @@ export function BidHeader() {
         break;
       case 0:
         if (payload.status !== "SOLD") {
+          setFinalCall(1);
           startAlert({
             call: "final call",
             variant: "final",
@@ -78,28 +82,10 @@ export function BidHeader() {
         }
 
         if (bidStatus !== BidStatus.CLOSE) {
-          let newStat = BidStatus.END;
-          setBidStatus(newStat);
+          setBidStatus(BidStatus.END);
         }
 
-        setTimeout(
-          () =>
-            startAlert({
-              call: "final call",
-              variant: "final",
-              audioName: "call3",
-            }),
-          3000
-        );
-        setTimeout(
-          () =>
-            startAlert({
-              call: "final call",
-              variant: "final",
-              audioName: "call3",
-            }),
-          6000
-        );
+        //TODO: remove settimeout, replace with state (3 =- 1) when cd == 0
 
         break;
 
@@ -107,6 +93,22 @@ export function BidHeader() {
         break;
     }
   }, [countdown]);
+
+  useEffect(() => {
+    if (finalCall > 0 && finalCall <= 3) {
+      const interval = setInterval(() => {
+        setFinalCall((prevCount) => prevCount + 1);
+      }, 3000);
+
+      startAlert({
+        call: "final call",
+        variant: "final",
+        audioName: "call3",
+      });
+
+      return () => clearInterval(interval);
+    }
+  }, [finalCall]);
 
   return (
     <div>
