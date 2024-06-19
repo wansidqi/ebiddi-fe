@@ -409,6 +409,7 @@ export function AuctioneerController() {
           };
 
           setBidListIndex(0);
+          setIsActive(true);
 
           publishEvent({ event_id: eventId, data: updatedPayload });
 
