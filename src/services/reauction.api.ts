@@ -34,6 +34,7 @@ const useGetReauctionStatus = (eventId: string | undefined) => {
   });
 };
 
+///fetching this, map to add attribute "auction_event_id" for publish and set as paylaod (bidder POV reauction list)
 const useGetHoldItems = (eventId: string | undefined) => {
   return useQuery({
     queryKey: [KEY.reauctions_holdItem, eventId],
