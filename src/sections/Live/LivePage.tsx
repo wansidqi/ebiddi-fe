@@ -474,8 +474,8 @@ export function LivePage() {
           setIsBidding(false);
           $swal({
             title: `Lot ${auction?.lot_no}`,
-            content: `item #${payload.auction_event_id} request for reauction`,
-            timer: 1000,
+            content: `No Bid`,
+            timer: 3000,
           });
           playAudio("withdraw");
           reset();
@@ -554,6 +554,7 @@ export function LivePage() {
               <div className="border-2 border-primary rounded-full p-2 text-primary">
                 <EyeIcon />
               </div>
+              {/* //TODO: total connection */}
               <p className="pt-1">888</p>
             </div>
             <div className="flexcenter gap-2 ">

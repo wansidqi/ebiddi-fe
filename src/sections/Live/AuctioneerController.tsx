@@ -65,19 +65,19 @@ export function AuctioneerController() {
 
   const onInitial = () => {
     setNaviStatus(true);
-    if (!eventId) return;
+    if (!eventId || !auctionId) return;
 
     resetBid();
+
+    setPayload((prev) => ({
+      ...prev,
+      event_id: eventId,
+      auction_id: auctionId,
+    }));
   };
 
   const publishTimer = () => {
     if (!auctionId || !eventId) return;
-    setPayload((prev) => ({
-      ...prev,
-      countdown,
-      auction_id: auctionId,
-      event_id: eventId,
-    }));
     publishEvent({ event_id: eventId, data: { ...payload, countdown } });
   };
 
@@ -98,12 +98,13 @@ export function AuctioneerController() {
     if (isActive) {
       clickResume();
     } else {
-      onInitial();
       setIsActive(true);
       setIsPaused(false);
       setNaviStatus(false);
 
       setBidStatus(BidStatus.RUN);
+
+      onInitial();
 
       if (!eventId) return;
       if (!auction) return;

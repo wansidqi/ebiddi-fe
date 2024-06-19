@@ -8,7 +8,7 @@ import withdraw from "@/assets/audio/sound_withdraw.mp3";
 import noBid from "@/assets/audio/sound_nobid.mp3";
 import sold from "@/assets/audio/sold.mp3";
 
-type Audio =
+export type EbiddiAudio =
   | "start"
   | "hold"
   | "reauction"
@@ -19,7 +19,7 @@ type Audio =
   | "call2"
   | "call3";
 
-export const playAudio = (name: Audio) => {
+export const playAudio = (name: EbiddiAudio) => {
   let audioSrc;
 
   switch (name) {

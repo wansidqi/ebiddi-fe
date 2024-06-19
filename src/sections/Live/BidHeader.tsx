@@ -4,10 +4,11 @@ import { toast } from "@/components/ui/use-toast";
 import { CallMessage } from "@/data/call-alert";
 import { CreditInterface, EventsInterface } from "@/interfaces";
 import { BidStatus, ROLE } from "@/enum";
-import { numWithComma, playAudio } from "@/lib/utils";
+import { numWithComma } from "@/lib/utils";
 import { KEY, useGetQueryData } from "@/services";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { playAudio } from "@/assets/audio";
 
 export function BidHeader() {
   const { eventId } = useParams();
@@ -39,13 +40,13 @@ export function BidHeader() {
     }
   };
 
-  const startAlert = ({ call, variant }: CallMessage) => {
+  const startAlert = ({ call, variant, audioName }: CallMessage) => {
     toast({
       duration: 1500,
       variant: variant,
       title: call.toUpperCase(),
     });
-    playAudio(call);
+    playAudio(audioName);
   };
 
   useEffect(() => {
@@ -54,14 +55,26 @@ export function BidHeader() {
         setBidStatus(2);
         break;
       case 8:
-        startAlert({ call: "calling once", variant: "once" });
+        startAlert({
+          call: "calling once",
+          variant: "once",
+          audioName: "call1",
+        });
         break;
       case 4:
-        startAlert({ call: "calling twice", variant: "twice" });
+        startAlert({
+          call: "calling twice",
+          variant: "twice",
+          audioName: "call2",
+        });
         break;
       case 0:
         if (payload.status !== "SOLD") {
-          startAlert({ call: "final call", variant: "final" });
+          startAlert({
+            call: "final call",
+            variant: "final",
+            audioName: "call3",
+          });
         }
 
         if (bidStatus !== BidStatus.CLOSE) {
@@ -70,11 +83,21 @@ export function BidHeader() {
         }
 
         setTimeout(
-          () => startAlert({ call: "final call", variant: "final" }),
+          () =>
+            startAlert({
+              call: "final call",
+              variant: "final",
+              audioName: "call3",
+            }),
           3000
         );
         setTimeout(
-          () => startAlert({ call: "final call", variant: "final" }),
+          () =>
+            startAlert({
+              call: "final call",
+              variant: "final",
+              audioName: "call3",
+            }),
           6000
         );
 

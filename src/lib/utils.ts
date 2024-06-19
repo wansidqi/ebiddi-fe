@@ -132,7 +132,7 @@ export const roleRenderer = ({
   }
 };
 
-export const playAudio = (text: string) => {
+export const playCustomAudio = (text: string) => {
   const speech = new SpeechSynthesisUtterance();
   speech.text = text;
   speech.volume = 2;
