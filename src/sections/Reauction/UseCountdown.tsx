@@ -10,7 +10,8 @@ export function UseCountdown() {
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [countdown, setCountdown] = useState<string>("");
 
-  const { payload, setPayload, publishReauction } = useStoreContext();
+  const { payload, setPayload, publishReauction, setCurrentPage } =
+    useStoreContext();
   const { expiryAt } = payload;
 
   const { useGetReauctionList, useGetReauctionStatus, useGetHoldItems } = useAPIServices(); //prettier-ignore
@@ -74,9 +75,12 @@ export function UseCountdown() {
         const now = moment();
         const diff = endTime.diff(now);
 
+        ///end
         if (diff <= 0) {
           setCountdown("00:00:00");
           clearInterval(newTimer);
+          setCurrentPage("bidding");
+
           return;
         }
 
@@ -84,6 +88,8 @@ export function UseCountdown() {
         const hours = String(duration.hours()).padStart(2, "0");
         const minutes = String(duration.minutes()).padStart(2, "0");
         const seconds = String(duration.seconds()).padStart(2, "0");
+
+        setCurrentPage("reauctionlist");
 
         setCountdown(`${hours}:${minutes}:${seconds}`);
 

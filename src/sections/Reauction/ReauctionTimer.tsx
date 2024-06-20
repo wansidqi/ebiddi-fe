@@ -44,7 +44,7 @@ export function ReauctionTimer() {
     subscribeEvent,
     socket,
     subscribeReauction,
-    publishReauction,
+    publishEvent,
   } = useStoreContext();
   const { expiryAt } = payload;
 
@@ -60,26 +60,36 @@ export function ReauctionTimer() {
     if (isCreate) {
       setPayload((prev) => {
         let update = { ...prev, eventId, status: "REAUCTIONLIST" as Status };
-        publishReauction({ event_id: eventId, data: { event_id: eventId, status: "REAUCTIONLIST" }}); //prettier-ignore
+        publishEvent({
+          event_id: eventId,
+          data: { ...payload, event_id: eventId, status: "REAUCTIONLIST" },
+        });
         return update;
       });
     }
-
-    setPayload((prev) => ({ ...prev, expiryAt: newExpiryAt }));
 
     try {
       postReauction(
         { isCreate, newExpiryAt },
         {
           onSuccess: (data) => {
-            setPayload((prev) => ({ ...prev, expiryAt: data.expiry_at }));
-            publishReauction({
-              event_id: eventId,
-              data: {
-                event_id: eventId,
-                status: "REAUCTIONLIST",
+            setPayload((prev) => {
+              let update = {
+                ...prev,
                 expiryAt: data.expiry_at,
-              },
+              };
+
+              publishEvent({
+                event_id: eventId,
+                data: {
+                  ...payload,
+                  event_id: eventId,
+                  status: "REAUCTIONLISTUPDATETIMER",
+                  expiryAt: data.expiry_at,
+                },
+              });
+
+              return update;
             });
           },
         }
@@ -189,6 +199,7 @@ const Content = ({
   closeModal: () => void;
 }) => {
   const [duration, setDuration] = useState(0);
+  const { dev } = useStoreContext();
 
   const convStrToNum = (value: string) => {
     setDuration(parseInt(value, 10));
@@ -208,6 +219,9 @@ const Content = ({
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
+              {dev && <SelectItem value="10">10 seconds</SelectItem>}
+              {dev && <SelectItem value="30">30 seconds</SelectItem>}
+              {dev && <SelectItem value="60">1 minute</SelectItem>}
               <SelectItem value="300">5 minutes</SelectItem>
               <SelectItem value="600">10 minutes</SelectItem>
               <SelectItem value="900">15 minutes</SelectItem>

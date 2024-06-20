@@ -154,7 +154,7 @@ export function LivePage() {
   };
 
   const reset = () => {
-    getAuction();
+    // getAuction();
     setBidStatus(0);
 
     setPayload((prev) => ({
@@ -285,6 +285,7 @@ export function LivePage() {
         }
 
         if (data.status === "REAUCTIONLIST") {
+          updateFlag.current = true;
           reset();
           $swal({
             title: "Redirecting to Reauction List",
@@ -295,19 +296,23 @@ export function LivePage() {
         }
 
         if (data.status === "REAUCTIONLISTUPDATETIMER") {
-          setCurrentPage("reauctionlist");
+          updateFlag.current = true;
           setPayload((prev) => ({ ...prev, expiryAt: data.expiryAt }));
+
+          setCurrentPage("reauctionlist");
+
           $swal({
             title: `Reauction Expiry Updated`,
             timer: 3000,
-            content: `The new reauction expiry is at ${moment(payload.expiryAt).format("HH:mm")}`,
+            content: `The new reauction expiry is at ${moment(data.expiryAt).format("HH:mm")}`,
           });
           reset();
         }
 
         // prettier-ignore
-        if (data.status !== "CLOSE" && auction?.auction_id !== Number(data.auction_id)) {
+        if (!updateFlag.current && data.status !== "CLOSE" && auction?.auction_id !== Number(data.auction_id)) {
           // payload.auction_id !== "" && getAuction();
+          setCurrentPage("bidding");
           setPayload((prev) => ({
             ...prev,
             bid: {
