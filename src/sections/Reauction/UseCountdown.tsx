@@ -9,6 +9,7 @@ export function UseCountdown() {
   const { eventId } = useParams();
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [countdown, setCountdown] = useState<string>("");
+  const [isCountdownActive, setIsCountdownActive] = useState(false);
 
   const { payload, setPayload, publishReauction, setCurrentPage } =
     useStoreContext();
@@ -80,6 +81,7 @@ export function UseCountdown() {
           setCountdown("00:00:00");
           clearInterval(newTimer);
           setCurrentPage("bidding");
+          setIsCountdownActive(false);
 
           return;
         }
@@ -90,6 +92,7 @@ export function UseCountdown() {
         const seconds = String(duration.seconds()).padStart(2, "0");
 
         setCurrentPage("reauctionlist");
+        setIsCountdownActive(true);
 
         setCountdown(`${hours}:${minutes}:${seconds}`);
 
@@ -116,5 +119,5 @@ export function UseCountdown() {
     };
   }, [expiryAt]);
 
-  return { countdown, isCdLoading };
+  return { countdown, isCdLoading, isCountdownActive };
 }

@@ -23,7 +23,7 @@ export function AuctioneerList() {
   ];
 
   const { eventId } = useParams();
-  const { countdown } = UseCountdown();
+  const { countdown, isCountdownActive } = UseCountdown();
   const navigate = useNavigate();
   const { useGetEventById, useCloseAuctionEvent } = useAPIServices();
   const { setView, publishEvent, setPayload, $swal } = useStoreContext();
@@ -170,6 +170,7 @@ export function AuctioneerList() {
                       <DynamicRenderer>
                         <DynamicRenderer.When cond={auction.status === "HOLD"}>
                           <Button
+                            disabled={isCountdownActive}
                             onClick={() => navigateToLive(auction.auction_id)}
                             variant="link"
                           >

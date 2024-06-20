@@ -81,9 +81,6 @@ export function AuctioneerController() {
         highest_user_id: 0,
         highest_user_name: "",
       },
-      expiryAt: "",
-      holdItems: [],
-      auction_event_id: "",
     }));
   };
 
@@ -145,7 +142,6 @@ export function AuctioneerController() {
     const newPayload: EventData = {
       ...payload,
       status: "PAUSE",
-      auction_id: "",
     };
     if (!eventId) return;
 
@@ -366,9 +362,6 @@ export function AuctioneerController() {
             up: 0,
           },
           countdown: COUNTDOWN.initial,
-          expiryAt: "",
-          holdItems: [],
-          auction_event_id: "",
         };
 
         publishEvent({

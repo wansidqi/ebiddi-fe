@@ -632,9 +632,11 @@ export function LivePage() {
           </DynamicRenderer>
         </main>
 
-        <main className={currentPage === "reauctionlist" ? "" : "hidden"}>
-          <ReauctionList onReauction={handleReauction} />
-        </main>
+        {isNotAuctioneer && (
+          <main className={currentPage === "reauctionlist" ? "" : "hidden"}>
+            <ReauctionList onReauction={handleReauction} />
+          </main>
+        )}
       </Container>
     </div>
   );
