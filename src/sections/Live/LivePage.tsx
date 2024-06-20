@@ -252,6 +252,7 @@ export function LivePage() {
           data: {
             auction_event_id: auctionId as string,
             event_id: eventId,
+            status: "REAUCTIONLISTITEM",
           },
         });
       },
