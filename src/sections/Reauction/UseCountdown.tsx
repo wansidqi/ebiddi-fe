@@ -11,8 +11,7 @@ export function UseCountdown() {
   const [countdown, setCountdown] = useState<string>("");
   const [isCountdownActive, setIsCountdownActive] = useState(false);
 
-  const { payload, setPayload, publishReauction, setCurrentPage } =
-    useStoreContext();
+  const { payload, setPayload, publishReauction } = useStoreContext();
   const { expiryAt } = payload;
 
   const { useGetReauctionList, useGetReauctionStatus, useGetHoldItems } = useAPIServices(); //prettier-ignore
@@ -80,7 +79,6 @@ export function UseCountdown() {
         if (diff <= 0) {
           setCountdown("00:00:00");
           clearInterval(newTimer);
-          setCurrentPage("bidding");
           setIsCountdownActive(false);
 
           return;
@@ -91,7 +89,6 @@ export function UseCountdown() {
         const minutes = String(duration.minutes()).padStart(2, "0");
         const seconds = String(duration.seconds()).padStart(2, "0");
 
-        setCurrentPage("reauctionlist");
         setIsCountdownActive(true);
 
         setCountdown(`${hours}:${minutes}:${seconds}`);

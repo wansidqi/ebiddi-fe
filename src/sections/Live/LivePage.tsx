@@ -7,6 +7,7 @@ import {
   LiveDetail,
   LiveDialog,
   ReauctionList,
+  UseCountdown,
 } from "@/sections";
 import waiting from "@/assets/images/waiting.png";
 import { useStoreContext } from "@/Context";
@@ -47,6 +48,8 @@ export function LivePage() {
     publishReauction,
     $swal,
   } = useStoreContext();
+
+  const { isCountdownActive } = UseCountdown();
 
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
   const isAuctionIdNotExist = payload.auction_id === "";
@@ -545,6 +548,15 @@ export function LivePage() {
       updateFlag.current = false;
     }
   }, [payload.auction_id]);
+
+  ///navigate to list (for auctioneer)
+  useEffect(() => {
+    if (!isNotAuctioneer && isCountdownActive) {
+      navigate(`/auctioneer/list/${eventId}`);
+    } else {
+      isCountdownActive ? setCurrentPage("reauctionlist") : setCurrentPage("bidding"); //prettier-ignore
+    }
+  }, [currentPage, isCountdownActive]);
 
   return (
     <div>
