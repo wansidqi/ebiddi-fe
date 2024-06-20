@@ -549,7 +549,7 @@ export function LivePage() {
     }
   }, [payload.auction_id]);
 
-  ///navigate to list (for auctioneer)
+  ///navigate to list (for auctioneer) and set currentPage depend on countdown
   useEffect(() => {
     if (!isNotAuctioneer && isCountdownActive) {
       navigate(`/auctioneer/list/${eventId}`);
