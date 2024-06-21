@@ -21,7 +21,7 @@ export function UseCountdown() {
   const { data: holdedItems, refetch: getHoldItems } =  useGetHoldItems(eventId); //prettier-ignore
 
   const sendHoldItems = () => {
-    if (expiryAt !== "" || !expiryAt) return;
+    // if (expiryAt === "" || !expiryAt) return;
 
     if (!eventId) return;
 
