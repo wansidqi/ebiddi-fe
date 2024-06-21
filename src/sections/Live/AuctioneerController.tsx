@@ -7,6 +7,7 @@ import { ArrowLeftSquare, ArrowRightSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { LiveDialog } from "../Live/LiveDialog";
+import { UseCountdown } from "..";
 
 export function AuctioneerController() {
   const { auctionId, eventId } = useParams();
@@ -337,6 +338,12 @@ export function AuctioneerController() {
   // const clickReauctionList = () => {
   /* navigation to reauction list page */
   // };
+
+  const { countdown: reauctionCd, isCountdownActive } = UseCountdown();
+
+  useEffect(() => {
+    if (!isCountdownActive) setBidStatus(1);
+  }, [isCountdownActive, reauctionCd]);
 
   ///reset bid
   useEffect(() => {
