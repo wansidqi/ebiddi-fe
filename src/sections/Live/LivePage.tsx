@@ -613,7 +613,7 @@ const WaitingComponent = () => {
   return (
     <div>
       <div className={`flexcenter-col mt-8 text-center gap-4`}>
-        <p className="text-3xl">WAITING</p>
+        <p className="animate-pulse text-3xl">WAITING</p>
         <img className="scale-[0.8] sm:scale-[1]" src={waiting} alt="" />
         <p>
           Please be patient, we are still waiting for Auctioneer input. The
