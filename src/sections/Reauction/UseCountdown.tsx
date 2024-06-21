@@ -10,6 +10,7 @@ export function UseCountdown() {
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [countdown, setCountdown] = useState<string>("");
   const [isCountdownActive, setIsCountdownActive] = useState(false);
+  const [mapItem, setMapItem] = useState<ReauctionList[]>([]);
 
   const { payload, setPayload, publishReauction } = useStoreContext();
   const { expiryAt } = payload;
@@ -37,21 +38,22 @@ export function UseCountdown() {
           item.status = "REQUEST";
         }
 
+        setMapItem(items);
         return item as ReauctionList;
       });
 
       setPayload((prev) => ({ ...prev, holdItems: items }));
-
-      publishReauction({
-        event_id: eventId,
-        data: {
-          event_id: eventId,
-          status: "REAUCTIONLISTUPDATE",
-          items,
-          expiryAt,
-        },
-      });
     }
+
+    publishReauction({
+      event_id: eventId,
+      data: {
+        event_id: eventId,
+        status: "REAUCTIONLISTUPDATE",
+        items: mapItem,
+        expiryAt,
+      },
+    });
   };
 
   ///assign expiry from API
