@@ -1,21 +1,83 @@
 import { UseCountdown, gridCSS } from "..";
 import { Button } from "@/components/ui/button";
 import { useStoreContext } from "@/Context";
+import { useAPIServices } from "@/services";
+import { useParams } from "react-router-dom";
 
-interface Props {
-  onReauction: (auctionId: string) => any;
-}
-
-export function ReauctionList({ onReauction }: Props) {
-  const { USER, payload } = useStoreContext();
+export function ReauctionList() {
+  const { eventId } = useParams();
+  const { USER, payload, $swal, publishReauction } = useStoreContext();
   const { expiryAt } = payload;
 
   const { countdown } = UseCountdown();
 
+  const { usePostReauctionItem } = useAPIServices();
+  const { mutateAsync: onReautionItem } = usePostReauctionItem();
+
+  const handleReauction = (auctionId: string) => {
+    $swal({
+      title: "Reauction",
+      content: "Please confirm if you want to reauction this lot",
+      onClick: () => {
+        reauctionItem(auctionId);
+      },
+    });
+  };
+
+  const reauctionItem = (auctionId: string) => {
+    if (!eventId) return;
+    const id = { auctionId, eventId };
+
+    onReautionItem(id, {
+      onSuccess: () => {
+        publishReauction({
+          event_id: eventId,
+          data: {
+            auction_event_id: auctionId as string,
+            event_id: eventId,
+            status: "REAUCTIONLISTITEM",
+          },
+        });
+      },
+      onError: (e: any) => {
+        $swal({
+          title: "Error Reauctioning",
+          content: `${e}`,
+          timer: 3000,
+        });
+      },
+    });
+  };
+
   const onClickReauction = (auctionId: string) => {
     if (!USER) return;
-    onReauction(auctionId);
+    handleReauction(auctionId);
   };
+
+  const temp = [
+    {
+      auction_event_id: "auction_1",
+      images: ["https://example.com/image1.jpg"],
+      lot_no: "1001",
+      registration_number: "ABC1234",
+      reserve_price: 100000,
+      model: "Toyota Camry",
+      year: 2018,
+      legal_owner: "Jane Smith",
+      status: "HOLD",
+    },
+    {
+      auction_event_id: "auction_2",
+      images: ["https://example.com/image2.jpg"],
+      lot_no: "1002",
+      registration_number: "XYZ5678",
+      reserve_price: 150000,
+      model: "Honda Accord",
+      year: 2019,
+      legal_owner: "John Doe",
+      status: "REQUEST",
+    },
+  ];
 
   return (
     <div className="relative">

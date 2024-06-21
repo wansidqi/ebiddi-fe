@@ -7,11 +7,10 @@ import {
   LiveDetail,
   LiveDialog,
   ReauctionList,
-  UseCountdown,
 } from "@/sections";
 import waiting from "@/assets/images/waiting.png";
 import { useStoreContext } from "@/Context";
-import { DynamicRenderer } from "@/components";
+import { DynamicRenderer, Modal } from "@/components";
 import { COUNTDOWN, ROLE } from "@/enum";
 import { Toaster } from "@/components/ui/toaster";
 import { useNavigate, useParams } from "react-router-dom";
@@ -45,11 +44,8 @@ export function LivePage() {
     currentPage,
     setCurrentPage,
     subscribeReauction,
-    publishReauction,
     $swal,
   } = useStoreContext();
-
-  const { isCountdownActive } = UseCountdown();
 
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
   const isAuctionIdNotExist = payload.auction_id === "";
@@ -63,13 +59,11 @@ export function LivePage() {
     useGetEventById,
     useGetLiveAuction,
     usePostAuditTrail,
-    usePostReauctionItem,
   } = useAPIServices();
   const { data: event } = useGetEventById(eventId);
   const { data: credits, refetch: getCredit } = useGetCredit( event?.auction_house.id); //prettier-ignore
   const { data: auction, refetch: getAuction } = useGetLiveAuction(payload.auction_id); //prettier-ignore
   const { mutateAsync: postTrail } = usePostAuditTrail();
-  const { mutateAsync: onReautionItem } = usePostReauctionItem();
 
   const testBid = () => {
     if (!eventId || !USER) return;
@@ -232,41 +226,6 @@ export function LivePage() {
     data += `&bid_amount=${amount}`;
 
     postTrail({ data });
-  };
-
-  const handleReauction = (auctionId: string) => {
-    $swal({
-      title: "Reauction",
-      content: "Please confirm if you want to reauction this lot",
-      onClick: () => {
-        reauctionItem(auctionId);
-      },
-    });
-  };
-
-  const reauctionItem = (auctionId: string) => {
-    if (!eventId) return;
-    const id = { auctionId, eventId };
-
-    onReautionItem(id, {
-      onSuccess: () => {
-        publishReauction({
-          event_id: eventId,
-          data: {
-            auction_event_id: auctionId as string,
-            event_id: eventId,
-            status: "REAUCTIONLISTITEM",
-          },
-        });
-      },
-      onError: (e: any) => {
-        $swal({
-          title: "Error Reauctioning",
-          content: `${e}`,
-          timer: 3000,
-        });
-      },
-    });
   };
 
   ///subscribe event
@@ -549,21 +508,12 @@ export function LivePage() {
     }
   }, [payload.auction_id]);
 
-  ///navigate to list (for auctioneer) and set currentPage depend on countdown
-  useEffect(() => {
-    if (!isNotAuctioneer && isCountdownActive) {
-      navigate(`/auctioneer/list/${eventId}`);
-    } else {
-      isCountdownActive ? setCurrentPage("reauctionlist") : setCurrentPage("bidding"); //prettier-ignore
-    }
-  }, [currentPage, isCountdownActive]);
-
   return (
     <div>
       <LiveDialog />
       <Toaster />
       <Container>
-        <main className={currentPage === "bidding" ? "" : "hidden"}>
+        <main className={currentPage === "bidding" ? "" : ""}>
           <p className="text-3xl sm:text-5xl text-center text-primary">
             AUCTIONS LIVE VIEW
           </p>
@@ -645,9 +595,11 @@ export function LivePage() {
         </main>
 
         {isNotAuctioneer && (
-          <main className={currentPage === "reauctionlist" ? "" : "hidden"}>
-            <ReauctionList onReauction={handleReauction} />
-          </main>
+          <Modal modalState={currentPage === "reauctionlist"}>
+            <main>
+              <ReauctionList />
+            </main>
+          </Modal>
         )}
       </Container>
     </div>
