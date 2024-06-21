@@ -26,7 +26,11 @@ export function AuctioneerList() {
   const { countdown, isCountdownActive } = UseCountdown();
   const navigate = useNavigate();
   const { useGetEventById, useCloseAuctionEvent } = useAPIServices();
-  const { setView, publishEvent, setPayload, $swal } = useStoreContext();
+  const { setView, publishEvent, setPayload, $swal, payload } =
+    useStoreContext();
+  const { expiryAt } = payload;
+
+  console.log(payload.expiryAt);
 
   const { data } = useGetEventById(eventId);
   const { mutateAsync: onCloseEventAPI } = useCloseAuctionEvent(eventId);
@@ -88,10 +92,14 @@ export function AuctioneerList() {
                 <p className="lg:text-xl">Reauction Items</p>
                 <BlinkAnimation />
               </div>
-              <div className="flexcenter digital text-4xl font-extrabold">
-                {countdown}
-              </div>
-              <ReauctionTimer />
+              {expiryAt !== "" && (
+                <>
+                  <div className="flexcenter digital text-4xl font-extrabold">
+                    {countdown}
+                  </div>
+                  <ReauctionTimer />
+                </>
+              )}
               <button
                 onClick={confirmationDialog}
                 className="bg-yellow-500 px-3 py-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg"
@@ -110,10 +118,14 @@ export function AuctioneerList() {
                 <BlinkAnimation />
               </div>
               <div className="flex gap-8">
-                <div className="flexcenter digital text-4xl font-extrabold">
-                  {countdown}
-                </div>
-                <ReauctionTimer />
+                {expiryAt !== "" && (
+                  <>
+                    <div className="flexcenter digital text-4xl font-extrabold">
+                      {countdown}
+                    </div>
+                    <ReauctionTimer />
+                  </>
+                )}
                 <button
                   onClick={confirmationDialog}
                   className="bg-yellow-500 px-3 py-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg"
