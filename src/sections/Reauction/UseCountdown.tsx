@@ -65,7 +65,9 @@ export function UseCountdown() {
 
   ///timer
   useEffect(() => {
-    const startCountdown = () => {
+    if (countdown === "NaN:NaN:NaN") setCountdown("fetching...");
+
+    const startCountdown = async () => {
       if (timer) {
         clearInterval(timer);
       }
@@ -90,6 +92,15 @@ export function UseCountdown() {
         const hours = String(duration.hours()).padStart(2, "0");
         const minutes = String(duration.minutes()).padStart(2, "0");
         const seconds = String(duration.seconds()).padStart(2, "0");
+
+        if (isNaN(Number(seconds))) {
+          getReauctionStatus().then((data) => {
+            setPayload((prev) => ({
+              ...prev,
+              expiryAt: data.data?.expiry_at!,
+            }));
+          });
+        }
 
         setIsCountdownActive(true);
 
