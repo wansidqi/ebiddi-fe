@@ -40,7 +40,7 @@ export function Modal({
         <>
           <div
             ref={modalRef}
-            className={`flexcenter fixed inset-0 z-50 bg-primary-foreground bg-opacity-${opacity}`}
+            className={`flexcenter fixed inset-0 z-50 bg-background bg-opacity-${opacity}`}
           >
             <div className="w-full bg-opacity-90 text-[16px]">
               <div className="mb-10 text-[16px]">
