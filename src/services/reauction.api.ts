@@ -7,6 +7,7 @@ const useGetReauctionList = (eventId: string | undefined) => {
   return useQuery({
     queryKey: [KEY.reauction, eventId],
     enabled: !!eventId,
+    retry: false,
     refetchOnWindowFocus: false,
     queryFn: async () => {
       const response = await datasource({
@@ -22,7 +23,6 @@ const useGetReauctionList = (eventId: string | undefined) => {
 const useGetReauctionStatus = (eventId: string | undefined) => {
   return useQuery({
     queryKey: [KEY.reauctions_status, eventId],
-    retry: false,
     queryFn: async () => {
       const response = await datasource({
         method: "get",
@@ -32,6 +32,8 @@ const useGetReauctionStatus = (eventId: string | undefined) => {
       const data = response.data.data as ReauctionStatus;
       return data;
     },
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -41,6 +43,7 @@ const useGetHoldItems = (eventId: string | undefined) => {
     queryKey: [KEY.reauctions_holdItem, eventId],
     enabled: !!eventId,
     refetchOnWindowFocus: false,
+    retry: false,
     queryFn: async () => {
       const response = await datasource({
         method: "get",
