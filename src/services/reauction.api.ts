@@ -22,6 +22,7 @@ const useGetReauctionList = (eventId: string | undefined) => {
 const useGetReauctionStatus = (eventId: string | undefined) => {
   return useQuery({
     queryKey: [KEY.reauctions_status, eventId],
+    retry: false,
     queryFn: async () => {
       const response = await datasource({
         method: "get",

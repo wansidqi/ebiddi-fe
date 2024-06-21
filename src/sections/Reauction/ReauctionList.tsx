@@ -81,8 +81,8 @@ export function ReauctionList() {
 
   return (
     <div className="relative">
-      {expiryAt !== new Date().toISOString() && (
-        <div className="text-5xl fixed z-50 left-1/2 -translate-x-1/2 top-16">
+      {expiryAt !== "" && (
+        <div className="text-5xl fixed z-50 left-1/2 -translate-x-1/2 top-10">
           <p className="text-black digital rounded-md digital font-extrabold flex items-center justify-center bg-cyan-500 py-3 px-8">
             {countdown}
           </p>
