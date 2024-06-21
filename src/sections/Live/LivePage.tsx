@@ -513,7 +513,7 @@ export function LivePage() {
       <LiveDialog />
       <Toaster />
       <Container>
-        <main className={currentPage === "bidding" ? "" : ""}>
+        <main>
           <p className="text-3xl sm:text-5xl text-center text-primary">
             AUCTIONS LIVE VIEW
           </p>
