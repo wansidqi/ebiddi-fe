@@ -7,6 +7,7 @@ import {
   LiveDetail,
   LiveDialog,
   ReauctionList,
+  UseCountdown,
 } from "@/sections";
 import waiting from "@/assets/images/waiting.png";
 import { useStoreContext } from "@/Context";
@@ -227,6 +228,8 @@ export function LivePage() {
 
     postTrail({ data });
   };
+
+  UseCountdown();
 
   ///subscribe event
   useEffect(() => {
