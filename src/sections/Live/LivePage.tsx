@@ -174,12 +174,12 @@ export function LivePage() {
 
   // prettier-ignore
   const canBid = () => {
-    if (auction) {
-      return (
-        (payload.bid.next < 100000 && getAvailableCredit() >= auction.deposit + auction.buyer_premium +  auction.security_deposit) ||
-        (payload.bid.next >= 100000 && getAvailableCredit() >=  0.05 * payload.bid.current +  auction.buyer_premium + auction.security_deposit)
-      );
-    }
+    let cond1 = auction && payload.bid.next < 100000 && getAvailableCredit() >= (auction.deposit + auction.buyer_premium +  auction.security_deposit);
+    let cond2 = auction && (payload.bid.next >= 100000 && !auction.is_flat_deposit &&  getAvailableCredit() >= ((0.05 * payload.bid.next) + auction.buyer_premium + auction.security_deposit));
+    let cond3 = auction && (payload.bid.next >= 100000 && getAvailableCredit() >=  5000 * (payload.bid.current +  auction.buyer_premium + auction.security_deposit));
+
+
+    return cond1 || cond2 || cond3;
   };
 
   const getAvailableCredit = () => {
