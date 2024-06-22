@@ -187,7 +187,7 @@ export function AuctioneerList() {
                       <DynamicRenderer>
                         <DynamicRenderer.When cond={auction.status === "HOLD"}>
                           <Button
-                            // disabled={isCountdownActive}
+                            disabled={isCountdownActive}
                             onClick={() => navigateToLive(auction.auction_id)}
                             variant="link"
                           >
