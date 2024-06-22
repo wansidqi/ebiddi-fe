@@ -29,7 +29,7 @@ export function AuctioneerController() {
 
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [naviStatus, setNaviStatus] = useState(false);
+  const [naviStatus, setNaviStatus] = useState(true);
 
   const {
     useGetLiveAuction,
@@ -65,8 +65,9 @@ export function AuctioneerController() {
   };
 
   const onInitial = () => {
-    setNaviStatus(true);
+    // setNaviStatus(true);
     if (!eventId || !auctionId) return;
+    refetch();
 
     resetBid();
 
@@ -159,13 +160,33 @@ export function AuctioneerController() {
   const clickResume = () => {
     setBidStatus(BidStatus.RUN);
     setIsPaused(false);
-    const newPayload: EventData = {
-      ...payload,
-      status: "AUCTION",
-      auction_id: auctionId!,
-    };
-    setPayload(newPayload);
-    publishEvent({ event_id: "", data: newPayload });
+
+    if (payload.countdown !== -1) {
+      setPayload((prev) => {
+        let newPayload = {
+          ...prev,
+          status: "AUCTION" as Status,
+          auction_id: auctionId!,
+        };
+
+        publishEvent({ event_id: "", data: newPayload });
+
+        return newPayload;
+      });
+    } else {
+      setPayload((prev) => {
+        let newPayload = {
+          ...prev,
+          status: "AUCTION" as Status,
+          auction_id: auctionId!,
+          countdown: 0,
+        };
+
+        publishEvent({ event_id: "", data: newPayload });
+
+        return newPayload;
+      });
+    }
 
     sendAuditTrail({
       event_id: Number(payload.event_id),
@@ -248,9 +269,19 @@ export function AuctioneerController() {
     setBidStatus(BidStatus.HOLD);
     setIsPaused(true);
 
-    const newPayload: EventData = { ...payload, status: "HOLD" };
     if (!eventId) return;
-    publishEvent({ event_id: eventId, data: newPayload });
+
+    setPayload((prev) => {
+      let newPayload = {
+        ...prev,
+        status: "HOLD" as Status,
+      };
+
+      publishEvent({ event_id: eventId, data: newPayload });
+
+      return newPayload;
+    });
+
     sendAuditTrail({
       event_id: Number(payload.event_id),
       auction_id: Number(payload.auction_id),
@@ -470,7 +501,15 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={clickStart}
-              show={bidStatus === 1 || bidStatus === 4}
+              show={bidStatus === 1}
+              className="bg-green-500"
+            >
+              START
+            </CondButton>
+
+            <CondButton
+              onClick={clickResume}
+              show={bidStatus === 4}
               className="bg-green-500"
             >
               START
