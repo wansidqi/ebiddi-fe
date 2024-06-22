@@ -28,7 +28,7 @@ const useGetAllEvents = () => {
 const useGetAuctioneerEvent = () => {
   const { USER } = useStoreContext();
   let id = USER?.id;
-  // let id = 2449;
+  // let id = 162;
 
   return useQuery({
     refetchOnWindowFocus: false,
