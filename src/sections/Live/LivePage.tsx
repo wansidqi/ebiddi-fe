@@ -252,6 +252,7 @@ export function LivePage() {
         }
 
         if (data.status === "REAUCTIONLIST") {
+          // console.log("REAUCTIONLIST");
           updateFlag.current = true;
           reset();
           $swal({
@@ -263,6 +264,7 @@ export function LivePage() {
         }
 
         if (data.status === "REAUCTIONLISTUPDATETIMER") {
+          // console.log("REAUCTIONLISTUPDATETIMER");
           updateFlag.current = true;
 
           setCurrentPage("reauctionlist");
@@ -276,7 +278,7 @@ export function LivePage() {
         }
 
         // prettier-ignore
-        if (!updateFlag.current && data.status !== "CLOSE" && auction?.auction_id !== Number(data.auction_id)) {
+        if (data.status !== "CLOSE" && auction?.auction_id !== Number(data.auction_id)) {
           // payload.auction_id !== "" && getAuction();
           setCurrentPage("bidding");
           setPayload((prev) => ({
@@ -472,6 +474,7 @@ export function LivePage() {
       event_id: eventId,
       onData: (data) => {
         if (data.status === "REAUCTIONLISTUPDATE") {
+          // console.log("REAUCTIONLISTUPDATE");
           reset();
           setCurrentPage("reauctionlist");
 

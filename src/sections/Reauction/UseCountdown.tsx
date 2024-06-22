@@ -25,7 +25,7 @@ export function UseCountdown() {
   // const expiryAt = useGetQueryData<ReauctionStatus>([KEY.reauctions_status, eventId]) ?.expiry_at ?? "";
 
   const sendHoldItems = () => {
-    // if (expiryAt === "" || !expiryAt) return;
+    // getReauctionList();
 
     if (!eventId) return;
 
@@ -67,15 +67,16 @@ export function UseCountdown() {
       }
 
       let counter = 0;
+      // getReauctionList();
       const endTime = moment(expiryAt);
 
       const newTimer = setInterval(() => {
-        getReauctionStatus();
         const now = moment();
         const diff = endTime.diff(now);
 
         ///end
         if (diff <= 0) {
+          getReauctionStatus();
           setCountdown("00:00:00");
           clearInterval(newTimer);
           setIsCountdownActive(false);
@@ -88,12 +89,16 @@ export function UseCountdown() {
         const minutes = String(duration.minutes()).padStart(2, "0");
         const seconds = String(duration.seconds()).padStart(2, "0");
 
+        if (isNaN(Number(seconds)) || countdown === "00:00:00") {
+          getReauctionList();
+        }
+
         setIsCountdownActive(true);
 
         setCountdown(`${hours}:${minutes}:${seconds}`);
 
         if (counter >= 1) {
-          getReauctionList();
+          getReauctionStatus();
           sendHoldItems();
           counter = 0;
         } else {
@@ -117,7 +122,7 @@ export function UseCountdown() {
 
   useEffect(() => {
     getReauctionStatus();
-  }, [eventId]);
+  }, [eventId, expiryAt]);
 
   return {
     countdown,
