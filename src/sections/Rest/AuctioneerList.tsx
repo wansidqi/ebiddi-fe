@@ -90,7 +90,7 @@ export function AuctioneerList() {
                 <p className="lg:text-xl">Reauction Items</p>
                 <BlinkAnimation />
               </div>
-              {expiryAt !== "" && (
+              {expiryAt !== "" || !expiryAt && (
                 <>
                   <div className="flexcenter digital text-4xl font-extrabold">
                     {countdown}
@@ -116,7 +116,7 @@ export function AuctioneerList() {
                 <BlinkAnimation />
               </div>
               <div className="flex gap-8">
-                {expiryAt !== "" && (
+                {expiryAt !== ""|| !expiryAt && (
                   <>
                     <div className="flexcenter digital text-4xl font-extrabold">
                       {countdown}
