@@ -90,7 +90,10 @@ export function BidHeader() {
   }, [countdown]);
 
   useEffect(() => {
-    if (countdown === 0 || !stopFinalCall) {
+    console.log(countdown);
+    if (USER?.role === ROLE.AUCTIONEER) return;
+
+    if (!stopFinalCall || countdown <= 0) {
       const intervalId = setInterval(() => {
         startAlert({
           call: "final call",
@@ -102,7 +105,7 @@ export function BidHeader() {
       // Clear interval on component unmount or dependency change
       return () => clearInterval(intervalId);
     }
-  }, [countdown, stopFinalCall]);
+  }, [stopFinalCall, countdown]);
 
   // useEffect(() => {
   //   if (finalCall > 0 && finalCall <= 3) {
