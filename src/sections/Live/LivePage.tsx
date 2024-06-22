@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Container } from "@/components/Container";
 import {
   AuctioneerController,
@@ -47,12 +47,11 @@ export function LivePage() {
     subscribeReauction,
     $swal,
     $swalClose,
+    updateFlag,
   } = useStoreContext();
 
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
-  const isAuctionIdNotExist = payload.auction_id === "";
 
-  const updateFlag = useRef(false);
   const [isBidding, setIsBidding] = useState(false);
   const [isBtnDisabled, setIsBtnDisabled] = useState(false);
 
@@ -158,6 +157,7 @@ export function LivePage() {
 
     setPayload((prev) => ({
       ...prev,
+      status: "DISPLAY",
       bidders: {
         all: [],
         highest_amount: prev.bidders.highest_amount,
@@ -300,9 +300,11 @@ export function LivePage() {
         if (!payload.auction_id) return;
 
         if (data.status === "AUCTION") {
+          $swalClose();
+
           setIsBidding(true);
 
-          if (bidStatus === 0 && !updateFlag.current) {
+          if (!updateFlag.current && bidStatus === 0) {
             $swal({
               title: `Lot ${auction?.lot_no}`,
               content: "Bidding is starting",
@@ -311,7 +313,7 @@ export function LivePage() {
 
             playAudio("start");
             setBidStatus(2);
-            updateFlag.current = true; // Set the flag to true after initial update
+            updateFlag.current = true;
           }
 
           if (bidStatus === 3) {
@@ -319,7 +321,6 @@ export function LivePage() {
           }
 
           if (isBidding) {
-            $swalClose();
             if (payload.bidders.all.length >= data.bidders.all.length) return;
 
             setPayload((prev) => ({
@@ -432,6 +433,7 @@ export function LivePage() {
             noClose: true,
           });
           playAudio("hold");
+          updateFlag.current = false;
         }
 
         if (data.status === "WITHDRAW") {
@@ -451,8 +453,9 @@ export function LivePage() {
             content: `No Bid`,
             timer: 3000,
           });
-          playAudio("withdraw");
+          playAudio("noBid");
           reset();
+          updateFlag.current = true;
         }
       },
     });
@@ -507,23 +510,19 @@ export function LivePage() {
 
   ///render when change auctionId
   useEffect(() => {
-    if (payload.auction_id !== "") {
-      getAuction();
-      getCredit();
-      updateFlag.current = false;
-    }
-  }, [payload.auction_id]);
+    setBidStatus(0);
+    getAuction();
+    getCredit();
+  }, [payload.auction_id, updateFlag]);
 
   return (
     <div>
       <LiveDialog />
-      <Toaster />
       <Container>
         <main>
           <p className="text-3xl sm:text-5xl text-center text-primary">
             AUCTIONS LIVE VIEW
           </p>
-
           <main className="m-3 flexcenter gap-10">
             <div className="flexcenter gap-2 ">
               <div className="border-2 border-primary rounded-full p-2 text-primary">
@@ -541,11 +540,14 @@ export function LivePage() {
           </main>
 
           <DynamicRenderer>
-            <DynamicRenderer.When cond={isNotAuctioneer && isAuctionIdNotExist}>
+            <DynamicRenderer.When
+              cond={isNotAuctioneer && payload.status === "DISPLAY"}
+            >
               <WaitingComponent />
             </DynamicRenderer.When>
             <DynamicRenderer.Else>
               <Fragment>
+                <Toaster />
                 <BidHeader />
                 <div className="flex sm:grid sm:grid-cols-2 w-full overflow-x-auto gap-4 my-8">
                   <div
