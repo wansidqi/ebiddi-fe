@@ -48,6 +48,7 @@ export function LivePage() {
     $swal,
     $swalClose,
     updateFlag,
+    setStopFinalCall,
   } = useStoreContext();
 
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
@@ -400,10 +401,13 @@ export function LivePage() {
         }
 
         if (data.status === "SOLD") {
+          setStopFinalCall(true);
+          setStopFinalCall(true);
           setIsBidding(false);
         }
 
         if (data.status === "END") {
+          setStopFinalCall(true);
           playAudio("sold");
 
           if (USER) {
@@ -447,6 +451,7 @@ export function LivePage() {
         }
 
         if (data.status === "WITHDRAW") {
+          setStopFinalCall(true);
           setIsBidding(false);
           $swal({
             title: `Lot ${auction?.lot_no}`,
@@ -458,6 +463,7 @@ export function LivePage() {
         }
 
         if (data.status === "HOLD") {
+          setStopFinalCall(true);
           setIsBidding(false);
           $swal({
             title: `Lot ${auction?.lot_no}`,

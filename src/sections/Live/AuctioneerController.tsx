@@ -25,6 +25,7 @@ export function AuctioneerController() {
     setBidListIndex,
     $swal,
     updateFlag,
+    setStopFinalCall,
   } = useStoreContext();
   const { countdown } = payload;
 
@@ -266,6 +267,7 @@ export function AuctioneerController() {
   };
 
   const clickHold = () => {
+    setStopFinalCall(true);
     setNaviStatus(true);
     setBidStatus(BidStatus.HOLD);
     setIsPaused(true);
@@ -292,6 +294,7 @@ export function AuctioneerController() {
   };
 
   const clickSold = () => {
+    setStopFinalCall(true);
     const newPayload: EventData = { ...payload, status: "SOLD" };
     if (!eventId) return;
     publishEvent({ event_id: eventId, data: newPayload });
@@ -301,6 +304,7 @@ export function AuctioneerController() {
   };
 
   const clickEnd = () => {
+    setStopFinalCall(true);
     setPayload((prev) => ({ ...prev, status: "END" }));
     if (!eventId) return;
     publishEvent({ event_id: eventId, data: { ...payload, status: "END" } });
@@ -312,6 +316,7 @@ export function AuctioneerController() {
   };
 
   const itemSold = () => {
+    setStopFinalCall(true);
     const auction_id = `${payload.auction_id}`;
 
     const postData = {

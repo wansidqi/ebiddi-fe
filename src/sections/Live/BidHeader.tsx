@@ -6,17 +6,16 @@ import { CreditInterface, EventsInterface } from "@/interfaces";
 import { BidStatus, ROLE } from "@/enum";
 import { numWithComma } from "@/lib/utils";
 import { KEY, useGetQueryData } from "@/services";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { playAudio } from "@/assets/audio";
 
 export function BidHeader() {
   const { eventId } = useParams();
 
-  const { USER, bidStatus, setBidStatus, payload } = useStoreContext();
+  const { USER, bidStatus, setBidStatus, payload, stopFinalCall } =
+    useStoreContext();
   const { countdown } = payload;
-
-  const [finalCall, setFinalCall] = useState(0);
 
   const queryKeyEvent = [KEY.credit, eventId];
   const event = useGetQueryData<EventsInterface>(queryKeyEvent);
@@ -54,7 +53,6 @@ export function BidHeader() {
   useEffect(() => {
     switch (countdown) {
       case 10:
-        setFinalCall(0);
         setBidStatus(2);
         break;
       case 8:
@@ -73,7 +71,6 @@ export function BidHeader() {
         break;
       case 0:
         if (payload.status !== "SOLD") {
-          setFinalCall(1);
           startAlert({
             call: "final call",
             variant: "final",
@@ -93,20 +90,35 @@ export function BidHeader() {
   }, [countdown]);
 
   useEffect(() => {
-    if (finalCall > 0 && finalCall <= 3) {
-      const interval = setInterval(() => {
-        setFinalCall((prevCount) => prevCount + 1);
+    if (countdown === 0 || !stopFinalCall) {
+      const intervalId = setInterval(() => {
+        startAlert({
+          call: "final call",
+          variant: "final",
+          audioName: "call3",
+        });
       }, 3000);
 
-      startAlert({
-        call: "final call",
-        variant: "final",
-        audioName: "call3",
-      });
-
-      return () => clearInterval(interval);
+      // Clear interval on component unmount or dependency change
+      return () => clearInterval(intervalId);
     }
-  }, [finalCall]);
+  }, [countdown, stopFinalCall]);
+
+  // useEffect(() => {
+  //   if (finalCall > 0 && finalCall <= 3) {
+  //     const interval = setInterval(() => {
+  //       setFinalCall((prevCount) => prevCount + 1);
+  //     }, 3000);
+
+  //     startAlert({
+  //       call: "final call",
+  //       variant: "final",
+  //       audioName: "call3",
+  //     });
+
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [finalCall]);
 
   return (
     <div>
