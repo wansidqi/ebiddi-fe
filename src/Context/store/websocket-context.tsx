@@ -7,7 +7,13 @@ import {
   Subscription,
   ReauctionData,
 } from "@/interfaces/websocket";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import * as socketClusterClient from "socketcluster-client";
 import { BidStatus, COUNTDOWN, ROLE } from "@/enum";
 import { useAuctionContext } from "./auction-context";
@@ -50,6 +56,8 @@ type Data = {
   setCurrentPage: React.Dispatch<
     React.SetStateAction<"bidding" | "reauctionlist">
   >;
+
+  updateFlag: React.MutableRefObject<boolean>;
 };
 
 function WsContext(props: React.PropsWithChildren<{}>) {
@@ -80,6 +88,8 @@ function WsContext(props: React.PropsWithChildren<{}>) {
   const [bidStatus, setBidStatus] = useState<BidStatus>(0);
   const [bidListIndex, setBidListIndex] = useState(-1);
   const [currentPage, setCurrentPage] = useState<"bidding" | "reauctionlist">("bidding"); //prettier-ignore
+
+  const updateFlag = useRef(false);
 
   const isAuctioneer = USER?.role === ROLE.AUCTIONEER;
 
@@ -224,6 +234,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     setCurrentPage,
     subscribeReauction,
     publishReauction,
+    updateFlag,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;
