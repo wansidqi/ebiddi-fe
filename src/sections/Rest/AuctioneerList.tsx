@@ -30,8 +30,6 @@ export function AuctioneerList() {
     useStoreContext();
   const { expiryAt } = payload;
 
-  console.log(payload.expiryAt);
-
   const { data } = useGetEventById(eventId);
   const { mutateAsync: onCloseEventAPI } = useCloseAuctionEvent(eventId);
 
@@ -86,7 +84,7 @@ export function AuctioneerList() {
       <Container className="sm:mx-28 pt-5">
         <div className="my-5  block lg:hidden">
           {/* mobile view */}
-          {(data?.status === "Approved" || data?.status === "Deactive") && (
+          {(data?.status === "Approve" || data?.status === "Deactive") && (
             <div className="grid grid-cols-2 gap-4 w-full">
               <div className="flex">
                 <p className="lg:text-xl">Reauction Items</p>
@@ -111,7 +109,7 @@ export function AuctioneerList() {
         </div>
         {/* desktop view */}
         <div className="my-5 hidden lg:block">
-          {(data?.status === "Approved" || data?.status === "Deactive") && (
+          {(data?.status === "Approve" || data?.status === "Deactive") && (
             <div className="flex items-center justify-between w-full">
               <div className="flex">
                 <p className="lg:text-xl">Reauction Items</p>
