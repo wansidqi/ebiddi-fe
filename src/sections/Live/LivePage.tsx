@@ -247,6 +247,7 @@ export function LivePage() {
             title: event ? event?.name : "",
             content: `Auction has been closed, that's all for this event`,
             onClick: () => navigate("/events"),
+            hasClose: false,
           });
           // navigate("/events");
         }
@@ -259,6 +260,7 @@ export function LivePage() {
             title: "Redirecting to Reauction List",
             content: `Select lot you wish to be reauction`,
             timer: 3000,
+            hasClose: false,
           });
           setCurrentPage("reauctionlist");
         }
@@ -273,6 +275,7 @@ export function LivePage() {
             title: `Reauction Expiry Updated`,
             timer: 3000,
             content: `The new reauction expiry is at ${moment(expiryAt).format("HH:mm:ss")}`,
+            hasClose: false,
           });
           reset();
         }
@@ -310,6 +313,7 @@ export function LivePage() {
               title: `Lot ${auction?.lot_no}`,
               content: "Bidding is starting",
               timer: 1500,
+              hasClose: false,
             });
 
             playAudio("start");
@@ -377,6 +381,7 @@ export function LivePage() {
             title: `Lot ${auction?.lot_no}`,
             content: `Reauction`,
             timer: 1000,
+            hasClose: false,
           });
 
           playAudio("reauction");
@@ -407,12 +412,14 @@ export function LivePage() {
                 title: `Lot ${auction?.lot_no}`,
                 content: `Congratulation, you have won the auction`,
                 timer: 3000,
+                hasClose: false,
               });
             } else {
               $swal({
                 title: `Lot ${auction?.lot_no}`,
                 content: `${payload.bidders.highest_user_name} have won the auction`,
                 timer: 3000,
+                hasClose: false,
               });
             }
           } else {
@@ -421,6 +428,7 @@ export function LivePage() {
               title: `Lot ${auction?.lot_no}`,
               content: `${payload.bidders.highest_user_name} have won the auction`,
               timer: 3000,
+              hasClose: false,
             });
           }
 
@@ -432,6 +440,7 @@ export function LivePage() {
             title: `Lot ${auction?.lot_no}`,
             content: `Auctioneer hold auction`,
             noClose: true,
+            hasClose: false,
           });
           playAudio("hold");
           updateFlag.current = false;
@@ -442,6 +451,7 @@ export function LivePage() {
           $swal({
             title: `Lot ${auction?.lot_no}`,
             content: `This auction is withdraw`,
+            hasClose: false,
           });
           playAudio("withdraw");
           reset();
@@ -453,6 +463,7 @@ export function LivePage() {
             title: `Lot ${auction?.lot_no}`,
             content: `No Bid`,
             timer: 3000,
+            hasClose: false,
           });
           playAudio("noBid");
           reset();
@@ -490,6 +501,7 @@ export function LivePage() {
             title: `Item Reauction`,
             content: `item #${payload.auction_event_id} request for reauction`,
             timer: 1000,
+            hasClose: false,
           });
         }
       },

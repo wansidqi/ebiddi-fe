@@ -17,6 +17,7 @@ export function ReauctionList() {
     $swal({
       title: "Reauction",
       content: "Please confirm if you want to reauction this lot",
+      hasClose: true,
       onClick: () => {
         reauctionItem(auctionId);
       },
@@ -45,6 +46,7 @@ export function ReauctionList() {
             title: "Error Reauctioning",
             content: `Error Reauctioning`,
             timer: 3000,
+            hasClose: false,
           });
         },
       }

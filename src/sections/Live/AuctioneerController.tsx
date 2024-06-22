@@ -540,6 +540,7 @@ export function AuctioneerController() {
                   content: `withdrawing LOT ${payload.auction_id}`,
                   variant: "destructive",
                   timer: undefined,
+                  hasClose: true,
                   onClick: () => clickWithdraw(),
                 })
               }

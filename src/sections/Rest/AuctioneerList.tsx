@@ -23,7 +23,7 @@ export function AuctioneerList() {
   ];
 
   const { eventId } = useParams();
-  const { countdown, isCountdownActive, expiryAt } = UseCountdown();
+  const { countdown, isCountdownActive } = UseCountdown();
 
   const navigate = useNavigate();
   const { useGetEventById, useCloseAuctionEvent } = useAPIServices();

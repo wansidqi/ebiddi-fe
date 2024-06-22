@@ -77,6 +77,7 @@ const usePostReauction = (eventId: string | undefined) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries([KEY.reauctions_status, eventId]);
+      queryClient.invalidateQueries([KEY.reauctions_holdItem, eventId]);
     },
   });
 };

@@ -13,7 +13,8 @@ import { useEffect } from "react";
 
 export function LiveDialog() {
   const { swal, $swalClose } = useStoreContext();
-  const { content, onClick, title, timer, variant, show, noClose } = swal;
+  const { content, onClick, title, timer, variant, show, noClose, hasClose } =
+    swal;
 
   const onConfirm = () => {
     onClick && onClick();
@@ -46,9 +47,22 @@ export function LiveDialog() {
               {content}
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="w-full flex gap-10 justify-between">
+            {hasClose && (
+              <Button
+                className="w-full"
+                variant={"outline"}
+                onClick={$swalClose}
+              >
+                Cancel
+              </Button>
+            )}
             {!noClose && (
-              <Button variant={variant || "default"} onClick={onConfirm}>
+              <Button
+                className="w-full"
+                variant={variant || "default"}
+                onClick={onConfirm}
+              >
                 Okay
               </Button>
             )}

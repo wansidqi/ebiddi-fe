@@ -18,6 +18,7 @@ interface ModalDialog {
   onClick?: () => any;
   timer?: number;
   noClose?: boolean;
+  hasClose: boolean;
 }
 
 type Data = {
@@ -71,6 +72,7 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
     onClick: undefined,
     variant: undefined,
     noClose: undefined,
+    hasClose: false,
   });
 
   const $swalClose = () => {
@@ -81,6 +83,8 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
       timer: undefined,
       onClick: () => {},
       variant: undefined,
+      noClose: undefined,
+      hasClose: false,
     });
   };
 
@@ -93,6 +97,7 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
       onClick: params.onClick,
       variant: params.variant,
       noClose: params.noClose,
+      hasClose: params.hasClose,
     });
   };
 
