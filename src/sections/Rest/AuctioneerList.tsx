@@ -69,6 +69,7 @@ export function AuctioneerList() {
       title: "Auction Event",
       onClick: () => closeEvent(),
       variant: "destructive",
+      hasClose: true,
     });
   };
 
