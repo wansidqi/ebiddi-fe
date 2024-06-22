@@ -107,7 +107,7 @@ export function Navigation() {
               >
                 <Hamburger />
               </button>
-              <button>
+              <button onClick={() => navigate("/events")}>
                 <img width={"50px"} src={icon} alt="" />
               </button>
             </div>

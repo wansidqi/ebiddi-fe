@@ -12,13 +12,17 @@ export function UseCountdown() {
   const [isCountdownActive, setIsCountdownActive] = useState(false);
   const [mapItem, setMapItem] = useState<ReauctionList[]>([]);
 
-  const { payload, setPayload, publishReauction } = useStoreContext();
-  const { expiryAt } = payload;
+  const { publishReauction } = useStoreContext();
 
   const { useGetReauctionList, useGetReauctionStatus, useGetHoldItems } = useAPIServices(); //prettier-ignore
   const { data: auctions, refetch: getReauctionList } =  useGetReauctionList(eventId); //prettier-ignore
   const { data: status, refetch: getReauctionStatus, isLoading:isCdLoading } = useGetReauctionStatus(eventId); //prettier-ignore
   const { data: holdedItems, refetch: getHoldItems } =  useGetHoldItems(eventId); //prettier-ignore
+
+  let expiryAt = status?.expiry_at;
+
+  //prettier-ignore
+  // const expiryAt = useGetQueryData<ReauctionStatus>([KEY.reauctions_status, eventId]) ?.expiry_at ?? "";
 
   const sendHoldItems = () => {
     // if (expiryAt === "" || !expiryAt) return;
@@ -40,35 +44,23 @@ export function UseCountdown() {
           item.status = "REQUEST";
         }
 
-        setMapItem(items);
         return item as ReauctionList;
       });
+      setMapItem(items);
 
-      setPayload((prev) => ({ ...prev, holdItems: items }));
-    }
-
-    publishReauction({
-      event_id: eventId,
-      data: {
+      publishReauction({
         event_id: eventId,
-        status: "REAUCTIONLISTUPDATE",
-        items: mapItem,
-        expiryAt,
-      },
-    });
+        data: {
+          event_id: eventId,
+          status: "REAUCTIONLISTUPDATE",
+          expiryAt,
+        },
+      });
+    }
   };
-
-  ///assign expiry from API
-  useEffect(() => {
-    if (!status) return;
-    getReauctionStatus();
-    setPayload((prev) => ({ ...prev, expiryAt: status.expiry_at }));
-  }, [status]);
 
   ///timer
   useEffect(() => {
-    if (countdown === "NaN:NaN:NaN") setCountdown("fetching...");
-
     const startCountdown = async () => {
       if (timer) {
         clearInterval(timer);
@@ -78,6 +70,7 @@ export function UseCountdown() {
       const endTime = moment(expiryAt);
 
       const newTimer = setInterval(() => {
+        getReauctionStatus();
         const now = moment();
         const diff = endTime.diff(now);
 
@@ -94,15 +87,6 @@ export function UseCountdown() {
         const hours = String(duration.hours()).padStart(2, "0");
         const minutes = String(duration.minutes()).padStart(2, "0");
         const seconds = String(duration.seconds()).padStart(2, "0");
-
-        if (isNaN(Number(seconds))) {
-          getReauctionStatus().then((data) => {
-            setPayload((prev) => ({
-              ...prev,
-              expiryAt: data.data?.expiry_at!,
-            }));
-          });
-        }
 
         setIsCountdownActive(true);
 
@@ -131,5 +115,15 @@ export function UseCountdown() {
     };
   }, [expiryAt]);
 
-  return { countdown, isCdLoading, isCountdownActive };
+  useEffect(() => {
+    getReauctionStatus();
+  }, [eventId]);
+
+  return {
+    countdown,
+    isCdLoading,
+    isCountdownActive,
+    mapItem,
+    expiryAt,
+  };
 }

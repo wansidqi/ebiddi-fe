@@ -64,8 +64,17 @@ email=dev@tes1t.com,
 #REAUCTION
 
 ###GET REAUCTION LIST
-GET https://api-test.e-biddi.com/api/auction/reauction/item/event/218
+GET https://api-test.e-biddi.com/api/auction/reauction/item/event/1165
 ###GET REAUCTION STATUS
-GET https://api-test.e-biddi.com/api/auction/reauctionevent/event/218
+GET https://api-test.e-biddi.com/api/auction/reauctionevent/event/1165
 ###GET REAUCTION HOLD ITEM
-GET https://api-test.e-biddi.com/api/auction/item/event/218/hold
+GET https://api-test.e-biddi.com/api/auction/item/event/1165/hold
+
+###POST
+POST https://api-test.e-biddi.com/api/auction/reauctioneventitem
+Content-Type: application/json
+
+{
+    "event_id": 1164,
+    "auction_event_id": 70018
+}

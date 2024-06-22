@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { LoaderCircle } from "lucide-react";
+import { UseCountdown } from "./UseCountdown";
 
 export function ReauctionTimer() {
   const [open, setOpen] = useState(false);
@@ -46,7 +46,8 @@ export function ReauctionTimer() {
     subscribeReauction,
     publishEvent,
   } = useStoreContext();
-  const { expiryAt } = payload;
+
+  const { expiryAt } = UseCountdown();
 
   const { usePostReauction } = useAPIServices();
   const { mutateAsync: postReauction } = usePostReauction(eventId);
@@ -58,6 +59,7 @@ export function ReauctionTimer() {
     const newExpiryAt = today.add(duration, "seconds").format("YYYY-MM-DD HH:mm:ss"); //prettier-ignore
 
     if (isCreate) {
+      console.log("create");
       setPayload((prev) => {
         let update = { ...prev, eventId, status: "REAUCTIONLIST" as Status };
         publishEvent({
@@ -72,24 +74,14 @@ export function ReauctionTimer() {
       postReauction(
         { isCreate, newExpiryAt },
         {
-          onSuccess: (data) => {
-            setPayload((prev) => {
-              let update = {
-                ...prev,
-                expiryAt: data.expiry_at,
-              };
-
-              publishEvent({
+          onSuccess: () => {
+            publishEvent({
+              event_id: eventId,
+              data: {
+                ...payload,
                 event_id: eventId,
-                data: {
-                  ...payload,
-                  event_id: eventId,
-                  status: "REAUCTIONLISTUPDATETIMER",
-                  expiryAt: data.expiry_at,
-                },
-              });
-
-              return update;
+                status: "REAUCTIONLISTUPDATETIMER",
+              },
             });
           },
         }
@@ -126,14 +118,8 @@ export function ReauctionTimer() {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <button className="flexcenter bg-cyan-500 px-3 pt-1 pb-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg w-32 lg:w-40">
-            {expiryAt === undefined ? (
-              <LoaderCircle className="animate-spin" />
-            ) : expiryAt === "" ? (
-              "Start Reauction"
-            ) : (
-              "Update timer"
-            )}
+          <button className="flexcenter bg-cyan-500 px-3 pt-1 pb-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg">
+            {expiryAt === "" ? "Start Reauction" : "Update timer"}
           </button>
         </DialogTrigger>
         <DialogContent className="sm:w-[425px]">
@@ -143,7 +129,7 @@ export function ReauctionTimer() {
             </DialogTitle>
 
             <Content
-              expiryAt={expiryAt}
+              expiryAt={expiryAt ?? ""}
               startReauction={startReauction}
               closeModal={closeModal}
             />
@@ -156,14 +142,8 @@ export function ReauctionTimer() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <button className="flexcenter bg-cyan-500 px-3 pt-1 pb-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg w-32 lg:w-40">
-          {expiryAt === undefined ? (
-            <LoaderCircle className="animate-spin" />
-          ) : expiryAt === "" ? (
-            "Start Reauction"
-          ) : (
-            "Update timer"
-          )}{" "}
+        <button className="flexcenter bg-cyan-500 px-3 pt-1 pb-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg">
+          {expiryAt === "" ? "Start Reauction" : "Update timer"}
         </button>
       </DrawerTrigger>
       <DrawerContent>
@@ -174,7 +154,7 @@ export function ReauctionTimer() {
         </DrawerHeader>
 
         <Content
-          expiryAt={expiryAt}
+          expiryAt={expiryAt ?? ""}
           startReauction={startReauction}
           closeModal={closeModal}
         />

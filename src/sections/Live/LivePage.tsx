@@ -230,7 +230,7 @@ export function LivePage() {
     postTrail({ data });
   };
 
-  UseCountdown();
+  const { expiryAt } = UseCountdown();
 
   ///subscribe event
   useEffect(() => {
@@ -264,14 +264,13 @@ export function LivePage() {
 
         if (data.status === "REAUCTIONLISTUPDATETIMER") {
           updateFlag.current = true;
-          setPayload((prev) => ({ ...prev, expiryAt: data.expiryAt }));
 
           setCurrentPage("reauctionlist");
 
           $swal({
             title: `Reauction Expiry Updated`,
             timer: 3000,
-            content: `The new reauction expiry is at ${moment(data.expiryAt).format("HH:mm")}`,
+            content: `The new reauction expiry is at ${moment(expiryAt).format("HH:mm:ss")}`,
           });
           reset();
         }
@@ -476,11 +475,11 @@ export function LivePage() {
           reset();
           setCurrentPage("reauctionlist");
 
-          setPayload((prev) => ({
-            ...prev,
-            holdItems: data.items ?? [],
-            expiryAt: data.expiryAt ?? "",
-          }));
+          // setPayload((prev) => ({
+          //   ...prev,
+          //   holdItems: data.items ?? [],
+          //   expiryAt: data.expiryAt ?? "",
+          // }));
         }
 
         if (data.status === "REAUCTIONITEM") {
@@ -492,7 +491,7 @@ export function LivePage() {
         }
       },
     });
-  }, [socket, payload]);
+  }, [socket]);
 
   ///subscribe status
   useEffect(() => {

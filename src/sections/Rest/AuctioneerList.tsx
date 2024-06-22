@@ -23,12 +23,11 @@ export function AuctioneerList() {
   ];
 
   const { eventId } = useParams();
-  const { countdown, isCountdownActive } = UseCountdown();
+  const { countdown, isCountdownActive, expiryAt } = UseCountdown();
+
   const navigate = useNavigate();
   const { useGetEventById, useCloseAuctionEvent } = useAPIServices();
-  const { setView, publishEvent, setPayload, $swal, payload } =
-    useStoreContext();
-  const { expiryAt } = payload;
+  const { setView, publishEvent, setPayload, $swal } = useStoreContext();
 
   const { data } = useGetEventById(eventId);
   const { mutateAsync: onCloseEventAPI } = useCloseAuctionEvent(eventId);
@@ -87,17 +86,21 @@ export function AuctioneerList() {
           {(data?.status === "Approve" || data?.status === "Deactive") && (
             <div className="grid grid-cols-2 gap-4 w-full">
               <div className="flex">
-                <p className="lg:text-xl">Reauction Items</p>
+                <p className="col-span-2 lg:text-xl">Reauction Items</p>
                 <BlinkAnimation />
               </div>
-              {expiryAt !== "" || !expiryAt && (
-                <>
-                  <div className="flexcenter digital text-4xl font-extrabold">
-                    {countdown}
-                  </div>
-                  <ReauctionTimer />
-                </>
-              )}
+              <>
+                <div
+                  className={
+                    countdown === "NaN:NaN:NaN"
+                      ? "text-transparent"
+                      : "flexcenter digital text-4xl font-extrabold"
+                  }
+                >
+                  {countdown}
+                </div>
+                <ReauctionTimer />
+              </>
               <button
                 onClick={confirmationDialog}
                 className="bg-yellow-500 px-3 py-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg"
@@ -116,14 +119,18 @@ export function AuctioneerList() {
                 <BlinkAnimation />
               </div>
               <div className="flex gap-8">
-                {expiryAt !== ""|| !expiryAt && (
-                  <>
-                    <div className="flexcenter digital text-4xl font-extrabold">
-                      {countdown}
-                    </div>
-                    <ReauctionTimer />
-                  </>
-                )}
+                <>
+                  <div
+                    className={
+                      countdown === "NaN:NaN:NaN"
+                        ? "hidden"
+                        : "flexcenter digital text-4xl font-extrabold"
+                    }
+                  >
+                    {countdown}
+                  </div>
+                  <ReauctionTimer />
+                </>
                 <button
                   onClick={confirmationDialog}
                   className="bg-yellow-500 px-3 py-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg"
@@ -180,7 +187,7 @@ export function AuctioneerList() {
                       <DynamicRenderer>
                         <DynamicRenderer.When cond={auction.status === "HOLD"}>
                           <Button
-                            disabled={isCountdownActive}
+                            // disabled={isCountdownActive}
                             onClick={() => navigateToLive(auction.auction_id)}
                             variant="link"
                           >

@@ -76,7 +76,7 @@ const usePostReauction = (eventId: string | undefined) => {
       ///return expiry: (response.data.data.expiry_at)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries([KEY.reauction, eventId]);
+      queryClient.invalidateQueries([KEY.reauctions_status, eventId]);
     },
   });
 };

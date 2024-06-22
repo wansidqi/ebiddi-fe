@@ -38,7 +38,7 @@ export interface EventData {
     highest_user_name: string;
   };
   auction_event_id: string;
-  expiryAt: string;
+  // expiryAt: string;
   holdItems: ReauctionList[];
 }
 

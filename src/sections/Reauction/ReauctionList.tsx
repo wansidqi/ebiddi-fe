@@ -6,10 +6,9 @@ import { useParams } from "react-router-dom";
 
 export function ReauctionList() {
   const { eventId } = useParams();
-  const { USER, payload, $swal, publishReauction } = useStoreContext();
-  const { expiryAt } = payload;
+  const { USER, $swal, publishReauction } = useStoreContext();
 
-  const { countdown } = UseCountdown();
+  const { countdown, mapItem, expiryAt } = UseCountdown();
 
   const { usePostReauctionItem } = useAPIServices();
   const { mutateAsync: onReautionItem } = usePostReauctionItem();
@@ -25,59 +24,37 @@ export function ReauctionList() {
   };
 
   const reauctionItem = (auctionId: string) => {
-    if (!eventId) return;
-    const id = { auctionId, eventId };
+    let data = `event_id=${eventId}&auction_event_id=${auctionId}`;
+    console.log(data);
 
-    onReautionItem(id, {
-      onSuccess: () => {
-        publishReauction({
-          event_id: eventId,
-          data: {
-            auction_event_id: auctionId as string,
-            event_id: eventId,
-            status: "REAUCTIONLISTITEM",
-          },
-        });
-      },
-      onError: (e: any) => {
-        $swal({
-          title: "Error Reauctioning",
-          content: `${e}`,
-          timer: 3000,
-        });
-      },
-    });
+    onReautionItem(
+      { data },
+      {
+        onSuccess: () => {
+          publishReauction({
+            event_id: eventId ?? "",
+            data: {
+              auction_event_id: auctionId as string,
+              event_id: eventId,
+              status: "REAUCTIONLISTITEM",
+            },
+          });
+        },
+        onError: () => {
+          $swal({
+            title: "Error Reauctioning",
+            content: `Error Reauctioning`,
+            timer: 3000,
+          });
+        },
+      }
+    );
   };
 
   const onClickReauction = (auctionId: string) => {
     if (!USER) return;
     handleReauction(auctionId);
   };
-
-  const temp = [
-    {
-      auction_event_id: "auction_1",
-      images: ["https://example.com/image1.jpg"],
-      lot_no: "1001",
-      registration_number: "ABC1234",
-      reserve_price: 100000,
-      model: "Toyota Camry",
-      year: 2018,
-      legal_owner: "Jane Smith",
-      status: "HOLD",
-    },
-    {
-      auction_event_id: "auction_2",
-      images: ["https://example.com/image2.jpg"],
-      lot_no: "1002",
-      registration_number: "XYZ5678",
-      reserve_price: 150000,
-      model: "Honda Accord",
-      year: 2019,
-      legal_owner: "John Doe",
-      status: "REQUEST",
-    },
-  ];
 
   return (
     <div className="relative">
@@ -91,7 +68,7 @@ export function ReauctionList() {
 
       <div className="my-10">
         <div className={gridCSS}>
-          {payload.holdItems?.map((item, i: number) => (
+          {mapItem?.map((item, i: number) => (
             <div key={i} className="border-2 border-secondary rounded-sm pb-4">
               <div className="relative h-[280px] w-full">
                 <img
@@ -118,21 +95,6 @@ export function ReauctionList() {
                   <p className="text-primary">Legal Owner:</p>
                   <p>{item.legal_owner}</p>
                 </div>
-                {/* <div className="hidden flex gap-3 my-0">
-                <ItemDetail {...item} />
-                <Button className="underline" variant="link">
-                <Link
-                target="_blank"
-                to={
-                    item.vehicle_type === VEHICLE_TYPE.CAR
-                    ? `/ireportcar/${item.vehicle_id}`
-                    : `/ireportmotor/${item.vehicle_id}`
-                    }
-                    >
-                    Report
-                    </Link>
-                    </Button>
-                    </div> */}
                 {item.status === "HOLD" && (
                   <Button
                     onClick={() =>
@@ -143,7 +105,11 @@ export function ReauctionList() {
                   </Button>
                 )}
                 {item.status === "REQUEST" && (
-                  <Button variant="ghost" className="text-green-400 text-lg">
+                  <Button
+                    disabled={true}
+                    variant="ghost"
+                    className="text-green-400 text-lg"
+                  >
                     REQUESTED
                   </Button>
                 )}

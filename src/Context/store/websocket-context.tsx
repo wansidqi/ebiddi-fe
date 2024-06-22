@@ -81,7 +81,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
       highest_user_id: 0,
       highest_user_name: "",
     },
-    expiryAt: "",
+    // expiryAt: "",
     holdItems: [],
     auction_event_id: "",
   });

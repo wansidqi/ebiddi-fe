@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 
 interface Props {
   modalState: boolean;
@@ -17,22 +17,22 @@ export function Modal({
 }: Props): JSX.Element {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (modalState) {
-      document.body.style.overflowY = "hidden";
-    } else {
-      document.body.style.overflowY = "scroll";
-    }
-    const handleClick = (event: any) => {
-      if (modalRef.current && event.target === modalRef.current) {
-        handleClose && handleClose();
-      }
-    };
-    window.addEventListener("click", handleClick);
-    return () => {
-      window.removeEventListener("click", handleClick);
-    };
-  }, [modalState]);
+  // useEffect(() => {
+  //   if (modalState) {
+  //     document.body.style.overflowY = "hidden";
+  //   } else {
+  //     document.body.style.overflowY = "scroll";
+  //   }
+  //   const handleClick = (event: any) => {
+  //     if (modalRef.current && event.target === modalRef.current) {
+  //       handleClose && handleClose();
+  //     }
+  //   };
+  //   window.addEventListener("click", handleClick);
+  //   return () => {
+  //     window.removeEventListener("click", handleClick);
+  //   };
+  // }, [modalState]);
 
   return (
     <div>
@@ -40,9 +40,9 @@ export function Modal({
         <>
           <div
             ref={modalRef}
-            className={`flexcenter fixed inset-0 z-50 bg-background bg-opacity-${opacity}`}
+            className={`flex fixed inset-0 z-50 bg-background bg-opacity-${opacity}`}
           >
-            <div className="w-full bg-opacity-90 text-[16px]">
+            <div className="w-full bg-opacity-90 text-[16px] overflow-y-auto">
               <div className="mb-10 text-[16px]">
                 {hasCloseBtn && (
                   <button

@@ -169,22 +169,16 @@ const useCloseAuctionEvent = (eventId: string | undefined) => {
   });
 };
 
-const usePostReauctionItem = (options = {}) => {
+const usePostReauctionItem = () => {
   return useMutation({
-    mutationFn: async ({
-      eventId,
-      auctionId,
-    }: {
-      eventId: string | number;
-      auctionId: string | number;
-    }) => {
+    mutationFn: async ({ data }: { data: string }) => {
       const response = await datasource({
+        method: "post",
         url: `/auction/reauctioneventitem`,
-        data: `event_id=${eventId}&auction_event_id=${auctionId}`,
+        data,
       });
       return response.data;
     },
-    ...options,
   });
 };
 
