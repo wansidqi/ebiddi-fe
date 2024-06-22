@@ -24,6 +24,7 @@ export function AuctioneerController() {
     setBidStatus,
     setBidListIndex,
     $swal,
+    updateFlag,
   } = useStoreContext();
   const { countdown } = payload;
 
@@ -364,6 +365,7 @@ export function AuctioneerController() {
     if (auction?.meta?.next !== 0) {
       navigate(`/auctioneer/live/${eventId}/${auction?.meta?.next}`);
     }
+    updateFlag.current = false;
   };
 
   // const clickReauctionList = () => {
@@ -378,7 +380,7 @@ export function AuctioneerController() {
 
   ///reset bid
   useEffect(() => {
-    setBidStatus(1);
+    setBidStatus(0);
     onInitial();
 
     return () => {
@@ -501,7 +503,7 @@ export function AuctioneerController() {
 
             <CondButton
               onClick={clickStart}
-              show={bidStatus === 1}
+              show={bidStatus === 0 || bidStatus === 1}
               className="bg-green-500"
             >
               START
@@ -541,7 +543,7 @@ export function AuctioneerController() {
                   onClick: () => clickWithdraw(),
                 })
               }
-              show={bidStatus === 1 || bidStatus === 4}
+              show={bidStatus === 0 || bidStatus === 1 || bidStatus === 4}
               className="bg-rose-800"
             >
               WITHDRAW CURRENT VEHICLE
