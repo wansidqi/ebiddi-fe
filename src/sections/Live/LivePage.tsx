@@ -46,6 +46,7 @@ export function LivePage() {
     setCurrentPage,
     subscribeReauction,
     $swal,
+    $swalClose,
   } = useStoreContext();
 
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
@@ -318,6 +319,7 @@ export function LivePage() {
           }
 
           if (isBidding) {
+            $swalClose();
             if (payload.bidders.all.length >= data.bidders.all.length) return;
 
             setPayload((prev) => ({
@@ -427,6 +429,7 @@ export function LivePage() {
           $swal({
             title: `Lot ${auction?.lot_no}`,
             content: `Auctioneer hold auction`,
+            noClose: true,
           });
           playAudio("hold");
         }

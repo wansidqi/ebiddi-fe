@@ -17,6 +17,7 @@ interface ModalDialog {
   variant?: "destructive" | "outline" | "secondary" | "ghost" | "link";
   onClick?: () => any;
   timer?: number;
+  noClose?: boolean;
 }
 
 type Data = {
@@ -69,6 +70,7 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
     timer: undefined,
     onClick: undefined,
     variant: undefined,
+    noClose: undefined,
   });
 
   const $swalClose = () => {
@@ -90,6 +92,7 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
       timer: params.timer,
       onClick: params.onClick,
       variant: params.variant,
+      noClose: params.noClose,
     });
   };
 
