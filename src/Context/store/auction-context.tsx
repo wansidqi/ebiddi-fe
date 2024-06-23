@@ -35,7 +35,7 @@ function AuctionContext(props: React.PropsWithChildren<{}>) {
   const [timer, setTimer] = useState(0);
 
   //TODO change to false when to deploy
-  const dev = true;
+  const dev = false;
 
   const contextValue: Data = {
     view,
