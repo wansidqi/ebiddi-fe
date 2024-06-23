@@ -90,10 +90,9 @@ export function BidHeader() {
   }, [countdown]);
 
   useEffect(() => {
-    console.log(countdown);
     if (USER?.role === ROLE.AUCTIONEER) return;
 
-    if (!stopFinalCall || countdown <= 0) {
+    if (stopFinalCall || countdown <= 0) {
       const intervalId = setInterval(() => {
         startAlert({
           call: "final call",

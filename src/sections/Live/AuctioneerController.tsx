@@ -617,7 +617,7 @@ const CondButton: React.FC<CondBtn> = ({
     <>
       {show && (
         <button
-          className={`${isIcon ? "flexcenter" : "py-3 rounded-md"}  w-full sm:w-1/4  ${className}`}
+          className={`${isIcon ? "flexcenter" : "py-3 px-5 rounded-md"}  ${className}`}
           {...rest}
         >
           {children}
