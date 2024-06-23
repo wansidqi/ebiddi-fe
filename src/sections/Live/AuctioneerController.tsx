@@ -171,7 +171,7 @@ export function AuctioneerController() {
           auction_id: auctionId!,
         };
 
-        publishEvent({ event_id: "", data: newPayload });
+        publishEvent({ event_id: eventId!, data: newPayload });
 
         return newPayload;
       });
@@ -184,7 +184,7 @@ export function AuctioneerController() {
           countdown: 0,
         };
 
-        publishEvent({ event_id: "", data: newPayload });
+        publishEvent({ event_id: eventId!, data: newPayload });
 
         return newPayload;
       });
