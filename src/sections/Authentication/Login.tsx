@@ -7,8 +7,10 @@ import { onEnterClick } from "@/lib/utils";
 import { useAPIServices } from "@/services";
 import { LogInIcon, Home } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function Login() {
+  const navigate = useNavigate();
   const { usePostLogin } = useAPIServices();
   const { mutateAsync } = usePostLogin();
   const { dev } = useStoreContext();
@@ -93,12 +95,13 @@ export function Login() {
           <Home size={"20px"} />
           <div>E-Biddi Home Page</div>
         </a>
-        <a
+        <Button
+          variant={"link"}
+          onClick={() => navigate("/events")}
           className="text-xl flex gap-2 text-primary"
-          href={`${import.meta.env.VITE_URL}/events`}
         >
           <div>View Live Page</div>
-        </a>
+        </Button>
       </div>
     </div>
   );
