@@ -68,8 +68,8 @@ export function ItemsList({ events }: { events: undefined | EventsInterface }) {
                     target="_blank"
                     to={
                       item.vehicle_type === VEHICLE_TYPE.CAR
-                        ? `/ireportcar/${item.vehicle_id}`
-                        : `/ireportmotor/${item.vehicle_id}`
+                        ? `${import.meta.env.VITE_URL}/ireportcar/${item.vehicle_id}`
+                        : `${import.meta.env.VITE_URL}/ireportmotor/${item.vehicle_id}`
                     }
                   >
                     Report
