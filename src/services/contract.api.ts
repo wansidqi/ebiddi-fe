@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { KEY } from ".";
 import datasource from "@/datasource/axiosInstance";
-import { Contract, ContractEvent } from "@/interfaces";
+import { ContractEvent } from "@/interfaces";
 
 interface Response {
-  data: Contract[];
+  data: any[];
 }
 
 const useGetContract = (userId: string) => {
