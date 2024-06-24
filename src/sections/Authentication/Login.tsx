@@ -93,7 +93,10 @@ export function Login() {
           <Home size={"20px"} />
           <div>E-Biddi Home Page</div>
         </a>
-        <a className="text-xl flex gap-2 text-primary" href="/events">
+        <a
+          className="text-xl flex gap-2 text-primary"
+          href={`${import.meta.env.VITE_URL}/events`}
+        >
           <div>View Live Page</div>
         </a>
       </div>
