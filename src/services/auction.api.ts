@@ -26,7 +26,7 @@ const useGetCredit = (auctionHouseId: string | number | undefined) => {
       const data = response.data.data as CreditInterface[];
       return data;
     },
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 };
 

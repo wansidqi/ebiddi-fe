@@ -58,9 +58,6 @@ type Data = {
   >;
 
   updateFlag: React.MutableRefObject<boolean>;
-
-  stopFinalCall: boolean;
-  setStopFinalCall: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 function WsContext(props: React.PropsWithChildren<{}>) {
@@ -85,13 +82,13 @@ function WsContext(props: React.PropsWithChildren<{}>) {
       highest_user_name: "",
     },
     // expiryAt: "",
+    isResume:false,
     holdItems: [],
     auction_event_id: "",
   });
   const [bidStatus, setBidStatus] = useState<BidStatus>(0);
   const [bidListIndex, setBidListIndex] = useState(-1);
   const [currentPage, setCurrentPage] = useState<"bidding" | "reauctionlist">("bidding"); //prettier-ignore
-  const [stopFinalCall, setStopFinalCall] = useState(false);
 
   const updateFlag = useRef(false);
 
@@ -239,8 +236,6 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     subscribeReauction,
     publishReauction,
     updateFlag,
-    stopFinalCall,
-    setStopFinalCall,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;

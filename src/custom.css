@@ -4,17 +4,17 @@
 
 @font-face {
   font-family: "firasans";
-  src: url("src/assets/fonts/FiraSans.otf") format("opentype");
+  src: url("/src/assets/fonts/FiraSans.otf") format("opentype");
 }
 
 @font-face {
   font-family: "baloo";
-  src: url("src/assets/fonts/Baloo.ttf") format("truetype");
+  src: url("/src/assets/fonts/Baloo.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "digital";
-  src: url("src/assets/fonts/digital.ttf") format("truetype");
+  src: url("/src/assets/fonts/digital.ttf") format("truetype");
 }
 
 .digital {
