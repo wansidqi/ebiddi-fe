@@ -23,7 +23,7 @@ export function TAC() {
   const navgiate = useNavigate();
 
   const { setAlert } = useStoreContext();
-  const cooldown = 20;
+  const cooldown = 60;
 
   const [TAC, setTAC] = useState("");
   const [isCooldown, setIsCooldown] = useState(false);
