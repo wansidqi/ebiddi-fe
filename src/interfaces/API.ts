@@ -1,5 +1,5 @@
+import { Status } from "@/types";
 import { CreditInterface } from ".";
-import { Status } from "./websocket";
 
 export interface LoginCredential {
   username: string;

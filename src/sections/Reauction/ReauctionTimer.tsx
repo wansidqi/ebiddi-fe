@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import moment from "moment";
 import { useStoreContext } from "@/Context";
 import { useAPIServices } from "@/services";
-import { Status } from "@/interfaces/websocket";
+import { Status } from "@/types";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import {
   Dialog,

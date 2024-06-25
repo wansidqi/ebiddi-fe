@@ -8,7 +8,7 @@ import { useStoreContext } from "@/Context";
 import { Fragment, useEffect } from "react";
 import { DynamicRenderer } from "@/components";
 import { Button } from "@/components/ui/button";
-import { Status } from "@/interfaces/websocket";
+import { Status } from "@/types";
 
 export function AuctioneerList() {
   const columns = [
