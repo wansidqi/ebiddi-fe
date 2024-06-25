@@ -48,7 +48,6 @@ export function LivePage() {
     $swal,
     $swalClose,
     updateFlag,
-    setStopFinalCall,
   } = useStoreContext();
 
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
@@ -77,6 +76,14 @@ export function LivePage() {
     };
 
     setPayload((prev) => {
+      const duplciateAmount = prev.bidders.all.some(
+        (bidder) => bidder.amount === data.amount
+      );
+
+      if (duplciateAmount) {
+        return prev;
+      }
+
       const updatedPayload = {
         ...prev,
         bidders: {
@@ -110,6 +117,14 @@ export function LivePage() {
     };
 
     setPayload((prev) => {
+      const duplciateAmount = prev.bidders.all.some(
+        (bidder) => bidder.amount === data.amount
+      );
+
+      if (duplciateAmount) {
+        return prev;
+      }
+
       const updatedPayload = {
         ...prev,
         bidders: {
@@ -254,8 +269,6 @@ export function LivePage() {
         }
 
         if (data.status === "REAUCTIONLIST") {
-          // console.log("REAUCTIONLIST");
-          updateFlag.current = true;
           reset();
           $swal({
             title: "Redirecting to Reauction List",
@@ -267,9 +280,6 @@ export function LivePage() {
         }
 
         if (data.status === "REAUCTIONLISTUPDATETIMER") {
-          // console.log("REAUCTIONLISTUPDATETIMER");
-          updateFlag.current = true;
-
           setCurrentPage("reauctionlist");
 
           $swal({
@@ -305,9 +315,12 @@ export function LivePage() {
         if (!payload.auction_id) return;
 
         if (data.status === "AUCTION") {
-          $swalClose();
-
           setIsBidding(true);
+
+          if (data.isResume) {
+            $swalClose();
+            setPayload((prev) => ({ ...prev, isResume: false }));
+          }
 
           if (!updateFlag.current && bidStatus === 0) {
             $swal({
@@ -401,13 +414,10 @@ export function LivePage() {
         }
 
         if (data.status === "SOLD") {
-          setStopFinalCall(true);
-          setStopFinalCall(true);
           setIsBidding(false);
         }
 
         if (data.status === "END") {
-          setStopFinalCall(true);
           playAudio("sold");
 
           if (USER) {
@@ -447,11 +457,9 @@ export function LivePage() {
             hasClose: false,
           });
           playAudio("hold");
-          updateFlag.current = false;
         }
 
         if (data.status === "WITHDRAW") {
-          setStopFinalCall(true);
           setIsBidding(false);
           $swal({
             title: `Lot ${auction?.lot_no}`,
@@ -463,7 +471,6 @@ export function LivePage() {
         }
 
         if (data.status === "HOLD") {
-          setStopFinalCall(true);
           setIsBidding(false);
           $swal({
             title: `Lot ${auction?.lot_no}`,
@@ -473,7 +480,6 @@ export function LivePage() {
           });
           playAudio("noBid");
           reset();
-          updateFlag.current = true;
         }
       },
     });
@@ -531,9 +537,11 @@ export function LivePage() {
   ///render when change auctionId
   useEffect(() => {
     setBidStatus(0);
-    getAuction();
-    getCredit();
-  }, [payload.auction_id, updateFlag]);
+    $swalClose();
+    updateFlag.current = false;
+    payload.auction_id !== "" && getAuction();
+    payload.auction_id !== "" && getCredit();
+  }, [payload.auction_id]);
 
   return (
     <div>
@@ -561,7 +569,8 @@ export function LivePage() {
 
           <DynamicRenderer>
             <DynamicRenderer.When
-              cond={isNotAuctioneer && payload.status === "DISPLAY"}
+              cond={isNotAuctioneer && payload.auction_id === ""}
+              // cond={isNotAuctioneer && payload.status === "DISPLAY"}
             >
               <WaitingComponent />
             </DynamicRenderer.When>
@@ -569,51 +578,64 @@ export function LivePage() {
               <Fragment>
                 <Toaster />
                 <BidHeader />
-                <div className="flex sm:grid sm:grid-cols-2 w-full overflow-x-auto gap-4 my-8">
-                  <div
-                    id="bidding"
-                    className="flex-shrink-0 w-[92%] sm:order-1"
-                  >
-                    <BidderList />
-                  </div>
-                  <div
-                    id="details"
-                    className="flex-shrink-0 w-[92%] sm:order-2"
-                  >
+                <div className="flex sm:grid sm:grid-cols-2 w-full overflow-x-auto gap-4 my-4 sm:my-8">
+                  <div className="flex-shrink-0 w-[92%] sm:order-2">
                     <LiveDetail auctionId={payload.auction_id} />
+                  </div>
+                  <div className="flex-shrink-0 w-[92%] sm:order-1">
+                    <BidderList />
                   </div>
                 </div>
 
                 {USER?.role === ROLE.BIDDER && (
-                  <div className="flexcenter gap-6">
-                    <button
-                      disabled={isBidDisabled()}
-                      onClick={clickBid}
-                      className={`${isBidDisabled() ? "bg-green-400" : "bg-green-600"}  py-3 rounded-md w-full relative sm:w-1/2`}
-                    >
-                      <p>
-                        {typeof showNumber() === "number"
-                          ? `RM${numWithComma(showNumber() as number)}`
-                          : showNumber()}
-                      </p>
-                      <div className="absolute right-10 top-[0.85rem]">
-                        <LucideGavel />
+                  <div>
+                    {credits?.map((cr, i) => (
+                      <div key={i} className="flexcenter my-3 sm:my-4 gap-2">
+                        {/* <p className="text-primary sm:text-2xl">
+                            {cr?.auction_house.name} balance:
+                          </p> */}
+                        <p className="text-primary sm:text-2xl">
+                          Deposit balance:
+                        </p>
+                        <p className="text-yellow-500 sm:text-2xl">
+                          RM{numWithComma(cr?.amount as number) || 0}
+                        </p>
                       </div>
-                    </button>
-                    <button
-                      onClick={() => setIsBtnDisabled((prev) => !prev)}
-                      className="flex gap-4"
-                    >
-                      {isBtnDisabled ? <LockKeyholeIcon /> : <UnlockKeyhole />}
-                    </button>
-                    {dev && (
+                    ))}
+                    <div className="flexcenter gap-6">
                       <button
-                        onClick={testBid}
-                        className="px-3 py-2 bg-blue-600 rounded-md"
+                        disabled={isBidDisabled()}
+                        onClick={clickBid}
+                        className={`${isBidDisabled() ? "bg-green-400" : "bg-green-600"}  py-3 rounded-md w-full relative sm:w-1/2`}
                       >
-                        test bid
+                        <p>
+                          {typeof showNumber() === "number"
+                            ? `RM${numWithComma(showNumber() as number)}`
+                            : showNumber()}
+                        </p>
+                        <div className="absolute right-10 top-[0.85rem]">
+                          <LucideGavel />
+                        </div>
                       </button>
-                    )}
+                      <button
+                        onClick={() => setIsBtnDisabled((prev) => !prev)}
+                        className="flex gap-4"
+                      >
+                        {isBtnDisabled ? (
+                          <LockKeyholeIcon />
+                        ) : (
+                          <UnlockKeyhole />
+                        )}
+                      </button>
+                      {dev && (
+                        <button
+                          onClick={testBid}
+                          className="px-3 py-2 bg-blue-600 rounded-md"
+                        >
+                          test bid
+                        </button>
+                      )}
+                    </div>
                   </div>
                 )}
                 {!isNotAuctioneer && <AuctioneerController />}

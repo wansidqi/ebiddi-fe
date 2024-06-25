@@ -1,13 +1,14 @@
 import { useStoreContext } from "@/Context";
 import { LogAuditTrail } from "@/interfaces/API";
 import { BidStatus, COUNTDOWN, ROLE } from "@/enum";
-import { EventData, Status } from "@/interfaces/websocket";
+import { EventData } from "@/interfaces/websocket";
 import { useAPIServices } from "@/services";
 import { ArrowLeftSquare, ArrowRightSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { LiveDialog } from "../Live/LiveDialog";
 import { UseCountdown } from "..";
+import { Status } from "@/types";
 
 export function AuctioneerController() {
   const { auctionId, eventId } = useParams();
@@ -25,7 +26,6 @@ export function AuctioneerController() {
     setBidListIndex,
     $swal,
     updateFlag,
-    setStopFinalCall,
   } = useStoreContext();
   const { countdown } = payload;
 
@@ -73,19 +73,25 @@ export function AuctioneerController() {
 
     resetBid();
 
-    setPayload((prev) => ({
-      ...prev,
-      event_id: eventId,
-      auction_id: auctionId,
-      countdown: COUNTDOWN.initial,
-      status: "DISPLAY",
-      bidders: {
-        all: [],
-        highest_amount: 0,
-        highest_user_id: 0,
-        highest_user_name: "",
-      },
-    }));
+    setPayload((prev) => {
+      let update = {
+        ...prev,
+        event_id: eventId,
+        auction_id: auctionId,
+        countdown: COUNTDOWN.initial,
+        status: "DISPLAY" as Status,
+        bidders: {
+          all: [],
+          highest_amount: 0,
+          highest_user_id: 0,
+          highest_user_name: "",
+        },
+      };
+
+      publishEvent({ event_id: eventId, data: update });
+
+      return update;
+    });
   };
 
   const publishTimer = () => {
@@ -107,37 +113,34 @@ export function AuctioneerController() {
   };
 
   const clickStart = () => {
-    if (isActive) {
-      clickResume();
-    } else {
-      setIsActive(true);
-      setIsPaused(false);
-      setNaviStatus(false);
+    setIsActive(true);
+    setIsPaused(false);
+    setNaviStatus(false);
 
-      setBidStatus(BidStatus.RUN);
+    setBidStatus(BidStatus.RUN);
 
-      onInitial();
+    onInitial();
 
-      if (!eventId) return;
-      if (!auction) return;
+    if (!eventId) return;
+    if (!auction) return;
 
-      setPayload((prev) => {
-        let data = {
-          ...prev,
-          status: "AUCTION" as Status,
-          countdown: COUNTDOWN.start, ///start cd
-        };
-        publishEvent({ event_id: eventId, data });
-        return data;
-      });
+    setPayload((prev) => {
+      let data = {
+        ...prev,
+        status: "AUCTION" as Status,
+        countdown: COUNTDOWN.start, ///start cd
+        isResume: false,
+      };
+      publishEvent({ event_id: eventId, data });
+      return data;
+    });
 
-      sendAuditTrail({
-        event_id: Number(payload.event_id),
-        auction_id: Number(payload.auction_id),
-        bid_amount: 0,
-        status: "START",
-      });
-    }
+    sendAuditTrail({
+      event_id: Number(payload.event_id),
+      auction_id: Number(payload.auction_id),
+      bid_amount: 0,
+      status: "START",
+    });
   };
 
   const clickPause = () => {
@@ -163,32 +166,19 @@ export function AuctioneerController() {
     setBidStatus(BidStatus.RUN);
     setIsPaused(false);
 
-    if (payload.countdown !== -1) {
-      setPayload((prev) => {
-        let newPayload = {
-          ...prev,
-          status: "AUCTION" as Status,
-          auction_id: auctionId!,
-        };
+    setPayload((prev) => {
+      let newPayload = {
+        ...prev,
+        status: "AUCTION" as Status,
+        auction_id: auctionId!,
+        isResume: true,
+        // countdown: payload.countdown !== -1 ? prev.countdown : 0,
+      };
 
-        publishEvent({ event_id: eventId!, data: newPayload });
+      publishEvent({ event_id: eventId!, data: newPayload });
 
-        return newPayload;
-      });
-    } else {
-      setPayload((prev) => {
-        let newPayload = {
-          ...prev,
-          status: "AUCTION" as Status,
-          auction_id: auctionId!,
-          countdown: 0,
-        };
-
-        publishEvent({ event_id: eventId!, data: newPayload });
-
-        return newPayload;
-      });
-    }
+      return newPayload;
+    });
 
     sendAuditTrail({
       event_id: Number(payload.event_id),
@@ -267,7 +257,6 @@ export function AuctioneerController() {
   };
 
   const clickHold = () => {
-    setStopFinalCall(true);
     setNaviStatus(true);
     setBidStatus(BidStatus.HOLD);
     setIsPaused(true);
@@ -294,7 +283,6 @@ export function AuctioneerController() {
   };
 
   const clickSold = () => {
-    setStopFinalCall(true);
     const newPayload: EventData = { ...payload, status: "SOLD" };
     if (!eventId) return;
     publishEvent({ event_id: eventId, data: newPayload });
@@ -304,7 +292,6 @@ export function AuctioneerController() {
   };
 
   const clickEnd = () => {
-    setStopFinalCall(true);
     setPayload((prev) => ({ ...prev, status: "END" }));
     if (!eventId) return;
     publishEvent({ event_id: eventId, data: { ...payload, status: "END" } });
@@ -316,7 +303,6 @@ export function AuctioneerController() {
   };
 
   const itemSold = () => {
-    setStopFinalCall(true);
     const auction_id = `${payload.auction_id}`;
 
     const postData = {
@@ -372,10 +358,6 @@ export function AuctioneerController() {
     }
     updateFlag.current = false;
   };
-
-  // const clickReauctionList = () => {
-  /* navigation to reauction list page */
-  // };
 
   const { countdown: reauctionCd, isCountdownActive } = UseCountdown();
 
@@ -437,6 +419,14 @@ export function AuctioneerController() {
         }
 
         setPayload((prev) => {
+          const duplciateAmount = prev.bidders.all.some(
+            (bidder) => bidder.amount === data.amount
+          );
+
+          if (duplciateAmount) {
+            return prev;
+          }
+
           const updatedPayload = {
             ...prev,
             bidders: {
@@ -519,7 +509,7 @@ export function AuctioneerController() {
               show={bidStatus === 4}
               className="bg-green-500"
             >
-              START
+              RESUME
             </CondButton>
 
             <CondButton
