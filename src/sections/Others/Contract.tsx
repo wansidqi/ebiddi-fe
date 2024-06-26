@@ -1,6 +1,7 @@
 import { useStoreContext } from "@/Context";
 import { Container } from "@/components";
 import { useAPIServices } from "@/services";
+import { Search } from "lucide-react";
 
 export function Contract() {
   const { USER } = useStoreContext();
@@ -40,28 +41,34 @@ export function Contract() {
               </tr>
             </thead>
             <tbody className="divide-y text-center text-xs sm:text-sm">
-              {data?.map((item, i) => (
+              {data?.map((contract, i) => (
                 <tr key={i}>
                   <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
-                    {item.registration_no}
+                    {contract?.item?.registration_number}
                   </td>
                   <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
-                    {item.model}
+                    {contract?.item?.model}
                   </td>
                   <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
-                    {item.bidder}
+                    {contract?.contract_owner?.name}
                   </td>
                   <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
-                    {item.ownership}
+                    {contract?.bidder_company}
                   </td>
                   <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
-                    {item.date}
+                    {contract?.event?.event_timestamp}
                   </td>
                   <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
-                    {item.auction_house}
+                    {contract?.event?.auction_house.auctionhouse_name}
                   </td>
-                  <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
-                    {item.actions}
+                  <td className="px-0 flexcenter sm:px-4 py-2 sm:py-4 whitespace-nowrap">
+                    <a
+                      href={contract.url}
+                      target="_blank"
+                      className="bg-blue-600 rounded-lg flexcenter aspect-square w-10"
+                    >
+                      <Search size={"18px"} strokeWidth={4} />
+                    </a>
                   </td>
                 </tr>
               ))}

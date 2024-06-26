@@ -3,10 +3,6 @@ import { KEY } from ".";
 import datasource from "@/datasource/axiosInstance";
 import { ContractEvent } from "@/interfaces";
 
-interface Response {
-  data: any[];
-}
-
 const useGetContract = (userId: string) => {
   return useQuery({
     queryKey: [KEY.contract],
@@ -15,8 +11,8 @@ const useGetContract = (userId: string) => {
         method: "get",
         url: `/contract/bidder/${userId}`,
       });
-      const data = response.data as Response;
-      return data.data;
+      const data = response.data.data as ContractEvent[];
+      return data;
     },
     enabled: !!userId,
   });
