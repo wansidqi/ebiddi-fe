@@ -17,6 +17,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   EyeIcon,
+  Info,
   LockKeyholeIcon,
   LucideGavel,
   UnlockKeyhole,
@@ -25,6 +26,13 @@ import { useAPIServices } from "@/services";
 import { playAudio } from "@/assets/audio";
 import { numWithComma } from "@/lib/utils";
 import moment from "moment";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 export function LivePage() {
   const { eventId } = useParams();
@@ -590,17 +598,38 @@ export function LivePage() {
                 {USER?.role === ROLE.BIDDER && (
                   <div>
                     {credits?.map((cr, i) => (
-                      <div key={i} className="flexcenter my-3 sm:my-4 gap-2">
-                        {/* <p className="text-primary sm:text-2xl">
+                      <>
+                        <div key={i} className="flexcenter my-3 sm:my-4 gap-2">
+                          {/* <p className="text-primary sm:text-2xl">
                             {cr?.auction_house.name} balance:
                           </p> */}
-                        <p className="text-primary sm:text-2xl">
-                          Deposit balance:
-                        </p>
-                        <p className="text-yellow-500 sm:text-2xl">
-                          RM{numWithComma(cr?.amount as number) || 0}
-                        </p>
-                      </div>
+                          <p className="text-primary sm:text-2xl">
+                            Deposit balance:
+                          </p>
+                          <div className="relative">
+                            <p className="text-yellow-500 sm:text-2xl">
+                              RM{numWithComma(cr?.amount as number) || 0}
+                            </p>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger
+                                  className="absolute -right-4 -top-1"
+                                  asChild
+                                >
+                                  <button>
+                                    <Info size={"14px"} />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p className="my-2 text-primary">
+                                    {cr?.auction_house.name}
+                                  </p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </div>
+                        </div>
+                      </>
                     ))}
                     <div className="flexcenter gap-6">
                       <button
