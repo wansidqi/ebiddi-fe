@@ -82,9 +82,10 @@ function WsContext(props: React.PropsWithChildren<{}>) {
       highest_user_name: "",
     },
     // expiryAt: "",
-    isResume:false,
+    isResume: false,
     holdItems: [],
     auction_event_id: "",
+    lot_no: 0,
   });
   const [bidStatus, setBidStatus] = useState<BidStatus>(0);
   const [bidListIndex, setBidListIndex] = useState(-1);

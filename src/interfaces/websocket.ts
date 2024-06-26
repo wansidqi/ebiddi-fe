@@ -20,6 +20,7 @@ export interface EventData {
   };
   auction_event_id: string;
   isResume: boolean;
+  lot_no: any;
   // expiryAt: string;
   holdItems: ReauctionList[];
 }

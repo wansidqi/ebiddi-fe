@@ -86,6 +86,7 @@ export function AuctioneerController() {
           highest_user_id: 0,
           highest_user_name: "",
         },
+        lot_no: auction?.lot_no,
       };
 
       publishEvent({ event_id: eventId, data: update });
@@ -172,7 +173,7 @@ export function AuctioneerController() {
         status: "AUCTION" as Status,
         auction_id: auctionId!,
         isResume: true,
-        // countdown: payload.countdown !== -1 ? prev.countdown : 0,
+        countdown: payload.countdown !== -1 ? prev.countdown : 0,
       };
 
       publishEvent({ event_id: eventId!, data: newPayload });

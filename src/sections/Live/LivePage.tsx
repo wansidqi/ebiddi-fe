@@ -331,7 +331,7 @@ export function LivePage() {
 
           if (!updateFlag.current && bidStatus === 0) {
             $swal({
-              title: `Lot ${auction?.lot_no}`,
+              title: `Lot ${data.lot_no}`,
               content: "Bidding is starting",
               timer: 1500,
               hasClose: false,
@@ -553,6 +553,7 @@ export function LivePage() {
   return (
     <div>
       <LiveDialog />
+      <Toaster />
       <Container>
         <main>
           <p className="text-3xl sm:text-5xl text-center text-primary">
@@ -583,7 +584,6 @@ export function LivePage() {
             </DynamicRenderer.When>
             <DynamicRenderer.Else>
               <Fragment>
-                <Toaster />
                 <BidHeader />
                 <div className="flex sm:grid sm:grid-cols-2 w-full overflow-x-auto gap-4 my-4 sm:my-8">
                   <div className="flex-shrink-0 w-[92%] sm:order-2">
@@ -597,11 +597,8 @@ export function LivePage() {
                 {USER?.role === ROLE.BIDDER && (
                   <div>
                     {credits?.map((cr, i) => (
-                      <>
+                      <Fragment key={i}>
                         <div key={i} className="flexcenter my-3 sm:my-4 gap-2">
-                          {/* <p className="text-primary sm:text-2xl">
-                            {cr?.auction_house.name} balance:
-                          </p> */}
                           <p className="text-primary sm:text-2xl">
                             Deposit balance:
                           </p>
@@ -628,7 +625,7 @@ export function LivePage() {
                             </TooltipProvider>
                           </div>
                         </div>
-                      </>
+                      </Fragment>
                     ))}
                     <div className="flexcenter gap-6">
                       <button
