@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 import DefaultImage from "@/assets/images/upload-receipt/upload-placehodler.jpeg";
 import uploading from "@/assets/images/upload-receipt/uploading.gif";
-import EditIcon from "@/assets/images/upload-receipt/edit.svg";
+// import EditIcon from "@/assets/images/upload-receipt/edit.svg";
 
 export function Profile() {
   const columns = [
@@ -40,14 +40,14 @@ export function Profile() {
   const [avatarURL, setAvatarURL] = useState(DefaultImage);
   const fileUploadRef = useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    if (fileUploadRef.current) {
-      fileUploadRef.current.click();
-    }
-  };
+  // const handleImageUpload = (
+  //   event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  // ) => {
+  //   event.preventDefault();
+  //   if (fileUploadRef.current) {
+  //     fileUploadRef.current.click();
+  //   }
+  // };
 
   const uploadImageDisplay = async () => {
     if (
