@@ -5,8 +5,12 @@ import { Input } from "@/components/ui/input";
 import { ROLE } from "@/enum";
 import { convertDateTime, numWithComma } from "@/lib/utils";
 import { useAPIServices } from "@/services";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import DefaultImage from "@/assets/images/upload-receipt/upload-placehodler.jpeg";
+import uploading from "@/assets/images/upload-receipt/uploading.gif";
+import EditIcon from "@/assets/images/upload-receipt/edit.svg";
 
 export function Profile() {
   const columns = [
@@ -33,6 +37,46 @@ export function Profile() {
   };
 
   const [emailInput, setEmailInput] = useState("");
+  const [avatarURL, setAvatarURL] = useState(DefaultImage);
+  const fileUploadRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    if (fileUploadRef.current) {
+      fileUploadRef.current.click();
+    }
+  };
+
+  const uploadImageDisplay = async () => {
+    if (
+      fileUploadRef.current &&
+      fileUploadRef.current.files &&
+      fileUploadRef.current.files[0]
+    ) {
+      console.log("upload img");
+      try {
+        setAvatarURL(uploading);
+        const uploadedFile = fileUploadRef.current.files[0];
+        const cachedURL = URL.createObjectURL(uploadedFile);
+        setAvatarURL(cachedURL);
+
+        const formData = new FormData();
+        formData.append("file", uploadedFile);
+
+        //TODO post API for uplaod receipt
+        /*
+        await fetch("https://api.example.com", {
+          method: "post",
+          body: formData,
+        }); 
+        */
+      } catch (error) {
+        alert(error);
+      }
+    }
+  };
 
   useEffect(() => {
     if (USER && USER?.email) setEmailInput(USER?.email);
@@ -49,7 +93,7 @@ export function Profile() {
         <p className="text-5xl sm:text-6xl text-primary my-4">PROFILE</p>
       </div>
       <div
-        className={`${USER?.role === ROLE.BIDDER ? "grid grid-cols-1sm:grid-cols-2 gap-3 sm:gap-y-10" : "flexcenter"} sm:mx-16`}
+        className={`${USER?.role === ROLE.BIDDER ? "grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-y-10" : "flexcenter"} sm:mx-16`}
       >
         <main
           className={
@@ -70,6 +114,7 @@ export function Profile() {
             <KeyValue title="City" value="" />
             <KeyValue title="Email" value={USER?.email ?? ""} />
             <KeyValue title="Mobile No" value={USER?.mobile_no ?? ""} />
+
             <div className="flexcenter gap-3 my-5">
               <DynamicDrawer
                 btnName="Update Password"
@@ -193,7 +238,53 @@ export function Profile() {
               </div>
             </main>
 
-            <main className="w-full border sm:col-span-2">
+            <main className="border">
+              <p className="text-center py-3 bg-primary font-bold text-black">
+                Upload Receipt Proof
+              </p>
+              <form
+                id="form"
+                className="flexcenter"
+                encType="multipart/form-data"
+              >
+                <div className="m-8 relative">
+                  <img src={avatarURL} className="w-80 my-3" alt="" />
+                  <input
+                    className=""
+                    type="file"
+                    id="file"
+                    ref={fileUploadRef}
+                    onChange={uploadImageDisplay}
+                  />
+                </div>
+                {/* <div className="relative h-72 w-72 m-8">
+                  <img
+                    src={avatarURL}
+                    alt="Avatar"
+                    className="h-72 w-72 rounded-full"
+                  />
+
+                  <form id="form" encType="multipart/form-data">
+                    <button
+                      onClick={handleImageUpload}
+                      type="submit"
+                      className="flex-center absolute bottom-12 right-14 h-9 w-9 rounded-full"
+                    >
+                      <img src={EditIcon} alt="Edit" className="object-cover" />
+                    </button>
+                  </form>
+                </div>
+                <input
+                  type="file"
+                  id="file"
+                  ref={fileUploadRef}
+                  onChange={uploadImageDisplay}
+                  hidden
+                /> */}
+              </form>
+            </main>
+
+            <main className="w-full border sm:col-span-3">
               <p className="text-center py-3 bg-primary font-bold text-black">
                 Deposit Information
               </p>
@@ -227,7 +318,7 @@ export function Profile() {
               </div>
             </main>
 
-            <main className="w-full border sm:col-span-2">
+            <main className="w-full border sm:col-span-3">
               <p className="text-center py-3 bg-primary font-bold text-black">
                 Company Information
               </p>
@@ -275,8 +366,10 @@ export function Profile() {
 
 function KeyValue({ title, value }: { title: string; value: string }) {
   return (
-    <p>
-      {title}: <span className="text-primary">{value}</span>
+    <p className="flex gap-x-2">
+      <p className="w-20">{title}</p>
+      <span> : </span>
+      <span className="text-primary">{value}</span>
     </p>
   );
 }

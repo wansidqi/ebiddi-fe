@@ -32,10 +32,10 @@ export * from "./Reauction/ReauctionList";
 export * from "./Reauction/ReauctionTimer";
 export * from "./Reauction/UseCountdown";
 
-export * from "./Rest/AuctContract";
-export * from "./Rest/AuctioneerList";
-export * from "./Rest/Contract";
-export * from "./Rest/Home";
-export * from "./Rest/Policies";
-export * from "./Rest/Profile";
-export * from "./Rest/Term";
+export * from "./Others/AuctContract";
+export * from "./Others/AuctioneerList";
+export * from "./Others/Contract";
+export * from "./Others/Home";
+export * from "./Others/Policies";
+export * from "./Others/Profile";
+export * from "./Others/Term";
