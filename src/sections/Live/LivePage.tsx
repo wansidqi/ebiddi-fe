@@ -331,7 +331,7 @@ export function LivePage() {
 
           if (!updateFlag.current && bidStatus === 0) {
             $swal({
-              title: `Lot ${data.lot_no}`,
+              title: `Lot ${data?.lot_no}`,
               content: "Bidding is starting",
               timer: 1500,
               hasClose: false,
@@ -399,7 +399,7 @@ export function LivePage() {
 
         if (data.status === "REAUCTION") {
           $swal({
-            title: `Lot ${auction?.lot_no}`,
+            title: `Lot ${data?.lot_no}`,
             content: `Reauction`,
             timer: 1000,
             hasClose: false,
@@ -430,14 +430,14 @@ export function LivePage() {
           if (USER) {
             if (data.bidders.highest_user_id === USER.id) {
               $swal({
-                title: `Lot ${auction?.lot_no}`,
+                title: `Lot ${data?.lot_no}`,
                 content: `Congratulation, you have won the auction`,
                 timer: 3000,
                 hasClose: false,
               });
             } else {
               $swal({
-                title: `Lot ${auction?.lot_no}`,
+                title: `Lot ${data?.lot_no}`,
                 content: `${payload.bidders.highest_user_name} have won the auction`,
                 timer: 3000,
                 hasClose: false,
@@ -446,7 +446,7 @@ export function LivePage() {
           } else {
             //live view (without auth)
             $swal({
-              title: `Lot ${auction?.lot_no}`,
+              title: `Lot ${data?.lot_no}`,
               content: `${payload.bidders.highest_user_name} have won the auction`,
               timer: 3000,
               hasClose: false,
@@ -458,7 +458,7 @@ export function LivePage() {
 
         if (data.status === "PAUSE") {
           $swal({
-            title: `Lot ${auction?.lot_no}`,
+            title: `Lot ${data?.lot_no}`,
             content: `Auctioneer hold auction`,
             noClose: true,
             hasClose: false,
@@ -469,7 +469,7 @@ export function LivePage() {
         if (data.status === "WITHDRAW") {
           setIsBidding(false);
           $swal({
-            title: `Lot ${auction?.lot_no}`,
+            title: `Lot ${data?.lot_no}`,
             content: `This auction is withdraw`,
             hasClose: false,
           });
@@ -480,7 +480,7 @@ export function LivePage() {
         if (data.status === "HOLD") {
           setIsBidding(false);
           $swal({
-            title: `Lot ${auction?.lot_no}`,
+            title: `Lot ${data?.lot_no}`,
             content: `No Bid`,
             timer: 3000,
             hasClose: false,
