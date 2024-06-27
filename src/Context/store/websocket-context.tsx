@@ -61,7 +61,7 @@ type Data = {
 };
 
 function WsContext(props: React.PropsWithChildren<{}>) {
-  const { USER, dev } = useAuctionContext();
+  const { USER } = useAuctionContext();
 
   const [socket, setSocket] = useState<ws>(null);
   const [payload, setPayload] = useState<EventData>({
@@ -98,9 +98,8 @@ function WsContext(props: React.PropsWithChildren<{}>) {
   const publishBid = (params: PubBid) => {
     if (!socket) return;
     let channel = `event/${params.event_id}/auction/${params.auction_id}/bid`;
-    let test_channel = `test/event/${params.event_id}/auction/${params.auction_id}/bid`;
     !isAuctioneer &&
-      socket.invokePublish(dev ? test_channel : channel, params.data);
+      socket.invokePublish(channel, params.data);
   };
 
   const subscribeBid = async (params: SubBid) => {
@@ -108,8 +107,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
 
     if (isAuctioneer) {
       const url = `event/${params.event_id}/auction/${params.auction_id}/bid`;
-      const test_url = `test/event/${params.event_id}/auction/${params.auction_id}/bid`;
-      const channel = socket.subscribe(dev ? test_url : url);
+      const channel = socket.subscribe( url);
 
       for await (const data of channel) {
         try {
@@ -124,9 +122,8 @@ function WsContext(props: React.PropsWithChildren<{}>) {
   const publishEvent = (params: Publication<EventData>) => {
     if (!socket) return;
     const channel = `event/${params.event_id}`;
-    const test_channel = `test/event/${params.event_id}`;
     isAuctioneer &&
-      socket.invokePublish(dev ? test_channel : channel, params.data);
+      socket.invokePublish(channel, params.data);
   };
 
   const subscribeEvent = async (params: Subscription<EventData>) => {
@@ -134,8 +131,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
 
     if (!isAuctioneer) {
       const url = `event/${params.event_id}`;
-      const test_url = `test/event/${params.event_id}`;
-      const channel = socket.subscribe(dev ? test_url : url);
+      const channel = socket.subscribe(url);
 
       for await (const data of channel) {
         try {
@@ -152,8 +148,6 @@ function WsContext(props: React.PropsWithChildren<{}>) {
 
     if (!isAuctioneer) {
       const url = `event/${params.event_id}/status`;
-      // const test_url = `test/event/${params.event_id}/status`;
-      // const channel = socket.subscribe(dev ? test_url : url);
       const channel = socket.subscribe(url);
 
       for await (const data of channel) {
@@ -169,16 +163,14 @@ function WsContext(props: React.PropsWithChildren<{}>) {
   const unsubscribeEvent = (event_id: string) => {
     if (!socket) return;
     const url = `event/${event_id}`;
-    const test_url = `test/event/${event_id}`;
-    socket.unsubscribe(dev ? test_url : url);
+    socket.unsubscribe(url);
   };
 
   const subscribeReauction = async (params: Subscription<ReauctionData>) => {
     if (!socket) return;
 
     const url = `event/${params.event_id}/reauction`;
-    const test_url = `test/event/${params.event_id}/reauction`;
-    const channel = socket.subscribe(dev ? test_url : url);
+    const channel = socket.subscribe(url);
 
     for await (const data of channel) {
       try {
@@ -192,8 +184,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
   const publishReauction = (params: Publication<ReauctionData>) => {
     if (!socket) return;
     const channel = `event/${params.event_id}/reauction`;
-    const test_channel = `test/event/${params.event_id}/reauction`;
-    socket.invokePublish(dev ? test_channel : channel, params.data);
+    socket.invokePublish(channel, params.data);
   };
 
   useEffect(() => {
