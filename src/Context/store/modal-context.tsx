@@ -1,14 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-const AppContext = createContext<Data | null>(null);
-
-export function useModalContext() {
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error("state must be used within a ContextProvider");
-  }
-  return context;
-}
+const AppContext = createContext<ModalData | null>(null);
 
 interface ModalDialog {
   show: boolean;
@@ -21,7 +13,7 @@ interface ModalDialog {
   hasClose: boolean;
 }
 
-type Data = {
+type ModalData = {
   showDetailById: number | null;
   openDetailModal: (number: number) => void;
   closeDetailModal: () => void;
@@ -55,7 +47,7 @@ type Data = {
   $swalClose: () => void;
 };
 
-function ModalContext(props: React.PropsWithChildren<{}>) {
+export function ModalProvider(props: React.PropsWithChildren<{}>) {
   const [alert, setAlert] = useState({
     showAlert: false,
     messsage: "",
@@ -108,7 +100,7 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
     setShowDetailById(null);
   };
 
-  const contextValue: Data = {
+  const contextValue: ModalData = {
     swal,
     $swal,
     alert,
@@ -132,4 +124,10 @@ function ModalContext(props: React.PropsWithChildren<{}>) {
   return <AppContext.Provider value={contextValue} {...props} />;
 }
 
-export default ModalContext;
+export function useModal() {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("state must be used within a ContextProvider");
+  }
+  return context;
+}

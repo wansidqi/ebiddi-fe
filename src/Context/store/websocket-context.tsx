@@ -16,21 +16,13 @@ import React, {
 } from "react";
 import * as socketClusterClient from "socketcluster-client";
 import { BidStatus, COUNTDOWN, ROLE } from "@/enum";
-import { useAuctionContext } from "./auction-context";
+import { useAuction } from "./auction-context";
 
-export function useWsContext() {
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error("state must be used within a ContextProvider");
-  }
-  return context;
-}
-
-const AppContext = createContext<Data | null>(null);
+const AppContext = createContext<SocketData | null>(null);
 
 type ws = socketClusterClient.AGClientSocket | null;
 
-type Data = {
+type SocketData = {
   socket: ws;
 
   subscribeBid: (params: SubBid) => Promise<void>;
@@ -60,8 +52,8 @@ type Data = {
   updateFlag: React.MutableRefObject<boolean>;
 };
 
-function WsContext(props: React.PropsWithChildren<{}>) {
-  const { USER } = useAuctionContext();
+export function SocketProvider(props: React.PropsWithChildren<{}>) {
+  const { USER } = useAuction();
 
   const [socket, setSocket] = useState<ws>(null);
   const [payload, setPayload] = useState<EventData>({
@@ -98,8 +90,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
   const publishBid = (params: PubBid) => {
     if (!socket) return;
     let channel = `event/${params.event_id}/auction/${params.auction_id}/bid`;
-    !isAuctioneer &&
-      socket.invokePublish(channel, params.data);
+    !isAuctioneer && socket.invokePublish(channel, params.data);
   };
 
   const subscribeBid = async (params: SubBid) => {
@@ -107,7 +98,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
 
     if (isAuctioneer) {
       const url = `event/${params.event_id}/auction/${params.auction_id}/bid`;
-      const channel = socket.subscribe( url);
+      const channel = socket.subscribe(url);
 
       for await (const data of channel) {
         try {
@@ -122,8 +113,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
   const publishEvent = (params: Publication<EventData>) => {
     if (!socket) return;
     const channel = `event/${params.event_id}`;
-    isAuctioneer &&
-      socket.invokePublish(channel, params.data);
+    isAuctioneer && socket.invokePublish(channel, params.data);
   };
 
   const subscribeEvent = async (params: Subscription<EventData>) => {
@@ -209,7 +199,7 @@ function WsContext(props: React.PropsWithChildren<{}>) {
     };
   }, []);
 
-  const contextValue: Data = {
+  const contextValue: SocketData = {
     socket,
     payload,
     setPayload,
@@ -233,4 +223,10 @@ function WsContext(props: React.PropsWithChildren<{}>) {
   return <AppContext.Provider value={contextValue} {...props} />;
 }
 
-export default WsContext;
+export function useSocket() {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("state must be used within a ContextProvider");
+  }
+  return context;
+}

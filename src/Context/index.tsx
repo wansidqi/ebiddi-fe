@@ -1,23 +1,27 @@
 import React from "react";
-import AuctionContext, { useAuctionContext } from "./store/auction-context";
-import ModalContext, { useModalContext } from "./store/modal-context";
-import WsContext, { useWsContext } from "./store/websocket-context";
+import { SocketProvider, useSocket } from "./store/websocket-context";
+import { AuctionProvider, useAuction } from "./store/auction-context";
+import { ModalProvider, useModal } from "./store/modal-context";
 
 export function useStoreContext() {
-  const auction = useAuctionContext();
-  const modal = useModalContext();
-  const websocket = useWsContext();
-
-  return { ...auction, ...modal, ...websocket };
+  return {
+    ...useAuction(),
+    ...useModal(),
+    ...useSocket(),
+  };
 }
 
 function StoreContext(props: React.PropsWithChildren<{}>) {
   return (
-    <AuctionContext>
-      <ModalContext>
-        <WsContext>{props.children}</WsContext>
-      </ModalContext>
-    </AuctionContext>
+    <AuctionProvider>
+      <ModalProvider>
+        <SocketProvider>
+          {/* <GAP> */}
+          {props.children}
+          {/* </GAP> */}
+        </SocketProvider>
+      </ModalProvider>
+    </AuctionProvider>
   );
 }
 
