@@ -542,36 +542,37 @@ export function LivePage() {
       <Toaster />
       <Container>
         <main>
-          <p className="text-3xl sm:text-5xl text-center text-primary">
-            AUCTIONS LIVE VIEW
-          </p>
-          <main className="m-3 flexcenter gap-10">
-            <div className="flexcenter gap-2 hidden">
-              <div className="border-2 border-primary rounded-full p-2 text-primary">
-                <LucideGavel />
-              </div>
-              <p className="pt-1">{viewer.connection}</p>
-            </div>
-            <div className="flexcenter gap-2 ">
-              <div className="border-2 border-primary rounded-full p-2 text-primary">
-                <EyeIcon />
-              </div>
-              <p className="pt-1">{viewer.connection}</p>
-            </div>
-            <div className="flexcenter gap-2 ">
-              <div className="border-2 border-primary rounded-full p-2 text-primary">
-                <LucideGavel />
-              </div>
-              <p className="pt-1">{viewer.bidder}</p>
-            </div>
-          </main>
-
           <DynamicRenderer>
             <DynamicRenderer.When
               cond={isNotAuctioneer && payload.auction_id === ""}
               // cond={isNotAuctioneer && payload.status === "DISPLAY"}
             >
-              <WaitingComponent />
+              <>
+                <p className="text-3xl sm:text-5xl text-center text-primary">
+                  AUCTIONS LIVE VIEW
+                </p>
+                <main className="m-3 flexcenter gap-10">
+                  <div className="flexcenter gap-2 hidden">
+                    <div className="border-2 border-primary rounded-full p-2 text-primary">
+                      <LucideGavel />
+                    </div>
+                    <p className="pt-1">{viewer.connection}</p>
+                  </div>
+                  <div className="flexcenter gap-2 ">
+                    <div className="border-2 border-primary rounded-full p-2 text-primary">
+                      <EyeIcon />
+                    </div>
+                    <p className="pt-1">{viewer.connection}</p>
+                  </div>
+                  <div className="flexcenter gap-2 ">
+                    <div className="border-2 border-primary rounded-full p-2 text-primary">
+                      <LucideGavel />
+                    </div>
+                    <p className="pt-1">{viewer.bidder}</p>
+                  </div>
+                </main>
+                <WaitingComponent />
+              </>
             </DynamicRenderer.When>
             <DynamicRenderer.Else>
               <Fragment>
