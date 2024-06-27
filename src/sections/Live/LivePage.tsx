@@ -43,7 +43,6 @@ export function LivePage() {
     setPayload,
     payload,
     publishBid,
-    subscribeStatus,
     bidStatus,
     setBidStatus,
     setBidListIndex,
@@ -55,6 +54,7 @@ export function LivePage() {
     $swal,
     $swalClose,
     updateFlag,
+    viewer,
   } = useStoreContext();
 
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
@@ -527,20 +527,6 @@ export function LivePage() {
     });
   }, [socket]);
 
-  ///subscribe status
-  useEffect(() => {
-    if (!eventId) return;
-    // console.log("render sub status");
-    subscribeStatus({
-      event_id: eventId,
-      onData: (data) => {
-        console.log(data.channel);
-        console.log(data.data.total_bidder);
-        console.log(data.data.total_connection);
-      },
-    });
-  }, [socket]);
-
   ///render when change auctionId
   useEffect(() => {
     setBidStatus(0);
@@ -560,18 +546,23 @@ export function LivePage() {
             AUCTIONS LIVE VIEW
           </p>
           <main className="m-3 flexcenter gap-10">
+            <div className="flexcenter gap-2 hidden">
+              <div className="border-2 border-primary rounded-full p-2 text-primary">
+                <LucideGavel />
+              </div>
+              <p className="pt-1">{viewer.connection}</p>
+            </div>
             <div className="flexcenter gap-2 ">
               <div className="border-2 border-primary rounded-full p-2 text-primary">
                 <EyeIcon />
               </div>
-              {/* //TODO: total connection */}
-              <p className="pt-1">888</p>
+              <p className="pt-1">{viewer.connection}</p>
             </div>
             <div className="flexcenter gap-2 ">
               <div className="border-2 border-primary rounded-full p-2 text-primary">
                 <LucideGavel />
               </div>
-              <p className="pt-1">888</p>
+              <p className="pt-1">{viewer.bidder}</p>
             </div>
           </main>
 

@@ -50,6 +50,11 @@ type SocketData = {
   >;
 
   updateFlag: React.MutableRefObject<boolean>;
+
+  viewer: {
+    connection: number;
+    bidder: number;
+  };
 };
 
 export function SocketProvider(props: React.PropsWithChildren<{}>) {
@@ -82,6 +87,10 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
   const [bidStatus, setBidStatus] = useState<BidStatus>(0);
   const [bidListIndex, setBidListIndex] = useState(-1);
   const [currentPage, setCurrentPage] = useState<"bidding" | "reauctionlist">("bidding"); //prettier-ignore
+  const [viewer, setViewer] = useState({
+    connection: 0,
+    bidder: 0,
+  });
 
   const updateFlag = useRef(false);
 
@@ -133,16 +142,18 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
     }
   };
 
-  const subscribeStatus = async (params: Subscription<StatusData>) => {
+  const subscribeStatus = async () => {
     if (!socket) return;
 
     if (!isAuctioneer) {
-      const url = `event/${params.event_id}/status`;
-      const channel = socket.subscribe(url);
+      const channel = socket.subscribe("status");
 
       for await (const data of channel) {
         try {
-          params.onData && params.onData(data);
+          setViewer({
+            connection: data.total_connection,
+            bidder: data.total_bidder,
+          });
         } catch (error) {
           console.log(error);
         }
@@ -199,6 +210,10 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
     };
   }, []);
 
+  useEffect(() => {
+    subscribeStatus();
+  }, [socket]);
+
   const contextValue: SocketData = {
     socket,
     payload,
@@ -218,6 +233,7 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
     subscribeReauction,
     publishReauction,
     updateFlag,
+    viewer,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;
