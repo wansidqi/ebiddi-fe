@@ -22,22 +22,21 @@ export function TAC() {
   const { mutateAsync: resendTAC } = useResendTAC();
   const navgiate = useNavigate();
 
-  const { setAlert } = useStoreContext();
+  const { setAlert, isTACCooldown, setIsTACCooldown } = useStoreContext();
   const cooldown = 60;
 
   const [TAC, setTAC] = useState("");
-  const [isCooldown, setIsCooldown] = useState(false);
   const [cooldownTime, setCooldownTime] = useState(cooldown);
   const authToken = getToken(TOKEN.auth);
 
   useEffect(() => {
     let timer: string | number | NodeJS.Timeout | undefined;
-    if (isCooldown) {
+    if (isTACCooldown) {
       timer = setInterval(() => {
         setCooldownTime((prevTime) => {
           if (prevTime <= 1) {
             clearInterval(timer);
-            setIsCooldown(false);
+            setIsTACCooldown(false);
             return cooldown;
           }
           return prevTime - 1;
@@ -45,7 +44,7 @@ export function TAC() {
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [isCooldown]);
+  }, [isTACCooldown]);
 
   const verify = async () => {
     const verification = {
@@ -61,12 +60,12 @@ export function TAC() {
   };
 
   const onResendTAC = async () => {
-    setIsCooldown(true);
+    setIsTACCooldown(true);
     try {
       await resendTAC(authToken as string);
       setCooldownTime(cooldown);
     } catch (error) {
-      setIsCooldown(false);
+      setIsTACCooldown(false);
       removeToken(TOKEN.auth);
       navgiate("/login");
       setAlert({
@@ -110,14 +109,14 @@ export function TAC() {
       </Button>
       <div className="flexcenter-col gap-1 mt-3 relative">
         <button
-          disabled={isCooldown}
+          disabled={isTACCooldown}
           onClick={onResendTAC}
-          className={`${isCooldown ? "text-gray-500" : "text-primary"} text-lg`}
+          className={`${isTACCooldown ? "text-gray-500" : "text-primary"} text-lg`}
         >
           <div>Resend TAC code</div>
         </button>
         <div className="absolute -right-7 top-1">
-          {isCooldown && (
+          {isTACCooldown && (
             <p className="text-gray-500 text-xs">{cooldownTime}</p>
           )}
         </div>

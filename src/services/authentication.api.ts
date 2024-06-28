@@ -12,7 +12,7 @@ import { useStoreContext } from "@/Context";
 
 const usePostLogin = () => {
   const navigate = useNavigate();
-  const { setAlert } = useStoreContext();
+  const { setAlert, setIsTACCooldown } = useStoreContext();
 
   return useMutation({
     mutationFn: async (body: LoginCredential) => {
@@ -31,6 +31,7 @@ const usePostLogin = () => {
     onSuccess: (data) => {
       setToken(TOKEN.auth, data.token);
       navigate("/tac");
+      setIsTACCooldown(true);
       setAlert({
         messsage: "Login Success",
         showAlert: true,

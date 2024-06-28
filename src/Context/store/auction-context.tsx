@@ -16,6 +16,9 @@ type AuctionData = {
   USER: User | null;
   SET_USER: React.Dispatch<React.SetStateAction<User | null>>;
 
+  isTACCooldown: boolean;
+  setIsTACCooldown: React.Dispatch<React.SetStateAction<boolean>>;
+
   dev: boolean;
 };
 
@@ -25,6 +28,9 @@ export function AuctionProvider(props: React.PropsWithChildren<{}>) {
   const [view, setView] = useState<"Grid" | "List">("Grid");
   const [selectEvent, setSelectEvent] = useState<EventsInterface | null>(null);
   const [timer, setTimer] = useState(0);
+  const [isTACCooldown, setIsTACCooldown] = useState(false);
+
+  console.log(isTACCooldown);
 
   //TODO change to false when to deploy
   const dev = false;
@@ -39,6 +45,8 @@ export function AuctionProvider(props: React.PropsWithChildren<{}>) {
     SET_USER,
     timer,
     setTimer,
+    isTACCooldown,
+    setIsTACCooldown,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;
