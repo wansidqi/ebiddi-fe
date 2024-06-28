@@ -547,41 +547,45 @@ export function LivePage() {
               cond={isNotAuctioneer && payload.auction_id === ""}
               // cond={isNotAuctioneer && payload.status === "DISPLAY"}
             >
-              <>
-                <p className="text-3xl sm:text-5xl text-center text-primary">
-                  AUCTIONS LIVE VIEW
-                </p>
-                <main className="m-3 flexcenter gap-10">
-                  <div className="flexcenter gap-2 hidden">
-                    <div className="border-2 border-primary rounded-full p-2 text-primary">
-                      <LucideGavel />
-                    </div>
-                    <p className="pt-1">{viewer.connection}</p>
-                  </div>
-                  <div className="flexcenter gap-2 ">
-                    <div className="border-2 border-primary rounded-full p-2 text-primary">
-                      <EyeIcon />
-                    </div>
-                    <p className="pt-1">{viewer.connection}</p>
-                  </div>
-                  <div className="flexcenter gap-2 ">
-                    <div className="border-2 border-primary rounded-full p-2 text-primary">
-                      <LucideGavel />
-                    </div>
-                    <p className="pt-1">{viewer.bidder}</p>
-                  </div>
-                </main>
+              <div>
+                {!USER && (
+                  <>
+                    <p className="text-3xl sm:text-5xl text-center text-primary">
+                      AUCTIONS LIVE VIEW
+                    </p>
+                    <main className="m-3 flexcenter gap-10">
+                      <div className="flexcenter gap-2 hidden">
+                        <div className="border-2 border-primary rounded-full p-2 text-primary">
+                          <LucideGavel />
+                        </div>
+                        <p className="pt-1">{viewer.connection}</p>
+                      </div>
+                      <div className="flexcenter gap-2 ">
+                        <div className="border-2 border-primary rounded-full p-2 text-primary">
+                          <EyeIcon />
+                        </div>
+                        <p className="pt-1">{viewer.connection}</p>
+                      </div>
+                      <div className="flexcenter gap-2 ">
+                        <div className="border-2 border-primary rounded-full p-2 text-primary">
+                          <LucideGavel />
+                        </div>
+                        <p className="pt-1">{viewer.bidder}</p>
+                      </div>
+                    </main>
+                  </>
+                )}
                 <WaitingComponent />
-              </>
+              </div>
             </DynamicRenderer.When>
             <DynamicRenderer.Else>
               <Fragment>
                 <BidHeader />
                 <div className="flex sm:grid sm:grid-cols-2 w-full overflow-x-auto gap-4 my-4 sm:my-8">
-                  <div className="flex-shrink-0 w-[92%] sm:order-2">
+                  <div className="flex-shrink-0 w-[92%]">
                     <LiveDetail auctionId={payload.auction_id} />
                   </div>
-                  <div className="flex-shrink-0 w-[92%] sm:order-1">
+                  <div className="flex-shrink-0 w-[92%]">
                     <BidderList />
                   </div>
                 </div>
@@ -674,12 +678,13 @@ export function LivePage() {
 }
 
 const WaitingComponent = () => {
+  const { USER } = useStoreContext();
   return (
-    <div>
-      <div className={`flexcenter-col mt-8 text-center gap-4`}>
+    <div className={!USER ? "" : "pt-20"}>
+      <div className={`flexcenter-col text-center gap-4 mt-8`}>
         <p className="animate-pulse text-3xl">WAITING</p>
         <img className="scale-[0.8] sm:scale-[1]" src={waiting} alt="" />
-        <p>
+        <p className="mt-5">
           Please be patient, we are still waiting for Auctioneer input. The
           auction will start soon. Do not leave this page until the auction
           starts. Thank you.

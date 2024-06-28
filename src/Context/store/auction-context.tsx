@@ -30,8 +30,6 @@ export function AuctionProvider(props: React.PropsWithChildren<{}>) {
   const [timer, setTimer] = useState(0);
   const [isTACCooldown, setIsTACCooldown] = useState(false);
 
-  console.log(isTACCooldown);
-
   //TODO change to false when to deploy
   const dev = false;
 
