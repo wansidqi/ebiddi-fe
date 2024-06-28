@@ -59,7 +59,6 @@ export function BidHeader() {
         break;
       case 0:
         if (bidStatus !== 0 && payload.status !== "SOLD") {
-          console.log(bidStatus);
           startAlert({
             call: "final call",
             variant: "final",

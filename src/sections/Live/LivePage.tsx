@@ -478,7 +478,35 @@ export function LivePage() {
           reset();
         }
 
+        // if (data.status === "HOLD") {
+        //   console.log("enter no bid");
+        //   setIsBidding(false);
+        //   $swal({
+        //     title: `Lot ${data?.lot_no}`,
+        //     content: `No Bid`,
+        //     timer: 3000,
+        //     hasClose: false,
+        //   });
+        //   playAudio("noBid");
+        //   reset();
+        // }
+      },
+    });
+
+    return () => {
+      unsubscribeEvent(eventId);
+    };
+  }, [socket, payload]);
+
+  ///no bid
+  useEffect(() => {
+    console.log("render");
+    if (!eventId) return;
+    subscribeEvent({
+      event_id: eventId,
+      onData: (data) => {
         if (data.status === "HOLD") {
+          console.log("enter no bid");
           setIsBidding(false);
           $swal({
             title: `Lot ${data?.lot_no}`,
@@ -491,11 +519,7 @@ export function LivePage() {
         }
       },
     });
-
-    return () => {
-      unsubscribeEvent(eventId);
-    };
-  }, [socket, payload]);
+  }, [socket]);
 
   ///subscribe reauction
   useEffect(() => {
