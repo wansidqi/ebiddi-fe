@@ -12,7 +12,7 @@ import {
 import waiting from "@/assets/images/waiting.png";
 import { useStoreContext } from "@/Context";
 import { DynamicRenderer, Modal } from "@/components";
-import { COUNTDOWN, ROLE } from "@/enum";
+import { ROLE } from "@/enum";
 import { Toaster } from "@/components/ui/toaster";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -343,7 +343,8 @@ export function LivePage() {
           }
 
           if (bidStatus === 3) {
-            setPayload((prev) => ({ ...prev, countdown: COUNTDOWN.initial }));
+            // console.log("enter here");
+            // setPayload((prev) => ({ ...prev, countdown: COUNTDOWN.initial }));
           }
 
           if (isBidding) {

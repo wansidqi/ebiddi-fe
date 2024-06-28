@@ -195,6 +195,7 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
   const resetBidder = async () => {
     emitter.emit("bidder_reset", 0);
     emitter.closeListener("bidder_reset");
+    socket?.invokePublish("bidder_reset", 0);
   };
 
   // async function loadData() {
@@ -228,7 +229,7 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
 
   useEffect(() => {
     subscribeStatus();
-    // loadData();
+    resetBidder();
     return () => {
       resetBidder();
     };

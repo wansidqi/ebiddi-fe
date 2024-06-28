@@ -1,4 +1,4 @@
 export enum COUNTDOWN {
-  initial = -1,
+  initial = 0,
   start = 15,
 }
