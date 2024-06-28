@@ -14,6 +14,7 @@
     "@radix-ui/themes": "^3.0.2",
     "@tanstack/react-query": "^4.29.15",
     "@tanstack/react-query-devtools": "^4.29.15",
+    "async-stream-emitter": "^7.0.1",
     "axios": "^1.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",

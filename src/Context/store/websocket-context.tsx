@@ -17,6 +17,7 @@ import React, {
 import * as socketClusterClient from "socketcluster-client";
 import { BidStatus, COUNTDOWN, ROLE } from "@/enum";
 import { useAuction } from "./auction-context";
+import AsyncStreamEmitter from "async-stream-emitter";
 
 const AppContext = createContext<SocketData | null>(null);
 
@@ -55,6 +56,7 @@ type SocketData = {
     connection: number;
     bidder: number;
   };
+  resetBidder: () => void;
 };
 
 export function SocketProvider(props: React.PropsWithChildren<{}>) {
@@ -95,6 +97,8 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
   const updateFlag = useRef(false);
 
   const isAuctioneer = USER?.role === ROLE.AUCTIONEER;
+
+  let emitter = new AsyncStreamEmitter();
 
   const publishBid = (params: PubBid) => {
     if (!socket) return;
@@ -188,6 +192,18 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
     socket.invokePublish(channel, params.data);
   };
 
+  const resetBidder = async () => {
+    emitter.emit("bidder_reset", 0);
+    emitter.closeListener("bidder_reset");
+  };
+
+  // async function loadData() {
+  //   for await (let data of emitter.listener("bidder_reset")) {
+  //     console.log(data);
+  //   }
+  //   console.log("The listener was closed.");
+  // }
+
   useEffect(() => {
     const init = () => {
       const newSocket = socketClusterClient.create({
@@ -212,6 +228,10 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
 
   useEffect(() => {
     subscribeStatus();
+    // loadData();
+    return () => {
+      resetBidder();
+    };
   }, [socket]);
 
   const contextValue: SocketData = {
@@ -234,6 +254,7 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
     publishReauction,
     updateFlag,
     viewer,
+    resetBidder,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;
