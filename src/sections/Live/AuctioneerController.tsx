@@ -173,13 +173,15 @@ export function AuctioneerController() {
         status: "AUCTION" as Status,
         auction_id: auctionId!,
         isResume: true,
-        countdown: payload.countdown !== -1 ? prev.countdown : 0,
+        // countdown: payload.countdown !== -1 ? prev.countdown : 0,
       };
 
       publishEvent({ event_id: eventId!, data: newPayload });
 
       return newPayload;
     });
+
+    setBidStatus((prev) => (countdown < 0 ? 3 : prev));
 
     sendAuditTrail({
       event_id: Number(payload.event_id),
@@ -464,7 +466,7 @@ export function AuctioneerController() {
     //   setPayload((prev) => ({ ...prev, countdown: COUNTDOWN.initial })); ///reset countdown
     // }
 
-    if (isActive  && !isPaused) {
+    if (isActive && !isPaused) {
       interval = setInterval(() => {
         setPayload((prev) => ({ ...prev, countdown: prev.countdown - 1 })); ///decrement
       }, 1000);
