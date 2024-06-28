@@ -9,67 +9,55 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { getMediaType } from "@/lib/utils";
 
-export function ItemsCarouselDesktop({ images }: { images: string[] }) {
+export function ItemsCarousel({ images }: { images: string[] }) {
   const plugin = React.useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true })
   );
 
   return (
-    <Carousel
-      plugins={[plugin.current]}
-      className="flexcenter sm:mx-20"
-      onMouseEnter={plugin.current.stop}
-      onMouseLeave={plugin.current.reset}
-    >
-      <CarouselContent>
-        {/*  {Array.from({ length: 5 }).map((_, index) => ())} */}
-        {images.map((img, index) => (
-          <CarouselItem key={index}>
-            <div className="p-1 w-full h-[20rem] pt-4 sm:scale-[1.5] sm:pt-8 mx-auto">
-              <Card>
-                <CardContent className="flex items-center justify-center p-0">
-                  <img className="w-full h-full object-cover" src={img} alt="" />
-                </CardContent>
-              </Card>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
-  );
-}
-
-export function ItemsCarouselMobile({ images }: { images: string[] }) {
-  const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: true })
-  );
-
-  return (
-    <Carousel
-      plugins={[plugin.current]}
-      className="flexcenter sm:mx-20"
-      onMouseEnter={plugin.current.stop}
-      onMouseLeave={plugin.current.reset}
-    >
-      <CarouselContent>
-        {/*  {Array.from({ length: 5 }).map((_, index) => ())} */}
-        {images.map((img, index) => (
-          <CarouselItem key={index}>
-            <div className="p-1 w-56 h-56 scale-[1.2] pt-4 sm:scale-[1.5] sm:pt-8 mx-auto">
-              <Card>
-                <CardContent className="flex items-center justify-center p-0">
-                  <img className="w-full h-full object-cover" src={img} alt="" />
-                </CardContent>
-              </Card>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+    <>
+      <Carousel
+        plugins={[plugin.current]}
+        className="flexcenter sm:mx-20"
+        onMouseEnter={plugin.current.stop}
+        onMouseLeave={plugin.current.reset}
+      >
+        <CarouselContent>
+          {images.map((img, index) => {
+            const mediaType = getMediaType(img);
+            return (
+              <CarouselItem key={index}>
+                <div className="flex items-center justify-center">
+                  <Card>
+                    <CardContent className="w-auto h-[14rem] md:h-[20rem] flex items-center justify-center p-0">
+                      {mediaType === "image" && (
+                        <img
+                          className="max-w-full max-h-full object-contain"
+                          src={img}
+                          alt=""
+                        />
+                      )}
+                      {mediaType === "video" && (
+                        <video
+                          controls
+                          className="gallery-video w-auto h-[14rem] md:h-[20rem] flex items-center justify-center p-0"
+                        >
+                          <source src={img} type="video/mp4" />
+                          Your browser does not support the video tag.
+                        </video>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </CarouselItem>
+            );
+          })}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+    </>
   );
 }

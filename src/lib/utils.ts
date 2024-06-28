@@ -140,3 +140,15 @@ export const playCustomAudio = (text: string) => {
   speech.pitch = 3;
   window.speechSynthesis.speak(speech);
 };
+
+export const getMediaType = (url: string): "image" | "video" | "unknown" => {
+  if (/\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(url)) {
+    return "image";
+  } else if (/\.(mp4|webm|ogg)$/i.test(url)) {
+    return "video";
+  } else {
+    return "unknown";
+  }
+};
+
+/*  {Array.from({ length: 5 }).map((_, index) => ())} */

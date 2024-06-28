@@ -20,7 +20,7 @@ import { XCircleIcon } from "lucide-react";
 import { InventoryInterface } from "@/interfaces";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ItemsCarouselDesktop, ItemsCarouselMobile } from "..";
+import { ItemsCarousel } from "..";
 import { useStoreContext } from "@/Context";
 
 export function ItemDetail(props: InventoryInterface) {
@@ -89,12 +89,10 @@ export function ItemDetail(props: InventoryInterface) {
 function DetailDesktop(props: InventoryInterface) {
   return (
     <div
-      className={cn(
-        "text-center text-[14px] flex flex-col items-center gap-3"
-      )}
+      className={cn("text-center text-[14px] flex flex-col items-center gap-3")}
     >
       <div className="flex sm:grid sm:grid-cols-1 w-full">
-        <ItemsCarouselDesktop images={props.images} />
+        <ItemsCarousel images={props.images} />
       </div>
       <div className="grid grid-cols-4 text-left my-5 gap-x-1 gap-y-2 text-sm w-full">
         <span className="text-primary">LEGAL OWNER</span>
@@ -167,7 +165,7 @@ function DetailMobile(props: InventoryInterface) {
       )}
     >
       <div className="flex sm:grid sm:grid-cols-1">
-        <ItemsCarouselMobile images={props.images} />
+        <ItemsCarousel images={props.images} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-1 text-left sm:my-5 gap-1 text-sm">
         <p className="flex gap-2">
