@@ -21,11 +21,10 @@ export function UseCountdown() {
 
   let expiryAt = status?.expiry_at;
 
-  //prettier-ignore
   // const expiryAt = useGetQueryData<ReauctionStatus>([KEY.reauctions_status, eventId]) ?.expiry_at ?? "";
 
   const sendHoldItems = () => {
-    // getReauctionList();
+    getReauctionList();
 
     if (!eventId) return;
 
@@ -46,6 +45,9 @@ export function UseCountdown() {
 
         return item as ReauctionList;
       });
+
+      console.log({ reauctionList: auctions?.length });
+
       setMapItem(items);
 
       publishReauction({
@@ -99,6 +101,7 @@ export function UseCountdown() {
 
         if (counter >= 1) {
           getReauctionStatus();
+          getReauctionList();
           sendHoldItems();
           counter = 0;
         } else {
@@ -118,7 +121,7 @@ export function UseCountdown() {
         clearInterval(timer);
       }
     };
-  }, [expiryAt]);
+  }, [expiryAt, auctions, holdedItems]);
 
   useEffect(() => {
     getReauctionStatus();
