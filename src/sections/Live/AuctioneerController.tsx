@@ -389,11 +389,11 @@ export function AuctioneerController() {
     }
   };
 
-  const { countdown: reauctionCd, isCountdownActive } = UseCountdown();
+  UseCountdown();
 
-  useEffect(() => {
-    if (!isCountdownActive) setPayload((prev) => ({ ...prev, bidStatus: 1 }));
-  }, [isCountdownActive, reauctionCd]);
+  // useEffect(() => {
+  //   if (!isCountdownActive) setPayload((prev) => ({ ...prev, bidStatus: 0 }));
+  // }, [isCountdownActive, reauctionCd]);
 
   ///reset bid
   useEffect(() => {

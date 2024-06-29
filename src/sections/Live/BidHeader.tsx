@@ -10,6 +10,8 @@ export function BidHeader() {
   const { payload, setPayload } = useStoreContext();
   const { countdown, bidStatus } = payload;
 
+  // const isAuctioneer = USER?.role === ROLE.AUCTIONEER;
+
   const displayTime = () => {
     let display = "00:00";
 
@@ -30,6 +32,7 @@ export function BidHeader() {
   };
 
   const startAlert = ({ call, variant, audioName }: CallMessage) => {
+    // if (isAuctioneer) return;
     toast({
       duration: 1500,
       variant: variant,
@@ -78,6 +81,12 @@ export function BidHeader() {
         break;
     }
   }, [countdown]);
+
+  useEffect(() => {
+    return () => {
+      setPayload((prev) => ({ ...prev, bidStatus: 0 }));
+    };
+  }, []);
 
   return (
     <>

@@ -501,6 +501,10 @@ export function LivePage() {
           playAudio("noBid");
           reset();
         }
+
+        if (data.status === "DISPLAY") {
+          setCurrentPage("bidding");
+        }
       },
     });
 
