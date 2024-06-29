@@ -401,14 +401,17 @@ export function LivePage() {
 
         if (data.status === "REAUCTION") {
           // console.log("enter reauction");
+          playAudio("reauction");
           $swal({
             title: `Lot ${data.auction?.lot_no}`,
             content: `Reauction`,
             timer: 1000,
             hasClose: false,
+            onClick: () => {
+              setPayload((prev) => ({ ...prev, auction_id: "" }));
+            },
           });
 
-          playAudio("reauction");
           reset();
           setIsBidding(false);
 
