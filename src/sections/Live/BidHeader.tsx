@@ -7,8 +7,8 @@ import { useEffect } from "react";
 import { playAudio } from "@/assets/audio";
 
 export function BidHeader() {
-  const { bidStatus, setBidStatus, payload } = useStoreContext();
-  const { countdown } = payload;
+  const { payload, setPayload } = useStoreContext();
+  const { countdown, bidStatus } = payload;
 
   const displayTime = () => {
     let display = "00:00";
@@ -41,7 +41,8 @@ export function BidHeader() {
   useEffect(() => {
     switch (countdown) {
       case 15:
-        setBidStatus(2);
+        setPayload((prev) => ({ ...prev, bidStatus: 2 }));
+        // setBidStatus(2);
         break;
       case 10:
         startAlert({
@@ -67,7 +68,8 @@ export function BidHeader() {
         }
 
         if (bidStatus !== BidStatus.CLOSE) {
-          setBidStatus(BidStatus.END);
+          // setBidStatus(BidStatus.END);
+          setPayload((prev) => ({ ...prev, bidStatus: BidStatus.END }));
         }
 
         break;

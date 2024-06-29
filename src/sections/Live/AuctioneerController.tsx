@@ -21,13 +21,10 @@ export function AuctioneerController() {
     payload,
     socket,
     subscribeBid,
-    bidStatus,
-    setBidStatus,
     setBidListIndex,
     $swal,
-    updateFlag,
   } = useStoreContext();
-  const { countdown } = payload;
+  const { countdown, bidStatus } = payload;
 
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -86,7 +83,7 @@ export function AuctioneerController() {
           highest_user_id: 0,
           highest_user_name: "",
         },
-        lot_no: auction?.lot_no,
+        auction,
       };
 
       publishEvent({ event_id: eventId, data: update });
@@ -97,6 +94,7 @@ export function AuctioneerController() {
 
   const publishTimer = () => {
     if (!auctionId || !eventId) return;
+    // socket?.invokePublish("timer", countdown);
     publishEvent({ event_id: eventId, data: { ...payload, countdown } });
   };
 
@@ -118,7 +116,7 @@ export function AuctioneerController() {
     setIsPaused(false);
     setNaviStatus(false);
 
-    setBidStatus(BidStatus.RUN);
+    // setBidStatus(BidStatus.RUN);
 
     onInitial();
 
@@ -131,6 +129,7 @@ export function AuctioneerController() {
         status: "AUCTION" as Status,
         countdown: COUNTDOWN.start, ///start cd
         isResume: false,
+        bidStatus: BidStatus.RUN,
       };
       publishEvent({ event_id: eventId, data });
       return data;
@@ -146,10 +145,11 @@ export function AuctioneerController() {
 
   const clickPause = () => {
     setIsPaused(true);
-    setBidStatus(BidStatus.PAUSE);
+    // setBidStatus(BidStatus.PAUSE);
     const newPayload: EventData = {
       ...payload,
       status: "PAUSE",
+      bidStatus: BidStatus.PAUSE,
     };
     if (!eventId) return;
 
@@ -164,7 +164,7 @@ export function AuctioneerController() {
   };
 
   const clickResume = () => {
-    setBidStatus(BidStatus.RUN);
+    // setBidStatus(BidStatus.RUN);
     setIsPaused(false);
 
     setPayload((prev) => {
@@ -173,6 +173,7 @@ export function AuctioneerController() {
         status: "AUCTION" as Status,
         auction_id: auctionId!,
         isResume: true,
+        bidStatus: countdown < 0 ? 3 : BidStatus.RUN,
         // countdown: payload.countdown !== -1 ? prev.countdown : 0,
       };
 
@@ -181,7 +182,7 @@ export function AuctioneerController() {
       return newPayload;
     });
 
-    setBidStatus((prev) => (countdown < 0 ? 3 : prev));
+    // setBidStatus((prev) => (countdown < 0 ? 3 : prev));
 
     sendAuditTrail({
       event_id: Number(payload.event_id),
@@ -204,6 +205,7 @@ export function AuctioneerController() {
             ...prev,
             status: "WITHDRAW" as Status,
             countdown: COUNTDOWN.initial,
+            bidStatus: BidStatus.WITHDRAW,
             // auction_id: "",
           };
 
@@ -215,7 +217,7 @@ export function AuctioneerController() {
           return update;
         });
 
-        setBidStatus(BidStatus.WITHDRAW);
+        // setBidStatus(BidStatus.WITHDRAW);
         setNaviStatus(true);
 
         sendAuditTrail({
@@ -238,11 +240,12 @@ export function AuctioneerController() {
         highest_user_id: 0,
         highest_user_name: "",
       },
+      bidStatus: BidStatus.START,
     };
     setPayload(newPayload);
     resetBid();
 
-    setBidStatus(BidStatus.START);
+    // setBidStatus(BidStatus.START);
 
     if (!eventId) return;
     publishEvent({ event_id: eventId, data: newPayload });
@@ -261,7 +264,7 @@ export function AuctioneerController() {
 
   const clickHold = () => {
     setNaviStatus(true);
-    setBidStatus(BidStatus.HOLD);
+    // setBidStatus(BidStatus.HOLD);
     setIsPaused(true);
 
     if (!eventId) return;
@@ -270,6 +273,7 @@ export function AuctioneerController() {
       let newPayload = {
         ...prev,
         status: "HOLD" as Status,
+        bidStatus: BidStatus.HOLD,
       };
 
       publishEvent({ event_id: eventId, data: newPayload });
@@ -286,22 +290,46 @@ export function AuctioneerController() {
   };
 
   const clickSold = () => {
-    const newPayload: EventData = { ...payload, status: "SOLD" };
+    // const newPayload: EventData = { ...payload, status: "SOLD" };
     if (!eventId) return;
-    publishEvent({ event_id: eventId, data: newPayload });
+    // publishEvent({ event_id: eventId, data: newPayload });
 
-    setBidStatus(BidStatus.CLOSE);
+    setPayload((prev) => {
+      let update = {
+        ...prev,
+        status: "SOLD" as Status,
+        bidStatus: BidStatus.CLOSE,
+      };
+
+      publishEvent({ event_id: eventId, data: update });
+
+      return update;
+    });
+
+    // setBidStatus(BidStatus.CLOSE);
     setNaviStatus(false);
   };
 
   const clickEnd = () => {
-    setPayload((prev) => ({ ...prev, status: "END" }));
     if (!eventId) return;
-    publishEvent({ event_id: eventId, data: { ...payload, status: "END" } });
+    // setPayload((prev) => ({ ...prev, status: "END" }));
+    // publishEvent({ event_id: eventId, data: { ...payload, status: "END" } });
+
+    setPayload((prev) => {
+      let update = {
+        ...prev,
+        status: "END" as Status,
+        bidStatus: 0,
+      };
+
+      publishEvent({ event_id: eventId, data: update });
+
+      return update;
+    });
 
     itemSold();
 
-    setBidStatus(0);
+    // setBidStatus(0);
     setNaviStatus(true);
   };
 
@@ -359,18 +387,17 @@ export function AuctioneerController() {
     if (auction?.meta?.next !== 0) {
       navigate(`/auctioneer/live/${eventId}/${auction?.meta?.next}`);
     }
-    updateFlag.current = false;
   };
 
   const { countdown: reauctionCd, isCountdownActive } = UseCountdown();
 
   useEffect(() => {
-    if (!isCountdownActive) setBidStatus(1);
+    if (!isCountdownActive) setPayload((prev) => ({ ...prev, bidStatus: 1 }));
   }, [isCountdownActive, reauctionCd]);
 
   ///reset bid
   useEffect(() => {
-    setBidStatus(0);
+    setPayload((prev) => ({ ...prev, bidStatus: 0 }));
     onInitial();
 
     return () => {
@@ -432,6 +459,7 @@ export function AuctioneerController() {
 
           const updatedPayload = {
             ...prev,
+            status: "" as Status,
             bidders: {
               all: [data, ...prev.bidders.all],
               highest_amount: data.amount,
@@ -470,8 +498,8 @@ export function AuctioneerController() {
       interval = setInterval(() => {
         setPayload((prev) => ({ ...prev, countdown: prev.countdown - 1 })); ///decrement
       }, 1000);
+      publishTimer();
     }
-    publishTimer();
 
     // if (countdown === 0) {
     //   // setBidStatus(1);

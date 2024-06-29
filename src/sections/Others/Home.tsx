@@ -1,9 +1,43 @@
+import { useStoreContext } from "@/Context";
 import { Container } from "@/components/Container";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function Home() {
   const navigate = useNavigate();
+  const { socket, dev } = useStoreContext();
+
+  const [data, setData] = useState("");
+
+  const subEvent = async () => {
+    if (!socket) return;
+    const channel = socket.subscribe("test");
+
+    for await (const data of channel) {
+      try {
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const pubEvent = (data: any) => {
+    if (!socket) return;
+    const channel = `test`;
+    socket.invokePublish(channel, data);
+  };
+
+  const onEnterClick = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      pubEvent(data);
+    }
+  };
+
+  useEffect(() => {
+    subEvent();
+  }, []);
 
   return (
     <Container className="max-h-screen py-7">
@@ -21,6 +55,23 @@ export function Home() {
         </p>
         <Button onClick={() => navigate("/login")}>Sign In</Button>
       </div>
+
+      {dev && (
+        <div className="flexcenter-col gap-5">
+          <input
+            onKeyDown={onEnterClick}
+            className="text-black pl-3 py-2"
+            type="text"
+            onChange={(e) => setData(e.target.value)}
+          />
+          <button
+            onClick={() => pubEvent(data)}
+            className="bg-emerald-500 px-10 py-3 rounded-md"
+          >
+            publish
+          </button>
+        </div>
+      )}
     </Container>
   );
 }

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Container } from "@/components/Container";
 import {
   AuctioneerController,
@@ -39,12 +39,9 @@ export function LivePage() {
   const {
     USER,
     subscribeEvent,
-    socket,
     setPayload,
     payload,
     publishBid,
-    bidStatus,
-    setBidStatus,
     setBidListIndex,
     dev,
     unsubscribeEvent,
@@ -53,7 +50,6 @@ export function LivePage() {
     subscribeReauction,
     $swal,
     $swalClose,
-    updateFlag,
     viewer,
   } = useStoreContext();
 
@@ -61,6 +57,8 @@ export function LivePage() {
 
   const [isBidding, setIsBidding] = useState(false);
   const [isBtnDisabled, setIsBtnDisabled] = useState(false);
+
+  const isPlayStart = useRef(true);
 
   const {
     useGetCredit,
@@ -176,7 +174,6 @@ export function LivePage() {
 
   const reset = () => {
     // getAuction();
-    setBidStatus(0);
 
     setPayload((prev) => ({
       ...prev,
@@ -193,6 +190,7 @@ export function LivePage() {
         start: prev.bid.start,
         up: prev.bid.up,
       },
+      bidStatus: 0,
     }));
   };
 
@@ -255,16 +253,19 @@ export function LivePage() {
 
   const { expiryAt } = UseCountdown();
 
-  ///subscribe event
+  ///subscribe event improve
   useEffect(() => {
     if (!eventId) return;
-
     subscribeEvent({
       event_id: eventId,
       onData: (data) => {
         setPayload(data);
 
+        // let subAuctionId = Number(data.auction_id);
+        // let dataAuctionId = auction?.auction_id;
+
         if (data.status === "CLOSE") {
+          console.log("enter close");
           setIsBidding(false);
           $swal({
             title: event ? event?.name : "",
@@ -276,6 +277,7 @@ export function LivePage() {
         }
 
         if (data.status === "REAUCTIONLIST") {
+          // console.log("enter reauct list");
           reset();
           $swal({
             title: "Redirecting to Reauction List",
@@ -287,6 +289,7 @@ export function LivePage() {
         }
 
         if (data.status === "REAUCTIONLISTUPDATETIMER") {
+          // console.log("enter reauct list update timer");
           setCurrentPage("reauctionlist");
 
           $swal({
@@ -298,9 +301,9 @@ export function LivePage() {
           reset();
         }
 
-        // prettier-ignore
-        if (data.status !== "CLOSE" && auction?.auction_id !== Number(data.auction_id)) {
+        /*if (data.status !== "CLOSE" && dataAuctionId !== subAuctionId) {
           // payload.auction_id !== "" && getAuction();
+          // console.log('enter rest')
           setCurrentPage("bidding");
           setPayload((prev) => ({
             ...prev,
@@ -317,11 +320,10 @@ export function LivePage() {
               highest_user_name: prev.bidders.highest_user_name,
             },
           }));
-        }
-
-        if (!payload.auction_id) return;
+        } */
 
         if (data.status === "AUCTION") {
+          // console.log("enter auction");
           setIsBidding(true);
 
           if (data.isResume) {
@@ -329,20 +331,20 @@ export function LivePage() {
             setPayload((prev) => ({ ...prev, isResume: false }));
           }
 
-          if (!updateFlag.current && bidStatus === 0) {
+          if (isPlayStart.current) {
             $swal({
-              title: `Lot ${data?.lot_no}`,
+              title: `Lot ${data.auction?.lot_no}`,
               content: "Bidding is starting",
               timer: 1500,
               hasClose: false,
             });
 
             playAudio("start");
-            setBidStatus(2);
-            updateFlag.current = true;
+            setPayload((prev) => ({ ...prev, bidStatus: 2 }));
+            isPlayStart.current = false;
           }
 
-          if (bidStatus === 3) {
+          if (payload.bidStatus === 3) {
             // console.log("enter here");
             // setPayload((prev) => ({ ...prev, countdown: COUNTDOWN.initial }));
           }
@@ -392,15 +394,15 @@ export function LivePage() {
                 all: prev.bidders.all,
                 highest_amount: prev.bidders.highest_amount,
               },
+              bidStatus: 2,
             }));
-
-            setBidStatus(2);
           }
         }
 
         if (data.status === "REAUCTION") {
+          // console.log("enter reauction");
           $swal({
-            title: `Lot ${data?.lot_no}`,
+            title: `Lot ${data.auction?.lot_no}`,
             content: `Reauction`,
             timer: 1000,
             hasClose: false,
@@ -422,23 +424,26 @@ export function LivePage() {
         }
 
         if (data.status === "SOLD") {
+          // console.log("enter sold");
           setIsBidding(false);
+          isPlayStart.current = true;
         }
 
         if (data.status === "END") {
+          // console.log("enter end");
           playAudio("sold");
 
           if (USER) {
             if (data.bidders.highest_user_id === USER.id) {
               $swal({
-                title: `Lot ${data?.lot_no}`,
+                title: `Lot ${data.auction?.lot_no}`,
                 content: `Congratulation, you have won the auction`,
                 timer: 3000,
                 hasClose: false,
               });
             } else {
               $swal({
-                title: `Lot ${data?.lot_no}`,
+                title: `Lot ${data.auction?.lot_no}`,
                 content: `${payload.bidders.highest_user_name} have won the auction`,
                 timer: 3000,
                 hasClose: false,
@@ -447,7 +452,7 @@ export function LivePage() {
           } else {
             //live view (without auth)
             $swal({
-              title: `Lot ${data?.lot_no}`,
+              title: `Lot ${data.auction?.lot_no}`,
               content: `${payload.bidders.highest_user_name} have won the auction`,
               timer: 3000,
               hasClose: false,
@@ -458,8 +463,9 @@ export function LivePage() {
         }
 
         if (data.status === "PAUSE") {
+          // console.log("enter pause");
           $swal({
-            title: `Lot ${data?.lot_no}`,
+            title: `Lot ${data.auction?.lot_no}`,
             content: `Auctioneer hold auction`,
             noClose: true,
             hasClose: false,
@@ -468,9 +474,10 @@ export function LivePage() {
         }
 
         if (data.status === "WITHDRAW") {
+          // console.log("enter withdraw");
           setIsBidding(false);
           $swal({
-            title: `Lot ${data?.lot_no}`,
+            title: `Lot ${data.auction?.lot_no}`,
             content: `This auction is withdraw`,
             hasClose: false,
           });
@@ -478,38 +485,12 @@ export function LivePage() {
           reset();
         }
 
-        // if (data.status === "HOLD") {
-        //   console.log("enter no bid");
-        //   setIsBidding(false);
-        //   $swal({
-        //     title: `Lot ${data?.lot_no}`,
-        //     content: `No Bid`,
-        //     timer: 3000,
-        //     hasClose: false,
-        //   });
-        //   playAudio("noBid");
-        //   reset();
-        // }
-      },
-    });
-
-    return () => {
-      unsubscribeEvent(eventId);
-    };
-  }, [socket, payload]);
-
-  ///no bid
-  useEffect(() => {
-    console.log("render");
-    if (!eventId) return;
-    subscribeEvent({
-      event_id: eventId,
-      onData: (data) => {
         if (data.status === "HOLD") {
-          console.log("enter no bid");
+          // console.log("enter no bid");
+          isPlayStart.current = true;
           setIsBidding(false);
           $swal({
-            title: `Lot ${data?.lot_no}`,
+            title: `Lot ${data.auction?.lot_no}`,
             content: `No Bid`,
             timer: 3000,
             hasClose: false,
@@ -519,7 +500,9 @@ export function LivePage() {
         }
       },
     });
-  }, [socket]);
+
+    return () => unsubscribeEvent(eventId);
+  }, []);
 
   ///subscribe reauction
   useEffect(() => {
@@ -550,13 +533,12 @@ export function LivePage() {
         }
       },
     });
-  }, [socket]);
+  }, []);
 
   ///render when change auctionId
   useEffect(() => {
-    setBidStatus(0);
+    setPayload((prev) => ({ ...prev, bidStatus: 0 }));
     $swalClose();
-    updateFlag.current = false;
     payload.auction_id !== "" && getAuction();
     payload.auction_id !== "" && getCredit();
   }, [payload.auction_id]);

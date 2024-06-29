@@ -1,5 +1,6 @@
 import { Status } from "@/types";
-import { ReauctionList } from ".";
+import { AuctionInterface, ReauctionList } from ".";
+import { BidStatus } from "@/enum";
 
 export interface EventData {
   event_id: string;
@@ -20,9 +21,10 @@ export interface EventData {
   };
   auction_event_id: string;
   isResume: boolean;
-  lot_no: any;
+  auction: AuctionInterface | undefined;
   // expiryAt: string;
   holdItems: ReauctionList[];
+  bidStatus: BidStatus;
 }
 
 export interface StatusData {

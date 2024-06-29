@@ -7,15 +7,9 @@ import {
   Subscription,
   ReauctionData,
 } from "@/interfaces/websocket";
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import * as socketClusterClient from "socketcluster-client";
-import { BidStatus, COUNTDOWN, ROLE } from "@/enum";
+import { COUNTDOWN, ROLE } from "@/enum";
 import { useAuction } from "./auction-context";
 import AsyncStreamEmitter from "async-stream-emitter";
 
@@ -35,12 +29,10 @@ type SocketData = {
   unsubscribeEvent: (event_id: string) => void;
   subscribeReauction: (params: Subscription<ReauctionData>) => Promise<void>;
   publishReauction: (params: Publication<ReauctionData>) => void;
+  subscribeTimer: (onData: (data: any) => void) => Promise<void>;
 
   payload: EventData;
   setPayload: React.Dispatch<React.SetStateAction<EventData>>;
-
-  bidStatus: BidStatus;
-  setBidStatus: React.Dispatch<React.SetStateAction<BidStatus>>;
 
   bidListIndex: number;
   setBidListIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -49,8 +41,6 @@ type SocketData = {
   setCurrentPage: React.Dispatch<
     React.SetStateAction<"bidding" | "reauctionlist">
   >;
-
-  updateFlag: React.MutableRefObject<boolean>;
 
   viewer: {
     connection: number;
@@ -63,6 +53,18 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
   const { USER } = useAuction();
 
   const [socket, setSocket] = useState<ws>(null);
+  // const socket = socketClusterClient.create({
+  //   hostname: "bidding.e-biddi.com",
+  //   secure: true,
+  //   port: 443,
+  //   autoConnect: true,
+  //   protocolVersion: 1,
+  //   path: "/socketcluster/",
+  // });
+
+  const [bidListIndex, setBidListIndex] = useState(-1);
+  const [currentPage, setCurrentPage] = useState<"bidding" | "reauctionlist">("bidding"); //prettier-ignore
+
   const [payload, setPayload] = useState<EventData>({
     auction_id: "",
     event_id: "",
@@ -84,17 +86,14 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
     isResume: false,
     holdItems: [],
     auction_event_id: "",
-    lot_no: 0,
+    auction: undefined,
+    bidStatus: 0,
   });
-  const [bidStatus, setBidStatus] = useState<BidStatus>(0);
-  const [bidListIndex, setBidListIndex] = useState(-1);
-  const [currentPage, setCurrentPage] = useState<"bidding" | "reauctionlist">("bidding"); //prettier-ignore
+
   const [viewer, setViewer] = useState({
     connection: 0,
     bidder: 0,
   });
-
-  const updateFlag = useRef(false);
 
   const isAuctioneer = USER?.role === ROLE.AUCTIONEER;
 
@@ -149,18 +148,16 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
   const subscribeStatus = async () => {
     if (!socket) return;
 
-    if (!isAuctioneer) {
-      const channel = socket.subscribe("status");
+    const channel = socket.subscribe("status");
 
-      for await (const data of channel) {
-        try {
-          setViewer({
-            connection: data.total_connection,
-            bidder: data.total_bidder,
-          });
-        } catch (error) {
-          console.log(error);
-        }
+    for await (const data of channel) {
+      try {
+        setViewer({
+          connection: data.total_connection,
+          bidder: data.total_bidder,
+        });
+      } catch (error) {
+        console.log(error);
       }
     }
   };
@@ -198,6 +195,21 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
     socket?.invokePublish("bidder_reset", 0);
   };
 
+  const subscribeTimer = async (onData: (data: any) => void) => {
+    if (!socket) return;
+
+    const url = `timer`;
+    const channel = socket.subscribe(url);
+
+    for await (const data of channel) {
+      try {
+        onData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   // async function loadData() {
   //   for await (let data of emitter.listener("bidder_reset")) {
   //     console.log(data);
@@ -215,7 +227,6 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
         protocolVersion: 1,
         path: "/socketcluster/",
       });
-
       newSocket.connect();
       setSocket(newSocket);
     };
@@ -233,7 +244,7 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
     return () => {
       resetBidder();
     };
-  }, [socket]);
+  }, []);
 
   const contextValue: SocketData = {
     socket,
@@ -244,8 +255,6 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
     publishBid,
     subscribeEvent,
     subscribeStatus,
-    bidStatus,
-    setBidStatus,
     bidListIndex,
     setBidListIndex,
     unsubscribeEvent,
@@ -253,9 +262,9 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
     setCurrentPage,
     subscribeReauction,
     publishReauction,
-    updateFlag,
     viewer,
     resetBidder,
+    subscribeTimer,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;
