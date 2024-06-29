@@ -27,7 +27,8 @@ export function AuctioneerList() {
 
   const navigate = useNavigate();
   const { useGetEventById, useCloseAuctionEvent } = useAPIServices();
-  const { setView, publishEvent, setPayload, $swal } = useStoreContext();
+  const { setView, publishEvent, setPayload, $swal, resetBidder } =
+    useStoreContext();
 
   const { data } = useGetEventById(eventId);
   const { mutateAsync: onCloseEventAPI } = useCloseAuctionEvent(eventId);
@@ -60,6 +61,7 @@ export function AuctioneerList() {
         return updatedPayload;
       });
       onCloseEventAPI();
+      resetBidder();
     }
   };
 
@@ -68,6 +70,7 @@ export function AuctioneerList() {
       content: "Close this auction event?",
       title: "Auction Event",
       onClick: () => closeEvent(),
+
       variant: "destructive",
       hasClose: true,
     });

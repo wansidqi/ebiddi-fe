@@ -51,6 +51,9 @@ export function LivePage() {
     $swal,
     $swalClose,
     viewer,
+    bidderIn,
+    bidderOut,
+    resetBidder,
   } = useStoreContext();
 
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
@@ -252,6 +255,13 @@ export function LivePage() {
   };
 
   const { expiryAt } = UseCountdown();
+
+  useEffect(() => {
+    bidderIn();
+    return () => {
+      bidderOut();
+    };
+  }, []);
 
   ///subscribe event improve
   useEffect(() => {
@@ -590,6 +600,12 @@ export function LivePage() {
                   </>
                 )}
                 <WaitingComponent />
+                {/* prettier-ignore */}
+                <div className="hidden flexcenter gap-4 my-10">
+                  <button onClick={bidderIn} className="bg-green-600 rounded-md px-4 py-3">bidder in</button>
+                  <button onClick={bidderOut} className="bg-green-600 rounded-md px-4 py-3">bidder out</button>
+                  <button onClick={resetBidder} className="bg-green-600 rounded-md px-4 py-3">bidder reset</button>
+                </div>
               </div>
             </DynamicRenderer.When>
             <DynamicRenderer.Else>

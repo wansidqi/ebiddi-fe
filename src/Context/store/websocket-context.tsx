@@ -11,7 +11,6 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import * as socketClusterClient from "socketcluster-client";
 import { COUNTDOWN, ROLE } from "@/enum";
 import { useAuction } from "./auction-context";
-import AsyncStreamEmitter from "async-stream-emitter";
 
 const AppContext = createContext<SocketData | null>(null);
 
@@ -29,7 +28,6 @@ type SocketData = {
   unsubscribeEvent: (event_id: string) => void;
   subscribeReauction: (params: Subscription<ReauctionData>) => Promise<void>;
   publishReauction: (params: Publication<ReauctionData>) => void;
-  subscribeTimer: (onData: (data: any) => void) => Promise<void>;
 
   payload: EventData;
   setPayload: React.Dispatch<React.SetStateAction<EventData>>;
@@ -47,6 +45,8 @@ type SocketData = {
     bidder: number;
   };
   resetBidder: () => void;
+  bidderIn: () => Promise<void>;
+  bidderOut: () => Promise<void>;
 };
 
 export function SocketProvider(props: React.PropsWithChildren<{}>) {
@@ -96,8 +96,7 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
   });
 
   const isAuctioneer = USER?.role === ROLE.AUCTIONEER;
-
-  let emitter = new AsyncStreamEmitter();
+  const isBidder = USER?.role === ROLE.BIDDER;
 
   const publishBid = (params: PubBid) => {
     if (!socket) return;
@@ -152,6 +151,7 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
 
     for await (const data of channel) {
       try {
+        console.log(data);
         setViewer({
           connection: data.total_connection,
           bidder: data.total_bidder,
@@ -190,32 +190,36 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
   };
 
   const resetBidder = async () => {
-    emitter.emit("bidder_reset", 0);
-    emitter.closeListener("bidder_reset");
-    socket?.invokePublish("bidder_reset", 0);
-  };
-
-  const subscribeTimer = async (onData: (data: any) => void) => {
     if (!socket) return;
 
-    const url = `timer`;
-    const channel = socket.subscribe(url);
-
-    for await (const data of channel) {
-      try {
-        onData(data);
-      } catch (error) {
-        console.log(error);
-      }
+    try {
+      socket.invoke("bidder_reset", 0);
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  // async function loadData() {
-  //   for await (let data of emitter.listener("bidder_reset")) {
-  //     console.log(data);
-  //   }
-  //   console.log("The listener was closed.");
-  // }
+  const bidderIn = async () => {
+    if (!isBidder) return;
+    if (!socket) return;
+
+    try {
+      socket.invoke("bidder_in", 0);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const bidderOut = async () => {
+    if (!isBidder) return;
+    if (!socket) return;
+
+    try {
+      socket.invoke("bidder_out", 0);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const init = () => {
@@ -240,11 +244,7 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
 
   useEffect(() => {
     subscribeStatus();
-    resetBidder();
-    return () => {
-      resetBidder();
-    };
-  }, []);
+  }, [socket]);
 
   const contextValue: SocketData = {
     socket,
@@ -264,7 +264,8 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
     publishReauction,
     viewer,
     resetBidder,
-    subscribeTimer,
+    bidderIn,
+    bidderOut,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;
