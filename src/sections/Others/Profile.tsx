@@ -5,15 +5,11 @@ import { Input } from "@/components/ui/input";
 import { ROLE } from "@/enum";
 import { convertDateTime, numWithComma } from "@/lib/utils";
 import { useAPIServices } from "@/services";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import DefaultImage from "@/assets/images/upload-receipt/upload-placehodler.jpeg";
-import uploading from "@/assets/images/upload-receipt/uploading.gif";
-import { Button } from "@/components/ui/button";
-import { ImageUp } from "lucide-react";
-import { LiveDialog } from "..";
-// import EditIcon from "@/assets/images/upload-receipt/edit.svg";
+import { LiveDialog, Receipt } from "..";
+
 
 export function Profile() {
   const columns = [
@@ -25,7 +21,7 @@ export function Profile() {
     "	Deposited Account",
   ];
 
-  const { USER, $swal } = useStoreContext();
+  const { USER } = useStoreContext();
   const depoInfo = USER?.credits;
 
   const navigate = useNavigate();
@@ -40,71 +36,6 @@ export function Profile() {
   };
 
   const [emailInput, setEmailInput] = useState("");
-  const [avatarURL, setAvatarURL] = useState<string | undefined>(undefined);
-  const fileUploadRef = useRef<HTMLInputElement>(null);
-
-  const handleImageUpload = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    if (fileUploadRef.current) {
-      fileUploadRef.current.click();
-    }
-  };
-
-  const uploadImageDisplay = () => {
-    if (
-      fileUploadRef.current &&
-      fileUploadRef.current.files &&
-      fileUploadRef.current.files[0]
-    ) {
-      try {
-        setAvatarURL(uploading);
-        const uploadedFile = fileUploadRef.current.files[0];
-        const cachedURL = URL.createObjectURL(uploadedFile);
-        setAvatarURL(cachedURL);
-      } catch (error) {
-        alert(error);
-      }
-    }
-  };
-
-  const postReceipt = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    if (
-      fileUploadRef.current &&
-      fileUploadRef.current.files &&
-      fileUploadRef.current.files[0]
-    ) {
-      const uploadedFile = fileUploadRef.current.files[0];
-      const formData = new FormData();
-      formData.append("file", uploadedFile);
-
-      try {
-        //TODO post API for uplaod receipt
-        /*  await fetch("https://api.example.com", {method: "post", body: formData});  */
-        $swal({
-          title: "Upload Image",
-          content: "Receipt success uploaded!",
-          hasClose: false,
-        });
-      } catch (error) {
-        $swal({
-          title: "Upload Image",
-          content: "Failed to upload receipt",
-          hasClose: false,
-        });
-      }
-    } else {
-      $swal({
-        title: "Upload Image",
-        content: "Please upload receipt",
-        hasClose: false,
-      });
-    }
-  };
 
   useEffect(() => {
     if (USER && USER?.email) setEmailInput(USER?.email);
@@ -134,7 +65,7 @@ export function Profile() {
           <p className="text-center py-3 bg-primary font-bold text-black">
             Personal Information
           </p>
-          <div className="m-4">
+          <div className="m-4 sm:mx-10 my-5">
             <KeyValue title="Username" value={USER?.nric ?? ""} />
             <KeyValue title="Name" value={USER?.name ?? ""} />
             <KeyValue title="I/C" value={USER?.nric ?? ""} />
@@ -267,43 +198,7 @@ export function Profile() {
               </div>
             </main>
 
-            <main className="border">
-              <p className="text-center py-3 bg-primary font-bold text-black">
-                Upload Receipt Proof
-              </p>
-              <form
-                id="form"
-                className="flexcenter-col"
-                encType="multipart/form-data"
-              >
-                <div className="m-4 flexcenter-col relative">
-                  {!avatarURL ? (
-                    <img src={DefaultImage} className="w-80 my-3" alt="" />
-                  ) : (
-                    <img src={avatarURL} className="w-80 my-3" alt="" />
-                  )}
-                  <input
-                    className=""
-                    type="file"
-                    id="file"
-                    ref={fileUploadRef}
-                    onChange={uploadImageDisplay}
-                    hidden
-                  />
-                  <button
-                    onClick={handleImageUpload}
-                    type="submit"
-                    className="absolute bottom-3 right-0"
-                  >
-                    {/* <ImageUp color={"#3B82F6"} size={"40px"} /> */}
-                    <ImageUp color={"black"} size={"40px"} />
-                  </button>
-                </div>
-                <div className="flexcenter gap-4 mb-4">
-                  <Button onClick={postReceipt}>Post Receipt</Button>
-                </div>
-              </form>
-            </main>
+            <Receipt />
 
             <main className="w-full border sm:col-span-3">
               <p className="text-center py-3 bg-primary font-bold text-black">

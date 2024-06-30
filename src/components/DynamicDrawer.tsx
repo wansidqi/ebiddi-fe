@@ -28,6 +28,7 @@ interface Props {
   description?: string;
   children: JSX.Element;
   footerBtnTitle: string;
+  widthPx?: string;
   footerButtonCallback: () => any;
 }
 
@@ -37,6 +38,7 @@ export function DynamicDrawer({
   description,
   children,
   footerBtnTitle,
+  widthPx,
   footerButtonCallback,
 }: Props) {
   const [open, setOpen] = React.useState(false);
@@ -50,7 +52,9 @@ export function DynamicDrawer({
         </DialogTrigger>
         <DialogContent className="">
           <DialogHeader>
-            <DialogTitle className="flexcenter sm:text-3xl sm:py-3">
+            <DialogTitle
+              className={`flexcenter sm:text-3xl sm:py-3 ${widthPx}`}
+            >
               {title}
             </DialogTitle>
             <DialogDescription className="flexcenter text-xl">

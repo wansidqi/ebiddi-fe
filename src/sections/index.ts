@@ -39,3 +39,4 @@ export * from "./Others/Home";
 export * from "./Others/Policies";
 export * from "./Others/Profile";
 export * from "./Others/Term";
+export * from "./Others/Receipt";
