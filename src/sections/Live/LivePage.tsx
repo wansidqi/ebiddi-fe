@@ -600,12 +600,16 @@ export function LivePage() {
                   </>
                 )}
                 <WaitingComponent />
-                {/* prettier-ignore */}
-                <div className="hidden flexcenter gap-4 my-10">
-                  <button onClick={bidderIn} className="bg-green-600 rounded-md px-4 py-3">bidder in</button>
-                  <button onClick={bidderOut} className="bg-green-600 rounded-md px-4 py-3">bidder out</button>
-                  <button onClick={resetBidder} className="bg-green-600 rounded-md px-4 py-3">bidder reset</button>
-                </div>
+                {dev && (
+                  <div className="flexcenter gap-4 my-10">
+                    {/* prettier-ignore */}
+                    <button onClick={bidderIn} className="bg-green-600 rounded-md px-4 py-3">bidder in</button>
+                    {/* prettier-ignore */}
+                    <button onClick={bidderOut} className="bg-green-600 rounded-md px-4 py-3">bidder out</button>
+                    {/* prettier-ignore */}
+                    <button onClick={resetBidder} className="bg-green-600 rounded-md px-4 py-3">bidder reset</button>
+                  </div>
+                )}
               </div>
             </DynamicRenderer.When>
             <DynamicRenderer.Else>

@@ -163,7 +163,7 @@ const useCloseAuctionEvent = (eventId: string | undefined) => {
       return response.data;
     },
     onSuccess: () => {
-      navigate(`/auctioneer/list/${eventId}`);
+      navigate(`/events`);
       queryClient.invalidateQueries([KEY.event, eventId]);
     },
   });

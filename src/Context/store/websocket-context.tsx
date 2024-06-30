@@ -151,7 +151,6 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
 
     for await (const data of channel) {
       try {
-        console.log(data);
         setViewer({
           connection: data.total_connection,
           bidder: data.total_bidder,
