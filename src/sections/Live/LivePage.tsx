@@ -439,7 +439,6 @@ export function LivePage() {
         if (data.status === "SOLD") {
           // console.log("enter sold");
           setIsBidding(false);
-          isPlayStart.current = true;
         }
 
         if (data.status === "END") {

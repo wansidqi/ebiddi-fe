@@ -292,6 +292,7 @@ export function AuctioneerController() {
   const clickSold = () => {
     // const newPayload: EventData = { ...payload, status: "SOLD" };
     if (!eventId) return;
+    setIsActive(false);
     // publishEvent({ event_id: eventId, data: newPayload });
 
     setPayload((prev) => {
