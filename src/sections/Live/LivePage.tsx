@@ -625,37 +625,46 @@ export function LivePage() {
 
                 {USER?.role === ROLE.BIDDER && (
                   <div>
-                    {credits?.map((cr, i) => (
-                      <Fragment key={i}>
-                        <div key={i} className="flexcenter my-3 sm:my-4 gap-2">
-                          <p className="text-primary sm:text-2xl">
-                            Deposit balance:
-                          </p>
-                          <div className="relative">
-                            <p className="text-yellow-500 sm:text-2xl">
-                              RM{numWithComma(cr?.amount as number) || 0}
-                            </p>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger
-                                  className="absolute -right-4 -top-1"
-                                  asChild
-                                >
-                                  <button>
-                                    <Info size={"14px"} />
-                                  </button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p className="my-2 text-primary">
-                                    {cr?.auction_house.name}
-                                  </p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </div>
-                        </div>
-                      </Fragment>
-                    ))}
+                    {credits?.map((cr, i) => {
+                      return (
+                        <Fragment key={i}>
+                          {(cr.auction_house.id === 0 ||
+                            cr.auction_house.id ===
+                              event?.auction_house.id) && (
+                            <div
+                              key={i}
+                              className="flexcenter my-3 sm:my-4 gap-2"
+                            >
+                              <p className="text-primary sm:text-2xl">
+                                Deposit balance:
+                              </p>
+                              <div className="relative">
+                                <p className="text-yellow-500 sm:text-2xl">
+                                  RM{numWithComma(cr?.amount as number) || 0}
+                                </p>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger
+                                      className="absolute -right-4 -top-1"
+                                      asChild
+                                    >
+                                      <button>
+                                        <Info size={"14px"} />
+                                      </button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p className="my-2 text-primary">
+                                        {cr?.auction_house.name}
+                                      </p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </div>
+                            </div>
+                          )}
+                        </Fragment>
+                      );
+                    })}
                     <div className="flexcenter gap-6">
                       <button
                         disabled={isBidDisabled()}
