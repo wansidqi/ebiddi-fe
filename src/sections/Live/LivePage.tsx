@@ -600,7 +600,7 @@ export function LivePage() {
               // cond={isNotAuctioneer && payload.status === "DISPLAY"}
             >
               <div>
-                {!USER && (
+                {/* {!USER && ( */}
                   <>
                     <p className="text-3xl sm:text-5xl text-center text-primary">
                       AUCTIONS LIVE VIEW
@@ -626,7 +626,7 @@ export function LivePage() {
                       </div>
                     </main>
                   </>
-                )}
+                {/* )} */}
                 <WaitingComponent />
                 {dev && (
                   <div className="flexcenter gap-4 my-10">
