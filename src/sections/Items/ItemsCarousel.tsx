@@ -41,6 +41,7 @@ export function ItemsCarousel({ images }: { images: string[] }) {
                       )}
                       {mediaType === "video" && (
                         <video
+                          autoPlay={true}
                           controls
                           className="gallery-video w-auto h-[14rem] md:h-[20rem] flex items-center justify-center p-0"
                         >
