@@ -119,7 +119,7 @@ export function ReauctionTimer() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <button className="flexcenter bg-cyan-500 px-3 pt-1 pb-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg">
-            {expiryAt === "" ? "Start Reauction" : "Update timer"}
+            {expiryAt === "" || !expiryAt ? "Start Reauction" : "Update timer"}
           </button>
         </DialogTrigger>
         <DialogContent className="sm:w-[425px]">
@@ -143,7 +143,7 @@ export function ReauctionTimer() {
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <button className="flexcenter bg-cyan-500 px-3 pt-1 pb-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg">
-          {expiryAt === "" ? "Start Reauction" : "Update timer"}
+          {expiryAt === "" || !expiryAt ? "Start Reauction" : "Update timer"}
         </button>
       </DrawerTrigger>
       <DrawerContent>
