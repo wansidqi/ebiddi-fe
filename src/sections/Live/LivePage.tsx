@@ -12,7 +12,7 @@ import {
 import waiting from "@/assets/images/waiting.png";
 import { useStoreContext } from "@/Context";
 import { DynamicRenderer, Modal } from "@/components";
-import { ROLE } from "@/enum";
+import { COUNTDOWN, ROLE } from "@/enum";
 import { Toaster } from "@/components/ui/toaster";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -265,6 +265,7 @@ export function LivePage() {
 
   ///subscribe event improve
   useEffect(() => {
+    if (!isNotAuctioneer) return;
     if (!eventId) return;
     subscribeEvent({
       event_id: eventId,
@@ -517,7 +518,35 @@ export function LivePage() {
       },
     });
 
-    return () => unsubscribeEvent(eventId);
+    return () => {
+      unsubscribeEvent(eventId);
+
+      if (!isNotAuctioneer) return;
+
+      setPayload({
+        auction_id: "",
+        event_id: "",
+        bid: {
+          current: 0,
+          next: 0,
+          start: 0,
+          up: 0,
+        },
+        countdown: COUNTDOWN.initial,
+        status: "DISPLAY",
+        bidders: {
+          all: [],
+          highest_amount: 0,
+          highest_user_id: 0,
+          highest_user_name: "",
+        },
+        isResume: false,
+        holdItems: [],
+        auction_event_id: "",
+        auction: undefined,
+        bidStatus: 0,
+      });
+    };
   }, []);
 
   ///subscribe reauction
