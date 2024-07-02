@@ -473,30 +473,47 @@ export function LivePage() {
           // console.log("enter end");
           playAudio("sold");
 
+          let timer = 3000;
+
+          function redirectWait() {
+            setTimeout(() => {
+              setPayload((prev) => ({ ...prev, auction_id: "" }));
+            }, timer + 100);
+          }
+
           if (USER) {
             if (data.bidders.highest_user_id === USER.id) {
               $swal({
                 title: `Lot ${data.auction?.lot_no}`,
                 content: `Congratulation, you have won the auction`,
-                timer: 3000,
+                timer,
                 hasClose: false,
+                onClick: () =>
+                  setPayload((prev) => ({ ...prev, auction_id: "" })),
               });
+              redirectWait();
             } else {
               $swal({
                 title: `Lot ${data.auction?.lot_no}`,
                 content: `${data.bidders.highest_user_name} have won the auction`,
-                timer: 3000,
+                timer,
                 hasClose: false,
+                onClick: () =>
+                  setPayload((prev) => ({ ...prev, auction_id: "" })),
               });
+              redirectWait();
             }
           } else {
             //live view (without auth)
             $swal({
               title: `Lot ${data.auction?.lot_no}`,
               content: `${data.bidders.highest_user_name} have won the auction`,
-              timer: 3000,
+              timer,
               hasClose: false,
+              onClick: () =>
+                setPayload((prev) => ({ ...prev, auction_id: "" })),
             });
+            redirectWait();
           }
 
           reset();
