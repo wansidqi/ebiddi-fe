@@ -81,6 +81,7 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
       highest_amount: 0,
       highest_user_id: 0,
       highest_user_name: "",
+      previous: [],
     },
     // expiryAt: "",
     isResume: false,

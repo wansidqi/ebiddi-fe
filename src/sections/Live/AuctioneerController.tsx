@@ -78,6 +78,7 @@ export function AuctioneerController() {
         countdown: COUNTDOWN.initial,
         status: "DISPLAY" as Status,
         bidders: {
+          previous: [],
           all: [],
           highest_amount: 0,
           highest_user_id: 0,
@@ -235,6 +236,7 @@ export function AuctioneerController() {
       ...payload,
       status: "REAUCTION",
       bidders: {
+        previous: [],
         all: [],
         highest_amount: 0,
         highest_user_id: 0,
@@ -408,6 +410,7 @@ export function AuctioneerController() {
           auction_id: "",
           status: "DISPLAY" as Status,
           bidders: {
+            previous: [],
             all: [],
             highest_amount: 0,
             highest_user_id: 0,
@@ -476,8 +479,8 @@ export function AuctioneerController() {
             ...prev,
             status: "" as Status,
             bidders: {
-              all: previous,
-              // all: [data, ...prev.bidders.all],
+              previous,
+              all: [data, ...prev.bidders.all],
               highest_amount: data.amount,
               highest_user_id: data.user_id,
               highest_user_name: data.name,

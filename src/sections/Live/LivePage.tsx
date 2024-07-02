@@ -102,8 +102,8 @@ export function LivePage() {
       const updatedPayload = {
         ...prev,
         bidders: {
-          all: previous,
-          // all: [data, ...prev.bidders.all],
+          previous,
+          all: [data, ...prev.bidders.all],
           highest_amount: data.amount,
           highest_user_id: data.user_id,
           highest_user_name: data.name,
@@ -158,8 +158,8 @@ export function LivePage() {
       const updatedPayload = {
         ...prev,
         bidders: {
-          all: previous,
-          // all: [data, ...prev.bidders.all],
+          previous,
+          all: [data, ...prev.bidders.all],
           highest_amount: data.amount,
           highest_user_id: data.user_id,
           highest_user_name: data.name,
@@ -205,6 +205,7 @@ export function LivePage() {
       ...prev,
       status: "DISPLAY",
       bidders: {
+        previous: [],
         all: [],
         highest_amount: prev.bidders.highest_amount,
         highest_user_id: 0,
@@ -389,6 +390,7 @@ export function LivePage() {
             setPayload((prev) => ({
               ...prev,
               bidders: {
+                previous: data.bidders.previous,
                 all: data.bidders.all,
                 highest_amount: prev.bidders.highest_amount,
                 highest_user_id: prev.bidders.highest_user_id,
@@ -426,6 +428,7 @@ export function LivePage() {
                 highest_user_id: data.bidders.highest_user_id,
                 highest_user_name: data.bidders.highest_user_name,
                 all: prev.bidders.all,
+                previous: prev.bidders.previous,
                 highest_amount: prev.bidders.highest_amount,
               },
               bidStatus: 2,
@@ -561,6 +564,7 @@ export function LivePage() {
         status: "DISPLAY",
         bidders: {
           all: [],
+          previous: [],
           highest_amount: 0,
           highest_user_id: 0,
           highest_user_name: "",
