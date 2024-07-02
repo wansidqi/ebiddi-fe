@@ -322,7 +322,8 @@ export function AuctioneerController() {
       let update = {
         ...prev,
         status: "END" as Status,
-        bidStatus: 0,
+        bidStatus: BidStatus.HOLD,
+        // bidStatus: 3,
       };
 
       publishEvent({ event_id: eventId, data: update });
@@ -462,14 +463,24 @@ export function AuctioneerController() {
           }
 
           /*  */
+
           let current: BidData = {
             amount: prev.bidders.highest_amount,
             name: prev.bidders.highest_user_name,
             user_id: prev.bidders.highest_user_id,
           };
+
           let previous: BidData[] = prev.bidders.all;
 
-          if (current.amount !== data.amount && current.amount !== 0) {
+          const duplciatePrev = previous.some(
+            (bidder) => bidder.amount === current.amount
+          );
+
+          if (
+            !duplciatePrev &&
+            current.amount !== data.amount &&
+            current.amount !== 0
+          ) {
             previous = [current, ...previous];
           }
           current = data;

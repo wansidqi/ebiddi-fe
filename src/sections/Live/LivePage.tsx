@@ -83,9 +83,18 @@ export function LivePage() {
         name: prev.bidders.highest_user_name,
         user_id: prev.bidders.highest_user_id,
       };
+
       let previous: BidData[] = prev.bidders.all;
 
-      if (current.amount !== data.amount && current.amount !== 0) {
+      const duplciatePrev = previous.some(
+        (bidder) => bidder.amount === current.amount
+      );
+
+      if (
+        !duplciatePrev &&
+        current.amount !== data.amount &&
+        current.amount !== 0
+      ) {
         previous = [current, ...previous];
       }
       current = data;
@@ -139,9 +148,18 @@ export function LivePage() {
         name: prev.bidders.highest_user_name,
         user_id: prev.bidders.highest_user_id,
       };
+
       let previous: BidData[] = prev.bidders.all;
 
-      if (current.amount !== data.amount && current.amount !== 0) {
+      const duplciatePrev = previous.some(
+        (bidder) => bidder.amount === current.amount
+      );
+
+      if (
+        !duplciatePrev &&
+        current.amount !== data.amount &&
+        current.amount !== 0
+      ) {
         previous = [current, ...previous];
       }
       current = data;
