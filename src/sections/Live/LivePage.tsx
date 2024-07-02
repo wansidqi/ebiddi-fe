@@ -17,7 +17,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   EyeIcon,
-  Info,
   LockKeyholeIcon,
   LucideGavel,
   UnlockKeyhole,
@@ -26,12 +25,7 @@ import { useAPIServices } from "@/services";
 import { playAudio } from "@/assets/audio";
 import { numWithComma } from "@/lib/utils";
 import moment from "moment";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { BidData } from "@/interfaces/websocket";
 
 export function LivePage() {
   const { eventId } = useParams();
@@ -53,7 +47,6 @@ export function LivePage() {
     viewer,
     bidderIn,
     bidderOut,
-    resetBidder,
   } = useStoreContext();
 
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
@@ -84,6 +77,20 @@ export function LivePage() {
     };
 
     setPayload((prev) => {
+      /*  */
+      let current: BidData = {
+        amount: prev.bidders.highest_amount,
+        name: prev.bidders.highest_user_name,
+        user_id: prev.bidders.highest_user_id,
+      };
+      let previous: BidData[] = prev.bidders.all;
+
+      if (current.amount !== data.amount && current.amount !== 0) {
+        previous = [current, ...previous];
+      }
+      current = data;
+      /*  */
+
       const duplciateAmount = prev.bidders.all.some(
         (bidder) => bidder.amount === data.amount
       );
@@ -95,7 +102,8 @@ export function LivePage() {
       const updatedPayload = {
         ...prev,
         bidders: {
-          all: [data, ...prev.bidders.all],
+          all: previous,
+          // all: [data, ...prev.bidders.all],
           highest_amount: data.amount,
           highest_user_id: data.user_id,
           highest_user_name: data.name,
@@ -125,6 +133,20 @@ export function LivePage() {
     };
 
     setPayload((prev) => {
+      /*  */
+      let current: BidData = {
+        amount: prev.bidders.highest_amount,
+        name: prev.bidders.highest_user_name,
+        user_id: prev.bidders.highest_user_id,
+      };
+      let previous: BidData[] = prev.bidders.all;
+
+      if (current.amount !== data.amount && current.amount !== 0) {
+        previous = [current, ...previous];
+      }
+      current = data;
+      /*  */
+
       const duplciateAmount = prev.bidders.all.some(
         (bidder) => bidder.amount === data.amount
       );
@@ -136,7 +158,8 @@ export function LivePage() {
       const updatedPayload = {
         ...prev,
         bidders: {
-          all: [data, ...prev.bidders.all],
+          all: previous,
+          // all: [data, ...prev.bidders.all],
           highest_amount: data.amount,
           highest_user_id: data.user_id,
           highest_user_name: data.name,
@@ -412,16 +435,17 @@ export function LivePage() {
 
         if (data.status === "REAUCTION") {
           // console.log("enter reauction");
+          $swalClose();
           playAudio("reauction");
-          $swal({
-            title: `Lot ${data.auction?.lot_no}`,
-            content: `Reauction`,
-            timer: 1000,
-            hasClose: false,
-            onClick: () => {
-              setPayload((prev) => ({ ...prev, auction_id: "" }));
-            },
-          });
+          setTimeout(() => {
+            $swal({
+              title: `Lot ${data.auction?.lot_no}`,
+              content: `Reauction`,
+              timer: 2000,
+              hasClose: false,
+              noClose: true,
+            });
+          }, 500);
 
           reset();
           setIsBidding(false);
@@ -457,7 +481,7 @@ export function LivePage() {
             } else {
               $swal({
                 title: `Lot ${data.auction?.lot_no}`,
-                content: `${payload.bidders.highest_user_name} have won the auction`,
+                content: `${data.bidders.highest_user_name} have won the auction`,
                 timer: 3000,
                 hasClose: false,
               });
@@ -466,7 +490,7 @@ export function LivePage() {
             //live view (without auth)
             $swal({
               title: `Lot ${data.auction?.lot_no}`,
-              content: `${payload.bidders.highest_user_name} have won the auction`,
+              content: `${data.bidders.highest_user_name} have won the auction`,
               timer: 3000,
               hasClose: false,
             });
@@ -505,8 +529,9 @@ export function LivePage() {
           $swal({
             title: `Lot ${data.auction?.lot_no}`,
             content: `No Bid`,
-            timer: 3000,
+            timer: 2000,
             hasClose: false,
+            noClose: true,
           });
           playAudio("noBid");
           reset();
@@ -597,47 +622,36 @@ export function LivePage() {
           <DynamicRenderer>
             <DynamicRenderer.When
               cond={isNotAuctioneer && payload.auction_id === ""}
+              // cond={false}
               // cond={isNotAuctioneer && payload.status === "DISPLAY"}
             >
               <div>
-                {/* {!USER && ( */}
-                  <>
-                    <p className="text-3xl sm:text-5xl text-center text-primary">
-                      AUCTIONS LIVE VIEW
-                    </p>
-                    <main className="m-3 flexcenter gap-10">
-                      <div className="flexcenter gap-2 hidden">
-                        <div className="border-2 border-primary rounded-full p-2 text-primary">
-                          <LucideGavel />
-                        </div>
-                        <p className="pt-1">{viewer.connection}</p>
+                <>
+                  <p className="text-3xl sm:text-5xl text-center text-primary">
+                    AUCTIONS LIVE VIEW
+                  </p>
+                  <main className="m-3 flexcenter gap-10">
+                    <div className="flexcenter gap-2 hidden">
+                      <div className="border-2 border-primary rounded-full p-2 text-primary">
+                        <LucideGavel />
                       </div>
-                      <div className="flexcenter gap-2 ">
-                        <div className="border-2 border-primary rounded-full p-2 text-primary">
-                          <EyeIcon />
-                        </div>
-                        <p className="pt-1">{viewer.connection}</p>
+                      <p className="pt-1">{viewer.connection}</p>
+                    </div>
+                    <div className="flexcenter gap-2 ">
+                      <div className="border-2 border-primary rounded-full p-2 text-primary">
+                        <EyeIcon />
                       </div>
-                      <div className="flexcenter gap-2 ">
-                        <div className="border-2 border-primary rounded-full p-2 text-primary">
-                          <LucideGavel />
-                        </div>
-                        <p className="pt-1">{viewer.bidder}</p>
+                      <p className="pt-1">{viewer.connection}</p>
+                    </div>
+                    <div className="flexcenter gap-2 ">
+                      <div className="border-2 border-primary rounded-full p-2 text-primary">
+                        <LucideGavel />
                       </div>
-                    </main>
-                  </>
-                {/* )} */}
+                      <p className="pt-1">{viewer.bidder}</p>
+                    </div>
+                  </main>
+                </>
                 <WaitingComponent />
-                {dev && (
-                  <div className="flexcenter gap-4 my-10">
-                    {/* prettier-ignore */}
-                    <button onClick={bidderIn} className="bg-green-600 rounded-md px-4 py-3">bidder in</button>
-                    {/* prettier-ignore */}
-                    <button onClick={bidderOut} className="bg-green-600 rounded-md px-4 py-3">bidder out</button>
-                    {/* prettier-ignore */}
-                    <button onClick={resetBidder} className="bg-green-600 rounded-md px-4 py-3">bidder reset</button>
-                  </div>
-                )}
               </div>
             </DynamicRenderer.When>
             <DynamicRenderer.Else>
@@ -665,29 +679,12 @@ export function LivePage() {
                               className="flexcenter my-3 sm:my-4 gap-2"
                             >
                               <p className="text-primary sm:text-2xl">
-                                Deposit balance:
+                                {cr?.auction_house.name}:
                               </p>
                               <div className="relative">
                                 <p className="text-yellow-500 sm:text-2xl">
                                   RM{numWithComma(cr?.amount as number) || 0}
                                 </p>
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger
-                                      className="absolute -right-4 -top-1"
-                                      asChild
-                                    >
-                                      <button>
-                                        <Info size={"14px"} />
-                                      </button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p className="my-2 text-primary">
-                                        {cr?.auction_house.name}
-                                      </p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
                               </div>
                             </div>
                           )}
@@ -749,18 +746,30 @@ export function LivePage() {
 }
 
 const WaitingComponent = () => {
-  const { USER } = useStoreContext();
+  const { dev, bidderIn, bidderOut, resetBidder } = useStoreContext();
   return (
-    <div className={!USER ? "" : "pt-20"}>
-      <div className={`flexcenter-col text-center gap-4 mt-8`}>
-        <p className="animate-pulse text-3xl">WAITING</p>
-        <img className="scale-[0.8] sm:scale-[1]" src={waiting} alt="" />
-        <p className="mt-5">
-          Please be patient, we are still waiting for Auctioneer input. The
-          auction will start soon. Do not leave this page until the auction
-          starts. Thank you.
-        </p>
+    <>
+      <div>
+        <div className={`flexcenter-col text-center gap-4 mt-8`}>
+          <p className="animate-pulse text-3xl">WAITING</p>
+          <img className="scale-[0.8] sm:scale-[1]" src={waiting} alt="" />
+          <p className="mt-5">
+            Please be patient, we are still waiting for Auctioneer input. The
+            auction will start soon. Do not leave this page until the auction
+            starts. Thank you.
+          </p>
+        </div>
       </div>
-    </div>
+      {dev && (
+        <div className="flexcenter gap-4 my-10">
+          {/* prettier-ignore */}
+          <button onClick={bidderIn} className="bg-green-600 rounded-md px-4 py-3">bidder in</button>
+          {/* prettier-ignore */}
+          <button onClick={bidderOut} className="bg-green-600 rounded-md px-4 py-3">bidder out</button>
+          {/* prettier-ignore */}
+          <button onClick={resetBidder} className="bg-green-600 rounded-md px-4 py-3">bidder reset</button>
+        </div>
+      )}
+    </>
   );
 };

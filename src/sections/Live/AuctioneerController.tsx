@@ -1,7 +1,7 @@
 import { useStoreContext } from "@/Context";
 import { LogAuditTrail } from "@/interfaces/API";
 import { BidStatus, COUNTDOWN, ROLE } from "@/enum";
-import { EventData } from "@/interfaces/websocket";
+import { BidData, EventData } from "@/interfaces/websocket";
 import { useAPIServices } from "@/services";
 import { ArrowLeftSquare, ArrowRightSquare } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -458,11 +458,26 @@ export function AuctioneerController() {
             return prev;
           }
 
+          /*  */
+          let current: BidData = {
+            amount: prev.bidders.highest_amount,
+            name: prev.bidders.highest_user_name,
+            user_id: prev.bidders.highest_user_id,
+          };
+          let previous: BidData[] = prev.bidders.all;
+
+          if (current.amount !== data.amount && current.amount !== 0) {
+            previous = [current, ...previous];
+          }
+          current = data;
+          /*  */
+
           const updatedPayload = {
             ...prev,
             status: "" as Status,
             bidders: {
-              all: [data, ...prev.bidders.all],
+              all: previous,
+              // all: [data, ...prev.bidders.all],
               highest_amount: data.amount,
               highest_user_id: data.user_id,
               highest_user_name: data.name,
