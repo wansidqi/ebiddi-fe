@@ -296,7 +296,7 @@ export function LivePage() {
     postTrail({ data });
   };
 
-  const { expiryAt } = UseCountdown();
+  const { expiryAt, countdown: rcd } = UseCountdown();
 
   useEffect(() => {
     bidderIn();
@@ -651,6 +651,14 @@ export function LivePage() {
     payload.auction_id !== "" && getAuction();
     payload.auction_id !== "" && getCredit();
   }, [payload.auction_id]);
+
+  useEffect(() => {
+    if (rcd === "00:00:00" || !rcd) {
+      setCurrentPage("bidding");
+    } else {
+      setCurrentPage("reauctionlist");
+    }
+  }, [rcd]);
 
   return (
     <div>

@@ -26,12 +26,12 @@ export function ReauctionList() {
 
   const reauctionItem = (auctionId: string) => {
     let data = `event_id=${eventId}&auction_event_id=${auctionId}`;
-    console.log(data);
 
     onReautionItem(
       { data },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          console.log(data);
           publishReauction({
             event_id: eventId ?? "",
             data: {
@@ -39,6 +39,12 @@ export function ReauctionList() {
               event_id: eventId,
               status: "REAUCTIONLISTITEM",
             },
+          });
+          $swal({
+            title: "Reauction",
+            content: "Item reauction requested",
+            hasClose: true,
+            timer: 1500,
           });
         },
         onError: () => {
