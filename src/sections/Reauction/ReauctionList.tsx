@@ -30,8 +30,7 @@ export function ReauctionList() {
     onReautionItem(
       { data },
       {
-        onSuccess: (data) => {
-          console.log(data);
+        onSuccess: () => {
           publishReauction({
             event_id: eventId ?? "",
             data: {
@@ -44,7 +43,7 @@ export function ReauctionList() {
             title: "Reauction",
             content: "Item reauction requested",
             hasClose: true,
-            timer: 1500,
+            timer: 2000,
           });
         },
         onError: () => {
@@ -97,7 +96,7 @@ export function ReauctionList() {
                 <p>{item.model}</p>
                 <div>
                   <p className="text-primary">Year of Make:</p>
-                  <p>{item.year || 'n/a'}</p>
+                  <p>{item.year || "n/a"}</p>
                 </div>
                 <div>
                   <p className="text-primary">Legal Owner:</p>
