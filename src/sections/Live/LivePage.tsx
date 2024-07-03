@@ -653,10 +653,16 @@ export function LivePage() {
   }, [payload.auction_id]);
 
   useEffect(() => {
-    if (rcd === "00:00:00" || !rcd) {
+    if (rcd === "") {
       setCurrentPage("bidding");
-    } else {
+    } else if (!rcd) {
       setCurrentPage("reauctionlist");
+    } else if (rcd !== "00:00:00") {
+      setCurrentPage("reauctionlist");
+    } else {
+      setTimeout(() => {
+        setCurrentPage("bidding");
+      }, 1500);
     }
   }, [rcd]);
 

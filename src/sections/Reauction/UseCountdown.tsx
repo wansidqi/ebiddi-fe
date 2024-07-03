@@ -46,8 +46,6 @@ export function UseCountdown() {
         return item as ReauctionList;
       });
 
-      console.log({ reauctionList: auctions?.length });
-
       setMapItem(items);
 
       publishReauction({

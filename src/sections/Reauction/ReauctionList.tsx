@@ -97,7 +97,7 @@ export function ReauctionList() {
                 <p>{item.model}</p>
                 <div>
                   <p className="text-primary">Year of Make:</p>
-                  <p>{item.year}</p>
+                  <p>{item.year || 'n/a'}</p>
                 </div>
                 <div>
                   <p className="text-primary">Legal Owner:</p>
