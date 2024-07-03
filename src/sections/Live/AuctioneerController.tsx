@@ -205,7 +205,7 @@ export function AuctioneerController() {
           let update = {
             ...prev,
             status: "WITHDRAW" as Status,
-            countdown: COUNTDOWN.initial,
+            // countdown: COUNTDOWN.initial,
             bidStatus: BidStatus.WITHDRAW,
             // auction_id: "",
           };
