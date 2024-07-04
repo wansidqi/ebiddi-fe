@@ -26,7 +26,13 @@ export function Navigation() {
   const { mutateAsync } = usePostLogout();
 
   const back = () => {
-    navigate(-1);
+    const endpoint = window.location.pathname;
+
+    if (endpoint === "/events") {
+      navigate("/");
+    } else {
+      navigate("/events");
+    }
   };
 
   const iconAttribute = {
