@@ -353,19 +353,19 @@ export function AuctioneerController() {
 
     const data = new URLSearchParams(postData as any).toString();
 
-    onPostItemSold(
-      { auction_id, data },
-      {
-        onSuccess: () => {
-          sendAuditTrail({
-            event_id: Number(payload.event_id),
-            auction_id: Number(payload.auction_id),
-            status: "SOLD",
-            bid_amount: 0,
-          });
-        },
-      }
-    );
+    // onPostItemSold(
+    //   { auction_id, data },
+    //   {
+    //     onSuccess: () => {
+    //       sendAuditTrail({
+    //         event_id: Number(payload.event_id),
+    //         auction_id: Number(payload.auction_id),
+    //         status: "SOLD",
+    //         bid_amount: 0,
+    //       });
+    //     },
+    //   }
+    // );
   };
 
   const getCurrentBid = (amount: number) => {
@@ -445,15 +445,20 @@ export function AuctioneerController() {
       auction_id: auctionId,
       event_id: eventId,
       onData: (data) => {
-        if (payload.bidders.highest_amount >= data.amount) {
-          return;
-        }
-
-        if (payload.bidders.highest_user_id === data.user_id) {
-          return;
-        }
-
         setPayload((prev) => {
+          if (prev.bidders.highest_amount >= data.amount) {
+            return prev;
+          }
+
+          if (prev.bidders.highest_user_id === data.user_id) {
+            return prev;
+          }
+
+          // console.log(":::::");
+          // console.log({payloadAmount:prev.bidders.highest_amount, dataAmount:data.amount}) //prettier-ignore
+          // console.log({payloadId:prev.bidders.highest_user_id, dataId:data.user_id}) //prettier-ignore
+          // console.log(":::::");
+
           const duplciateAmount = prev.bidders.all.some(
             (bidder) => bidder.amount === data.amount
           );

@@ -25,7 +25,6 @@ import { useAPIServices } from "@/services";
 import { playAudio } from "@/assets/audio";
 import { numWithComma } from "@/lib/utils";
 import moment from "moment";
-import { BidData } from "@/interfaces/websocket";
 
 export function LivePage() {
   const { eventId } = useParams();
@@ -36,7 +35,6 @@ export function LivePage() {
     setPayload,
     payload,
     publishBid,
-    setBidListIndex,
     unsubscribeEvent,
     currentPage,
     setCurrentPage,
@@ -75,58 +73,10 @@ export function LivePage() {
       user_id: USER?.id,
     };
 
-    setPayload((prev) => {
-      /*  */
-      let current: BidData = {
-        amount: prev.bidders.highest_amount,
-        name: prev.bidders.highest_user_name,
-        user_id: prev.bidders.highest_user_id,
-      };
-
-      let previous: BidData[] = prev.bidders.all;
-
-      const duplciatePrev = previous.some(
-        (bidder) => bidder.amount === current.amount
-      );
-
-      if (
-        !duplciatePrev &&
-        current.amount !== data.amount &&
-        current.amount !== 0
-      ) {
-        previous = [current, ...previous];
-      }
-      current = data;
-      /*  */
-
-      const duplciateAmount = prev.bidders.all.some(
-        (bidder) => bidder.amount === data.amount
-      );
-
-      if (duplciateAmount) {
-        return prev;
-      }
-
-      const updatedPayload = {
-        ...prev,
-        bidders: {
-          previous,
-          all: [data, ...prev.bidders.all],
-          highest_amount: data.amount,
-          highest_user_id: data.user_id,
-          highest_user_name: data.name,
-        },
-      };
-
-      setBidListIndex(0);
-
-      publishBid({
-        auction_id: payload.auction_id,
-        event_id: eventId,
-        data: data,
-      });
-
-      return updatedPayload;
+    publishBid({
+      auction_id: payload.auction_id,
+      event_id: eventId,
+      data: data,
     });
   };
 
@@ -140,58 +90,10 @@ export function LivePage() {
       user_id: USER?.id,
     };
 
-    setPayload((prev) => {
-      /*  */
-      let current: BidData = {
-        amount: prev.bidders.highest_amount,
-        name: prev.bidders.highest_user_name,
-        user_id: prev.bidders.highest_user_id,
-      };
-
-      let previous: BidData[] = prev.bidders.all;
-
-      const duplciatePrev = previous.some(
-        (bidder) => bidder.amount === current.amount
-      );
-
-      if (
-        !duplciatePrev &&
-        current.amount !== data.amount &&
-        current.amount !== 0
-      ) {
-        previous = [current, ...previous];
-      }
-      current = data;
-      /*  */
-
-      const duplciateAmount = prev.bidders.all.some(
-        (bidder) => bidder.amount === data.amount
-      );
-
-      if (duplciateAmount) {
-        return prev;
-      }
-
-      const updatedPayload = {
-        ...prev,
-        bidders: {
-          previous,
-          all: [data, ...prev.bidders.all],
-          highest_amount: data.amount,
-          highest_user_id: data.user_id,
-          highest_user_name: data.name,
-        },
-      };
-
-      setBidListIndex(0);
-
-      publishBid({
-        auction_id: payload.auction_id,
-        event_id: eventId,
-        data: data,
-      });
-
-      return updatedPayload;
+    publishBid({
+      auction_id: payload.auction_id,
+      event_id: eventId,
+      data: data,
     });
   };
 
@@ -494,7 +396,7 @@ export function LivePage() {
           // console.log("enter end");
           playAudio("sold");
 
-          let timer = 3000;
+          let timer = 1500;
 
           function redirectWait() {
             setTimeout(() => {
@@ -536,7 +438,8 @@ export function LivePage() {
             });
             redirectWait();
           }
-
+          
+          isPlayStart.current = true;
           reset();
         }
 
