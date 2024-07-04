@@ -4,7 +4,7 @@ import { Fragment, useEffect } from "react";
 
 export function BidderList() {
   const { payload, bidListIndex, setBidListIndex } = useStoreContext();
-  const getBidders = payload.bidders.previous;
+  const getBidders = payload.bidders.all.slice(1);
 
   useEffect(() => {
     if (bidListIndex !== null) {

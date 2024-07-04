@@ -15,7 +15,6 @@ export interface EventData {
   countdown: number;
   bidders: {
     all: BidData[];
-    previous: BidData[];
     highest_amount: number;
     highest_user_id: number;
     highest_user_name: string;
