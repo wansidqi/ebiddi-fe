@@ -44,6 +44,7 @@ export function LivePage() {
     viewer,
     bidderIn,
     bidderOut,
+    setBidListIndex,
   } = useStoreContext();
 
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
@@ -73,6 +74,8 @@ export function LivePage() {
       user_id: USER?.id,
     };
 
+    setBidListIndex(0);
+
     publishBid({
       auction_id: payload.auction_id,
       event_id: eventId,
@@ -89,6 +92,8 @@ export function LivePage() {
       name: USER?.name,
       user_id: USER?.id,
     };
+
+    setBidListIndex(0);
 
     publishBid({
       auction_id: payload.auction_id,
@@ -435,7 +440,7 @@ export function LivePage() {
             });
             redirectWait();
           }
-          
+
           isPlayStart.current = true;
           reset();
         }
