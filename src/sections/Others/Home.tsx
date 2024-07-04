@@ -1,12 +1,13 @@
 import { useStoreContext } from "@/Context";
 import { Container } from "@/components/Container";
 import { Button } from "@/components/ui/button";
+import { DEV } from "@/enum";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function Home() {
   const navigate = useNavigate();
-  const { socket, dev } = useStoreContext();
+  const { socket } = useStoreContext();
 
   const [data, setData] = useState("");
 
@@ -56,7 +57,7 @@ export function Home() {
         <Button onClick={() => navigate("/login")}>Sign In</Button>
       </div>
 
-      {dev && (
+      {DEV && (
         <div className="flexcenter-col gap-5">
           <input
             onKeyDown={onEnterClick}

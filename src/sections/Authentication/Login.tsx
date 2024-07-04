@@ -1,8 +1,8 @@
-import { useStoreContext } from "@/Context";
 import logo from "@/assets/images/e-biddi icon.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DEV } from "@/enum";
 import { onEnterClick } from "@/lib/utils";
 import { useAPIServices } from "@/services";
 import { LogInIcon, Home } from "lucide-react";
@@ -13,7 +13,6 @@ export function Login() {
   const navigate = useNavigate();
   const { usePostLogin } = useAPIServices();
   const { mutateAsync } = usePostLogin();
-  const { dev } = useStoreContext();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -72,7 +71,7 @@ export function Login() {
         </div>
       </Button>
 
-      <div className={dev ? "flex gap-4" : "hidden"}>
+      <div className={DEV ? "flex gap-4" : "hidden"}>
         <button
           onClick={() => mutateAsync(bidderCredentials)}
           className="w-40 pt-3 pb-2 px-3 bg-yellow-500 rounded-md"

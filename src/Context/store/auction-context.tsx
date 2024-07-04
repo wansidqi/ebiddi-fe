@@ -18,8 +18,6 @@ type AuctionData = {
 
   isTACCooldown: boolean;
   setIsTACCooldown: React.Dispatch<React.SetStateAction<boolean>>;
-
-  dev: boolean;
 };
 
 export function AuctionProvider(props: React.PropsWithChildren<{}>) {
@@ -30,15 +28,11 @@ export function AuctionProvider(props: React.PropsWithChildren<{}>) {
   const [timer, setTimer] = useState(0);
   const [isTACCooldown, setIsTACCooldown] = useState(false);
 
-  //TODO change to false when to deploy
-  const dev = false;
-
   const contextValue: AuctionData = {
     view,
     setView,
     selectEvent,
     setSelectEvent,
-    dev,
     USER,
     SET_USER,
     timer,

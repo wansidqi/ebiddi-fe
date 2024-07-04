@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UseCountdown } from "./UseCountdown";
+import { DEV } from "@/enum";
 
 export function ReauctionTimer() {
   const [open, setOpen] = useState(false);
@@ -179,7 +180,6 @@ const Content = ({
   closeModal: () => void;
 }) => {
   const [duration, setDuration] = useState(0);
-  const { dev } = useStoreContext();
 
   const convStrToNum = (value: string) => {
     setDuration(parseInt(value, 10));
@@ -199,9 +199,9 @@ const Content = ({
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {dev && <SelectItem value="10">10 seconds</SelectItem>}
-              {dev && <SelectItem value="30">30 seconds</SelectItem>}
-              {dev && <SelectItem value="60">1 minute</SelectItem>}
+              {DEV && <SelectItem value="10">10 seconds</SelectItem>}
+              {DEV && <SelectItem value="30">30 seconds</SelectItem>}
+              {DEV && <SelectItem value="60">1 minute</SelectItem>}
               <SelectItem value="300">5 minutes</SelectItem>
               <SelectItem value="600">10 minutes</SelectItem>
               <SelectItem value="900">15 minutes</SelectItem>

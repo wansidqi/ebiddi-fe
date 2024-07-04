@@ -12,7 +12,7 @@ import {
 import waiting from "@/assets/images/waiting.png";
 import { useStoreContext } from "@/Context";
 import { DynamicRenderer, Modal } from "@/components";
-import { COUNTDOWN, ROLE } from "@/enum";
+import { COUNTDOWN, DEV, ROLE } from "@/enum";
 import { Toaster } from "@/components/ui/toaster";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -37,7 +37,6 @@ export function LivePage() {
     payload,
     publishBid,
     setBidListIndex,
-    dev,
     unsubscribeEvent,
     currentPage,
     setCurrentPage,
@@ -769,7 +768,7 @@ export function LivePage() {
                           <UnlockKeyhole />
                         )}
                       </button>
-                      {dev && (
+                      {DEV && (
                         <button
                           onClick={testBid}
                           className="px-3 py-2 bg-blue-600 rounded-md"
@@ -799,7 +798,7 @@ export function LivePage() {
 }
 
 const WaitingComponent = () => {
-  const { dev, bidderIn, bidderOut, resetBidder } = useStoreContext();
+  const { bidderIn, bidderOut, resetBidder } = useStoreContext();
   return (
     <>
       <div>
@@ -813,7 +812,7 @@ const WaitingComponent = () => {
           </p>
         </div>
       </div>
-      {dev && (
+      {DEV && (
         <div className="flexcenter gap-4 my-10">
           {/* prettier-ignore */}
           <button onClick={bidderIn} className="bg-green-600 rounded-md px-4 py-3">bidder in</button>
