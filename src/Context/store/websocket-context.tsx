@@ -53,14 +53,6 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
   const { USER } = useAuction();
 
   const [socket, setSocket] = useState<ws>(null);
-  // const socket = socketClusterClient.create({
-  //   hostname: "bidding.e-biddi.com",
-  //   secure: true,
-  //   port: 443,
-  //   autoConnect: true,
-  //   protocolVersion: 1,
-  //   path: "/socketcluster/",
-  // });
 
   const [bidListIndex, setBidListIndex] = useState(-1);
   const [currentPage, setCurrentPage] = useState<"bidding" | "reauctionlist">("bidding"); //prettier-ignore
