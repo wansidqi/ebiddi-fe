@@ -322,9 +322,13 @@ export function LivePage() {
           $swal({
             title: event ? event?.name : "",
             content: `Auction has been closed, that's all for this event`,
+            timer: 3000,
             onClick: () => navigate("/events"),
             hasClose: false,
           });
+          setTimeout(() => {
+            navigate("/events");
+          }, 3000);
           // navigate("/events");
         }
 
