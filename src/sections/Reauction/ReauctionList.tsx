@@ -30,18 +30,18 @@ export function ReauctionList() {
     return check;
   };
 
-  const handleReauction = (auctionId: string) => {
+  const handleReauction = (auctionId: string, lot: string) => {
     $swal({
       title: "Reauction",
       content: "Please confirm if you want to reauction this lot",
       hasClose: true,
       onClick: () => {
-        reauctionItem(auctionId);
+        reauctionItem(auctionId, lot);
       },
     });
   };
 
-  const reauctionItem = (auctionId: string) => {
+  const reauctionItem = (auctionId: string, lot: string) => {
     let data = `event_id=${eventId}&auction_event_id=${auctionId}`;
 
     onReautionItem(
@@ -58,7 +58,7 @@ export function ReauctionList() {
           });
           $swal({
             title: "Reauction",
-            content: "Item reauction requested",
+            content: `Lot ${lot} reauction requested`,
             hasClose: true,
             timer: 2000,
           });
@@ -73,11 +73,6 @@ export function ReauctionList() {
         },
       }
     );
-  };
-
-  const onClickReauction = (auctionId: string) => {
-    if (!USER) return;
-    handleReauction(auctionId);
   };
 
   return (
@@ -121,7 +116,7 @@ export function ReauctionList() {
                 </div>
 
                 <Button
-                  disabled={Boolean(isReauctionList(item.lot_no))}
+                  disabled={!USER || Boolean(isReauctionList(item.lot_no))}
                   className={
                     !isReauctionList(item.lot_no)
                       ? ""
@@ -129,7 +124,7 @@ export function ReauctionList() {
                   }
                   variant={!isReauctionList(item.lot_no) ? "default" : "ghost"}
                   onClick={() =>
-                    onClickReauction(item?.auction_event_id as any)
+                    handleReauction(item?.auction_event_id as any, item.lot_no)
                   }
                 >
                   {!isReauctionList(item.lot_no) ? "REAUCTION" : "REQUESTED"}

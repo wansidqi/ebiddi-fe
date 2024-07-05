@@ -23,12 +23,18 @@ export function AuctioneerList() {
   ];
 
   const { eventId } = useParams();
-  const { countdown, isCountdownActive } = UseCountdown();
+  const { countdown, isCountdownActive, getReauctionList } = UseCountdown();
 
   const navigate = useNavigate();
   const { useGetEventById, useCloseAuctionEvent } = useAPIServices();
-  const { setView, publishEvent, setPayload, $swal, resetBidder } =
-    useStoreContext();
+  const {
+    setView,
+    publishEvent,
+    setPayload,
+    $swal,
+    resetBidder,
+    subscribeReauction,
+  } = useStoreContext();
 
   const { data } = useGetEventById(eventId);
   const { mutateAsync: onCloseEventAPI } = useCloseAuctionEvent(eventId);
@@ -74,6 +80,19 @@ export function AuctioneerList() {
       hasClose: true,
     });
   };
+
+  useEffect(() => {
+    if (!eventId) return;
+
+    subscribeReauction({
+      event_id: eventId,
+      onData: (data) => {
+        if (data.status === "REAUCTIONLISTITEM") {
+          getReauctionList();
+        }
+      },
+    });
+  }, []);
 
   useEffect(() => {
     setView("List");

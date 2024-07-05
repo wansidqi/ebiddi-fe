@@ -68,9 +68,7 @@ export function UseCountdown() {
         const minutes = String(duration.minutes()).padStart(2, "0");
         const seconds = String(duration.seconds()).padStart(2, "0");
 
-        if (isNaN(Number(seconds)) || countdown === "00:00:00") {
-          getReauctionList();
-        }
+        // if (isNaN(Number(seconds)) || countdown === "00:00:00") {}
 
         setIsCountdownActive(true);
 
@@ -109,5 +107,6 @@ export function UseCountdown() {
     isCdLoading,
     isCountdownActive,
     expiryAt,
+    getReauctionList,
   };
 }
