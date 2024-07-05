@@ -134,25 +134,6 @@ export function ReauctionList() {
                 >
                   {!isReauctionList(item.lot_no) ? "REAUCTION" : "REQUESTED"}
                 </Button>
-
-                {/* {item.status === "HOLD" && (
-                  <Button
-                    onClick={() =>
-                      onClickReauction(item?.auction_event_id as any)
-                    }
-                  >
-                    REAUCTION
-                  </Button>
-                )}
-                {item.status === "REQUEST" && (
-                  <Button
-                    disabled={true}
-                    variant="ghost"
-                    className="text-green-400 text-lg"
-                  >
-                    REQUESTED
-                  </Button>
-                )} */}
               </div>
             </div>
           ))}

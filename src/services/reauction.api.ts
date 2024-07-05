@@ -116,12 +116,3 @@ export const ReauctionsServices = {
   usePostReauction,
   usePostReauctionItem,
 };
-
-/* {
-          id: "",
-          event_id: {
-            event_id: 0,
-            name: "",
-          },
-          expiry_at: "",
-        } */

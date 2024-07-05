@@ -65,13 +65,13 @@ export function LivePage() {
   const { data: auction, refetch: getAuction } = useGetLiveAuction(payload.auction_id); //prettier-ignore
   const { mutateAsync: postTrail } = usePostAuditTrail();
 
-  const testBid = () => {
+  const testBid = (name: string, user_id: number) => {
     if (!eventId || !USER) return;
 
     let data = {
       amount: payload.bid.next,
-      name: USER?.name,
-      user_id: USER?.id,
+      name,
+      user_id,
     };
 
     setBidListIndex(0);
@@ -81,6 +81,22 @@ export function LivePage() {
       event_id: eventId,
       data: data,
     });
+  };
+
+  const showNumberTest = (id: number) => {
+    if (!isBidding) {
+      return "WAITING";
+    }
+
+    if (payload.bidders.highest_user_id === id) {
+      return "HIGHEST BID";
+    }
+
+    if (!canBid()) {
+      return "INSUFFICIENT DEPOSIT";
+    }
+
+    return payload.bid.next;
   };
 
   const clickBid = () => {
@@ -676,15 +692,22 @@ export function LivePage() {
                           <UnlockKeyhole />
                         )}
                       </button>
-                      {DEV && (
-                        <button
-                          onClick={testBid}
-                          className="px-3 py-2 bg-blue-600 rounded-md"
-                        >
-                          test bid
-                        </button>
-                      )}
                     </div>
+                    {DEV && (
+                      <div className="gap-4 my-5 flexcenter mx-20">
+                        {Array.from({ length: 4 }).map((_, i) => (
+                          <button
+                            onClick={() => testBid(`USER ${i + 1}`, i + 1)}
+                            className="w-full py-2 bg-blue-600 rounded-md"
+                          >
+                            <p>
+                              USER {i + 1}: {payload.bid.next}
+                            </p>
+                            <p>{showNumberTest(i + 1)}</p>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
                 {!isNotAuctioneer && <AuctioneerController />}
