@@ -481,6 +481,7 @@ export function LivePage() {
             hasClose: false,
           });
           playAudio("withdraw");
+          isPlayStart.current = true;
           reset();
         }
 
