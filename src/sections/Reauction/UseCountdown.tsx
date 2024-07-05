@@ -20,8 +20,6 @@ export function UseCountdown() {
   let expiryAt = status?.expiry_at;
 
   const sendHoldItems = () => {
-    getReauctionList();
-
     if (!eventId) return;
 
     if (holdedItems && holdedItems.length <= 0) {
@@ -80,7 +78,7 @@ export function UseCountdown() {
 
         if (counter >= 1) {
           getReauctionStatus();
-          getReauctionList();
+          // getReauctionList();
           sendHoldItems();
           counter = 0;
         } else {
