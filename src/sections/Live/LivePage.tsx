@@ -698,6 +698,7 @@ export function LivePage() {
                       <div className="gap-4 my-5 flexcenter mx-20">
                         {Array.from({ length: 4 }).map((_, i) => (
                           <button
+                            key={i}
                             onClick={() => testBid(`USER ${i + 1}`, i + 1)}
                             className="w-full py-2 bg-blue-600 rounded-md"
                           >
