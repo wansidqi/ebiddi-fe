@@ -498,25 +498,12 @@ export function AuctioneerController() {
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
-    // if (payload.status === "SOLD") {
-    //   setPayload((prev) => ({ ...prev, countdown: COUNTDOWN.initial })); ///reset countdown
-    // }
-
     if (isActive && !isPaused) {
       interval = setInterval(() => {
         setPayload((prev) => ({ ...prev, countdown: prev.countdown - 1 })); ///decrement
       }, 1000);
       publishTimer();
     }
-
-    // if (countdown === 0) {
-    //   // setBidStatus(1);
-    //   const timeout = setTimeout(() => {
-    //     setIsActive(false);
-    //     setPayload((prev) => ({ ...prev, countdown: COUNTDOWN.initial })); ///reset countdown
-    //   }, 1000);
-    //   return () => clearTimeout(timeout);
-    // }
 
     return () => clearInterval(interval);
   }, [isActive, countdown, isPaused]);
