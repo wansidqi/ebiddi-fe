@@ -33,7 +33,6 @@ export function AuctioneerList() {
   const { data } = useGetEventById(eventId);
   const { mutateAsync: onCloseEventAPI } = useCloseAuctionEvent(eventId);
 
-  //TODO: check which API is for hold Items (getReauctionList or getHoldItems)
   const qryKey = [KEY.reauction, eventId];
   const reauctions = useGetQueryData<ReauctionList[]>(qryKey);
 

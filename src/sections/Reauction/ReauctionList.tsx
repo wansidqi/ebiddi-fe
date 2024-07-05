@@ -1,17 +1,34 @@
 import { UseCountdown, gridCSS } from "..";
 import { Button } from "@/components/ui/button";
 import { useStoreContext } from "@/Context";
-import { useAPIServices } from "@/services";
+import { KEY, useAPIServices, useGetQueryData } from "@/services";
 import { useParams } from "react-router-dom";
+import { ReauctionList as ReauctionListInterface } from "@/interfaces";
 
 export function ReauctionList() {
   const { eventId } = useParams();
   const { USER, $swal, publishReauction } = useStoreContext();
 
-  const { countdown, mapItem, expiryAt } = UseCountdown();
+  const { countdown, expiryAt } = UseCountdown();
 
   const { usePostReauctionItem } = useAPIServices();
   const { mutateAsync: onReautionItem } = usePostReauctionItem();
+
+  const reauctions = useGetQueryData<ReauctionListInterface[]>([
+    KEY.reauction,
+    eventId,
+  ]);
+  const holdedItems = useGetQueryData<ReauctionListInterface[]>([
+    KEY.reauctions_holdItem,
+    eventId,
+  ]);
+
+  const isReauctionList = (lot: string) => {
+    const check = reauctions?.find((item) => item.lot_no === lot);
+    // console.log(check);
+    /* kalau undefined, bukan reauction. kalau ada value, is reauction */
+    return check;
+  };
 
   const handleReauction = (auctionId: string) => {
     $swal({
@@ -75,7 +92,7 @@ export function ReauctionList() {
 
       <div className="my-10">
         <div className={gridCSS}>
-          {mapItem?.map((item, i: number) => (
+          {holdedItems?.map((item, i: number) => (
             <div key={i} className="border-2 border-secondary rounded-sm pb-4">
               <div className="relative h-[280px] w-full">
                 <img
@@ -102,7 +119,23 @@ export function ReauctionList() {
                   <p className="text-primary">Legal Owner:</p>
                   <p>{item.legal_owner}</p>
                 </div>
-                {item.status === "HOLD" && (
+
+                <Button
+                  disabled={Boolean(isReauctionList(item.lot_no))}
+                  className={
+                    !isReauctionList(item.lot_no)
+                      ? ""
+                      : "text-green-400 text-lg"
+                  }
+                  variant={!isReauctionList(item.lot_no) ? "default" : "ghost"}
+                  onClick={() =>
+                    onClickReauction(item?.auction_event_id as any)
+                  }
+                >
+                  {!isReauctionList(item.lot_no) ? "REAUCTION" : "REQUESTED"}
+                </Button>
+
+                {/* {item.status === "HOLD" && (
                   <Button
                     onClick={() =>
                       onClickReauction(item?.auction_event_id as any)
@@ -119,7 +152,7 @@ export function ReauctionList() {
                   >
                     REQUESTED
                   </Button>
-                )}
+                )} */}
               </div>
             </div>
           ))}

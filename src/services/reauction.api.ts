@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { KEY } from ".";
 import datasource from "@/datasource/axiosInstance";
 import { ReauctionList, ReauctionStatus } from "@/interfaces";
+import { useParams } from "react-router-dom";
 
 const useGetReauctionList = (eventId: string | undefined) => {
   return useQuery({
@@ -24,13 +25,17 @@ const useGetReauctionStatus = (eventId: string | undefined) => {
   return useQuery({
     queryKey: [KEY.reauctions_status, eventId],
     queryFn: async () => {
-      const response = await datasource({
-        method: "get",
-        url: `/auction/reauctionevent/event/${eventId}`,
-      });
-      ///return expiryAt (response.data.data.expiry_at)
-      const data = response.data.data as ReauctionStatus;
-      return data;
+      try {
+        const response = await datasource({
+          method: "get",
+          url: `/auction/reauctionevent/event/${eventId}`,
+        });
+        ///return expiryAt (response.data.data.expiry_at)
+        const data = response.data.data as ReauctionStatus;
+        return data;
+      } catch (error) {
+        return null;
+      }
     },
     retry: false,
     refetchOnWindowFocus: false,
@@ -83,9 +88,40 @@ const usePostReauction = (eventId: string | undefined) => {
   });
 };
 
+const usePostReauctionItem = () => {
+  const queryClient = useQueryClient();
+  const { eventId } = useParams();
+
+  return useMutation({
+    mutationFn: async ({ data }: { data: string }) => {
+      const response = await datasource({
+        method: "post",
+        url: `/auction/reauctioneventitem`,
+        data,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries([KEY.reauctions_status, eventId]);
+      queryClient.invalidateQueries([KEY.reauctions_holdItem, eventId]);
+      queryClient.invalidateQueries([KEY.reauction, eventId]);
+    },
+  });
+};
+
 export const ReauctionsServices = {
   useGetReauctionList,
   useGetReauctionStatus,
   useGetHoldItems,
   usePostReauction,
+  usePostReauctionItem,
 };
+
+/* {
+          id: "",
+          event_id: {
+            event_id: 0,
+            name: "",
+          },
+          expiry_at: "",
+        } */

@@ -1,5 +1,4 @@
 import { useStoreContext } from "@/Context";
-import { ReauctionList } from "@/interfaces";
 import { useAPIServices } from "@/services";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -10,7 +9,6 @@ export function UseCountdown() {
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [countdown, setCountdown] = useState<string>("");
   const [isCountdownActive, setIsCountdownActive] = useState(false);
-  const [mapItem, setMapItem] = useState<ReauctionList[]>([]);
 
   const { publishReauction } = useStoreContext();
 
@@ -20,8 +18,6 @@ export function UseCountdown() {
   const { data: holdedItems, refetch: getHoldItems } =  useGetHoldItems(eventId); //prettier-ignore
 
   let expiryAt = status?.expiry_at;
-
-  // const expiryAt = useGetQueryData<ReauctionStatus>([KEY.reauctions_status, eventId]) ?.expiry_at ?? "";
 
   const sendHoldItems = () => {
     getReauctionList();
@@ -33,21 +29,6 @@ export function UseCountdown() {
     }
 
     if (holdedItems && holdedItems.length > 0) {
-      const auctionEventIds = auctions?.map(
-        (auction) => auction.auction_event_id
-      );
-
-      let items = holdedItems.map((hItem) => {
-        const item = { ...hItem };
-        if (auctionEventIds?.includes(item.auction_event_id)) {
-          item.status = "REQUEST";
-        }
-
-        return item as ReauctionList;
-      });
-
-      setMapItem(items);
-
       publishReauction({
         event_id: eventId,
         data: {
@@ -129,7 +110,6 @@ export function UseCountdown() {
     countdown,
     isCdLoading,
     isCountdownActive,
-    mapItem,
     expiryAt,
   };
 }
