@@ -720,9 +720,9 @@ export function LivePage() {
 
         {isNotAuctioneer && (
           <Modal modalState={currentPage === "reauctionlist"}>
-            <main className="px-8">
+            <Container className="px-8">
               <ReauctionList />
-            </main>
+            </Container>
           </Modal>
         )}
       </Container>

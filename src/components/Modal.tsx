@@ -43,7 +43,7 @@ export function Modal({
             className={`flex fixed inset-0 z-50 bg-background bg-opacity-${opacity}`}
           >
             <div className="w-full bg-opacity-90 text-[16px] overflow-y-auto custom-scrollbar">
-              <div className="mb-10 text-[16px]">
+              <div className="text-[16px]">
                 {hasCloseBtn && (
                   <button
                     onClick={handleClose}
