@@ -29,7 +29,6 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.52.0",
     "react-router-dom": "^6.16.0",
-    "react-simplify-gen": "^0.0.1",
     "react-toastify": "^10.0.5",
     "socketcluster-client": "^19.2.1",
     "sonner": "^1.4.41",
