@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useAPIServices } from "@/services";
 
 export function Receipt() {
   const { $swal } = useStoreContext();
@@ -35,6 +36,20 @@ export function Receipt() {
   const [bankName, setBankName] = useState("");
   const [bankAccNo, setBankAccNo] = useState("");
   const [refundAmount, setRefundAmount] = useState("");
+
+  const { usePostReceipt } = useAPIServices();
+  const { mutateAsync: uploadReceipt } = usePostReceipt();
+
+  const resetAll = () => {
+    setpaymentRef("");
+    setBankinAmount("");
+    setAccHolder("");
+    setBankName("");
+    setBankAccNo("");
+    setRefundAmount("");
+    setReceipt("");
+    setRefund("");
+  };
 
   const handleImageUpload = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -70,31 +85,42 @@ export function Receipt() {
     ) {
       const uploadedFile = receiptRef.current.files[0];
       const formData = new FormData();
-      formData.append("file", uploadedFile);
-      formData.append("paymentRef", paymentRef);
-      formData.append("bankinAmount", bankinAmount);
 
-      try {
-        //TODO post API for uplaod receipt
+      const data = {
+        credit_id: "0",
+        reference_no: paymentRef,
+        amount: bankinAmount,
+        attachment: uploadedFile,
+      };
 
-        /*  await fetch("https://api.example.com", {method: "post", body: formData});  */
-        $swal({
-          title: "Upload Image",
-          content: "Receipt success uploaded!",
-          hasClose: false,
-        });
-      } catch (error) {
-        $swal({
-          title: "Upload Image",
-          content: "Failed to upload receipt",
-          hasClose: false,
-        });
+      for (let [key, value] of Object.entries(data)) {
+        formData.append(key, value);
       }
+
+      uploadReceipt(formData, {
+        onSuccess: () => {
+          $swal({
+            title: "Upload Image",
+            content: "Receipt success uploaded!",
+            hasClose: false,
+            onClick: () => resetAll(),
+          });
+        },
+        onError: () => {
+          $swal({
+            title: "Upload Image",
+            content: "Failed to upload receipt",
+            hasClose: false,
+            onClick: () => resetAll(),
+          });
+        },
+      });
     } else {
       $swal({
         title: "Upload Image",
         content: "Please upload receipt",
         hasClose: false,
+        onClick: () => resetAll(),
       });
     }
   };
@@ -121,12 +147,14 @@ export function Receipt() {
           title: "Upload Image",
           content: "Receipt success uploaded!",
           hasClose: false,
+          onClick: () => resetAll(),
         });
       } catch (error) {
         $swal({
           title: "Upload Image",
           content: "Failed to upload receipt",
           hasClose: false,
+          onClick: () => resetAll(),
         });
       }
     } else {
@@ -134,6 +162,7 @@ export function Receipt() {
         title: "Upload Image",
         content: "Please upload receipt",
         hasClose: false,
+        onClick: () => resetAll(),
       });
     }
   };

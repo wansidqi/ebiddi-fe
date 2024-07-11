@@ -79,7 +79,45 @@ const useGetTx = () => {
       const data = response.data;
       return data.data as Transactions[];
     },
+    refetchOnWindowFocus: false,
   });
 };
 
-export const ProfileServices = { useGetDepositInfo, useGetTx, useChangeEmail };
+const useGetReceipt = () => {
+  const { USER } = useStoreContext();
+  return useQuery({
+    queryKey: [KEY.receipt],
+    enabled: !!USER?.id,
+    queryFn: async () => {
+      const response = await datasource({
+        url: `/profile/${USER?.id}/receipts`,
+        method: "get",
+      });
+      const data = response.data;
+      return data;
+    },
+  });
+};
+
+const usePostReceipt = () => {
+  const { USER } = useStoreContext();
+
+  return useMutation({
+    mutationFn: async (data: FormData) => {
+      const response = await datasource({
+        method: "post",
+        url: `/profile/${USER?.id}/uploadreceipt`,
+        data,
+      });
+      return response.data;
+    },
+  });
+};
+
+export const ProfileServices = {
+  useGetDepositInfo,
+  useGetTx,
+  useChangeEmail,
+  useGetReceipt,
+  usePostReceipt,
+};
