@@ -29,6 +29,7 @@ interface Props {
   children: JSX.Element;
   footerBtnTitle: string;
   widthPx?: string;
+  footerBtnDisable?: boolean;
   footerButtonCallback: () => any;
 }
 
@@ -38,6 +39,7 @@ export function DynamicDrawer({
   description,
   children,
   footerBtnTitle,
+  footerBtnDisable,
   widthPx,
   footerButtonCallback,
 }: Props) {
@@ -64,6 +66,7 @@ export function DynamicDrawer({
           <div>{children}</div>
           <DialogFooter className="">
             <Button
+              disabled={footerBtnDisable}
               onClick={() => {
                 setOpen(false);
                 footerButtonCallback();
@@ -92,6 +95,7 @@ export function DynamicDrawer({
           <DrawerClose asChild>
             <Button
               className="mt-4"
+              disabled={footerBtnDisable}
               onClick={() => {
                 setOpen(false);
                 footerButtonCallback();

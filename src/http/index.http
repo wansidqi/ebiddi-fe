@@ -78,3 +78,6 @@ Content-Type: application/json
     "event_id": 1164,
     "auction_event_id": 70018
 }
+
+###GET RECEIPT
+GET https://api-test.e-biddi.com/api/profile/232/receipts

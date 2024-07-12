@@ -20,6 +20,7 @@
     "clsx": "^2.1.0",
     "embla-carousel-autoplay": "^8.0.2",
     "embla-carousel-react": "^8.0.2",
+    "file-type-checker": "^1.1.0",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.372.0",
     "moment": "^2.30.1",
