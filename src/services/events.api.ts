@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { KEY } from ".";
 import { EventsInterface } from "@/interfaces";
 import { useStoreContext } from "@/Context";
+import { ROLE } from "@/enum";
 
 interface EventsResponse {
   data: EventsInterface[];
@@ -13,9 +14,11 @@ interface EventResponse {
 }
 
 const useGetAllEvents = () => {
+  const { USER } = useStoreContext();
   return useQuery({
     queryKey: [KEY.events],
     refetchOnWindowFocus: false,
+    enabled: USER?.role !== ROLE.AUCTIONEER,
     queryFn: async () => {
       const response = await datasource({ url: "/events", method: "get" });
       const data = response.data as EventsResponse;
@@ -32,7 +35,7 @@ const useGetAuctioneerEvent = () => {
 
   return useQuery({
     refetchOnWindowFocus: false,
-    enabled: !!id,
+    enabled: USER?.role === ROLE.AUCTIONEER,
     queryKey: [KEY.auctioneer, id],
     queryFn: async () => {
       const response = await datasource({ url: `/events/auctioneer/${id}` });
