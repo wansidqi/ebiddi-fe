@@ -42,6 +42,15 @@ export function AuctioneerController() {
   const { mutateAsync: onPostItemSold } = usePostItemSold();
   const { mutateAsync: onWithdraw } = usePostWithdraw();
 
+  useEffect(() => {
+    if (!eventId) return;
+    setPayload((prev) => {
+      let data = { ...prev, auction };
+      publishEvent({ event_id: eventId, data });
+      return data;
+    });
+  }, [auction]);
+
   const resetBid = (onReset?: () => any) => {
     if (!auction) return;
     let { current } = payload.bid;
@@ -422,6 +431,7 @@ export function AuctioneerController() {
             up: 0,
           },
           countdown: COUNTDOWN.initial,
+          auction,
         };
 
         publishEvent({

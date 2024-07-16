@@ -57,13 +57,17 @@ export function LivePage() {
   const {
     useGetCredit,
     useGetEventById,
-    useGetLiveAuction,
     usePostAuditTrail,
   } = useAPIServices();
   const { data: event } = useGetEventById(eventId);
   const { data: credits, refetch: getCredit } = useGetCredit( event?.auction_house.id); //prettier-ignore
-  const { data: auction, refetch: getAuction } = useGetLiveAuction(payload.auction_id); //prettier-ignore
   const { mutateAsync: postTrail } = usePostAuditTrail();
+
+  useEffect(() => {
+    if (!credits) {
+      getCredit();
+    }
+  }, [credits]);
 
   const testBid = (name: string, user_id: number) => {
     if (!eventId || !USER) return;
@@ -162,9 +166,9 @@ export function LivePage() {
 
   // prettier-ignore
   const canBid = () => {
-    let cond1 = auction && payload.bid.next < 100000 && getAvailableCredit() >= (auction.deposit + auction.buyer_premium +  auction.security_deposit);
-    let cond2 = auction && (payload.bid.next >= 100000 && !auction.is_flat_deposit &&  getAvailableCredit() >= ((0.05 * payload.bid.next) + auction.buyer_premium + auction.security_deposit));
-    let cond3 = auction && (payload.bid.next >= 100000 && getAvailableCredit() >=  5000 * (payload.bid.current +  auction.buyer_premium + auction.security_deposit));
+    let cond1 = payload.auction && payload.bid.next < 100000 && getAvailableCredit() >= (payload.auction.deposit + payload.auction.buyer_premium +  payload.auction.security_deposit);
+    let cond2 = payload.auction && (payload.bid.next >= 100000 && !payload.auction.is_flat_deposit &&  getAvailableCredit() >= ((0.05 * payload.bid.next) + payload.auction.buyer_premium + payload.auction.security_deposit));
+    let cond3 = payload.auction && (payload.bid.next >= 100000 && getAvailableCredit() >=  5000 * (payload.bid.current +  payload.auction.buyer_premium + payload.auction.security_deposit));
 
 
     return cond1 || cond2 || cond3;
@@ -204,12 +208,12 @@ export function LivePage() {
   };
 
   const sendAuditTrail = (amount: string | number) => {
-    if (!auction || !auction.auction_id) {
+    if (!payload.auction || !payload.auction.auction_id) {
       return;
     }
 
     let data = `event_id=${eventId}`;
-    data += `&auction_id=${auction.auction_id}`;
+    data += `&auction_id=${payload.auction.auction_id}`;
     data += "&type=BID";
     data += `&user_id=${USER?.id}`;
     data += `&bid_amount=${amount}`;
@@ -462,7 +466,7 @@ export function LivePage() {
         }
 
         if (data.status === "PAUSE") {
-          // console.log("enter pause");
+          console.log("enter pause");
           $swal({
             title: `Lot ${data.auction?.lot_no}`,
             content: `Auctioneer hold auction`,
@@ -572,8 +576,8 @@ export function LivePage() {
   useEffect(() => {
     setPayload((prev) => ({ ...prev, bidStatus: 0 }));
     $swalClose();
-    payload.auction_id !== "" && getAuction();
-    payload.auction_id !== "" && getCredit();
+    // payload.auction_id !== "" && getAuction();
+    // payload.auction_id !== "" && getCredit();
   }, [payload.auction_id]);
 
   useEffect(() => {
@@ -636,7 +640,7 @@ export function LivePage() {
                 <BidHeader />
                 <div className="flex sm:grid sm:grid-cols-2 w-full overflow-x-auto gap-4 my-4 sm:my-8">
                   <div className="flex-shrink-0 w-[92%]">
-                    <LiveDetail auctionId={payload.auction_id} />
+                    <LiveDetail />
                   </div>
                   <div className="flex-shrink-0 w-[92%]">
                     <BidderList />

@@ -1,11 +1,12 @@
-import { AuctionInterface } from "@/interfaces";
+import { useStoreContext } from "@/Context";
 import { numWithComma } from "@/lib/utils";
-import { KEY, useGetQueryData } from "@/services";
 
-export function LiveDetail({ auctionId }: { auctionId: string | undefined }) {
-  // const test = "69889";
-  const queryKey = [KEY.auction, auctionId];
-  const data = useGetQueryData<AuctionInterface>(queryKey);
+export function LiveDetail() {
+  const { payload } = useStoreContext();
+
+  // const queryKey = [KEY.auction, auctId];
+  // const data = useGetQueryData<AuctionInterface>(queryKey) || payload.auction;
+  const data = payload.auction;
 
   return (
     <div className="border flex flex-col gap-y-2 py-3 px-2 rounded-md h-[30em]">
