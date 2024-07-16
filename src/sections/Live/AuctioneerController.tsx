@@ -366,19 +366,19 @@ export function AuctioneerController() {
 
     const data = new URLSearchParams(postData as any).toString();
 
-    onPostItemSold(
-      { auction_id, data },
-      {
-        onSuccess: () => {
-          sendAuditTrail({
-            event_id: Number(payload.event_id),
-            auction_id: Number(payload.auction_id),
-            status: "SOLD",
-            bid_amount: 0,
-          });
-        },
-      }
-    );
+    // onPostItemSold(
+    //   { auction_id, data },
+    //   {
+    //     onSuccess: () => {
+    //       sendAuditTrail({
+    //         event_id: Number(payload.event_id),
+    //         auction_id: Number(payload.auction_id),
+    //         status: "SOLD",
+    //         bid_amount: 0,
+    //       });
+    //     },
+    //   }
+    // );
   };
 
   const getCurrentBid = (amount: number) => {
@@ -395,12 +395,22 @@ export function AuctioneerController() {
   };
 
   const goPrev = () => {
+    setPayload((prev) => {
+      let data = { ...prev, bidStatus:0, auction_id:auctionId!, status:"DISPLAY" as Status };
+      publishEvent({ event_id: eventId!, data });
+      return data;
+    });
     if (auction?.meta?.prev !== 0) {
       navigate(`/auctioneer/live/${eventId}/${auction?.meta?.prev}`);
     }
   };
 
   const goNext = () => {
+    setPayload((prev) => {
+      let data = { ...prev, bidStatus:0, auction_id:auctionId!, status:"DISPLAY" as Status };
+      publishEvent({ event_id: eventId!, data });
+      return data;
+    });
     if (auction?.meta?.next !== 0) {
       navigate(`/auctioneer/live/${eventId}/${auction?.meta?.next}`);
     }

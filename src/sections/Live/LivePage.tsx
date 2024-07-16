@@ -54,11 +54,7 @@ export function LivePage() {
 
   const isPlayStart = useRef(true);
 
-  const {
-    useGetCredit,
-    useGetEventById,
-    usePostAuditTrail,
-  } = useAPIServices();
+  const { useGetCredit, useGetEventById, usePostAuditTrail } = useAPIServices();
   const { data: event } = useGetEventById(eventId);
   const { data: credits, refetch: getCredit } = useGetCredit( event?.auction_house.id); //prettier-ignore
   const { mutateAsync: postTrail } = usePostAuditTrail();
