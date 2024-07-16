@@ -270,7 +270,7 @@ export function AuctioneerController() {
 
   const clickBackToAuction = () => {
     setPayload((prev) => {
-      let data = { ...prev, auction_id: "" };
+      let data = { ...prev, auction_id: "", status:"DISPLAY" as Status };
       publishEvent({ event_id: eventId!, data });
       return data;
     });
@@ -366,19 +366,19 @@ export function AuctioneerController() {
 
     const data = new URLSearchParams(postData as any).toString();
 
-    // onPostItemSold(
-    //   { auction_id, data },
-    //   {
-    //     onSuccess: () => {
-    //       sendAuditTrail({
-    //         event_id: Number(payload.event_id),
-    //         auction_id: Number(payload.auction_id),
-    //         status: "SOLD",
-    //         bid_amount: 0,
-    //       });
-    //     },
-    //   }
-    // );
+    onPostItemSold(
+      { auction_id, data },
+      {
+        onSuccess: () => {
+          sendAuditTrail({
+            event_id: Number(payload.event_id),
+            auction_id: Number(payload.auction_id),
+            status: "SOLD",
+            bid_amount: 0,
+          });
+        },
+      }
+    );
   };
 
   const getCurrentBid = (amount: number) => {

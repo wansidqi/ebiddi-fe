@@ -462,7 +462,7 @@ export function LivePage() {
         }
 
         if (data.status === "PAUSE") {
-          console.log("enter pause");
+          // console.log("enter pause");
           $swal({
             title: `Lot ${data.auction?.lot_no}`,
             content: `Auctioneer hold auction`,
