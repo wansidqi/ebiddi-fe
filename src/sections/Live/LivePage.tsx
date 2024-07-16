@@ -243,7 +243,7 @@ export function LivePage() {
         // let dataAuctionId = auction?.auction_id;
 
         if (data.status === "CLOSE") {
-          console.log("enter close");
+          // console.log("enter close");
           setIsBidding(false);
           $swal({
             title: event ? event?.name : "",
