@@ -269,6 +269,11 @@ export function AuctioneerController() {
   };
 
   const clickBackToAuction = () => {
+    setPayload((prev) => {
+      let data = { ...prev, auction_id: "" };
+      publishEvent({ event_id: eventId!, data });
+      return data;
+    });
     navigate(`/auctioneer/list/${eventId}`);
   };
 
@@ -416,7 +421,7 @@ export function AuctioneerController() {
       setPayload((prev) => {
         let update = {
           ...prev,
-          auction_id: "",
+          // auction_id: "",
           status: "DISPLAY" as Status,
           bidders: {
             all: [],
