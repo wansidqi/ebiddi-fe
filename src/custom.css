@@ -13,6 +13,11 @@
 }
 
 @font-face {
+  font-family: "orsted";
+  src: url("/src/assets/fonts/orsted-sans.otf") format("opentype");
+}
+
+@font-face {
   font-family: "digital";
   src: url("/src/assets/fonts/digital.ttf") format("truetype");
 }
