@@ -139,13 +139,17 @@ export function Refund() {
       bank_name,
       bank_no,
       amount,
-      ssm: ssm || "",
-      ic_front: ic_front || "",
-      ic_back: ic_back || "",
     };
 
     for (let [key, value] of Object.entries(payload)) {
       formData.append(key, value);
+    }
+
+    if (holder_type === Holder.ic) {
+      formData.append("ic_front", ic_front || "");
+      formData.append("ic_back", ic_back || "");
+    } else {
+      formData.append("ssm", ssm || "");
     }
 
     uploadRefund(formData, {
