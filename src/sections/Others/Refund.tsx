@@ -14,6 +14,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { numWithComma } from "@/lib/utils";
 
 enum Holder {
   ic = "1",
@@ -24,7 +25,7 @@ type Ref = React.RefObject<HTMLInputElement>;
 type SetImage = (value: React.SetStateAction<string | undefined>) => void;
 
 export function Refund() {
-  const { $swal } = useStoreContext();
+  const { $swal, USER } = useStoreContext();
 
   const [holder_type, setHolder_type] = useState<Holder>(Holder.ic);
 
@@ -47,9 +48,10 @@ export function Refund() {
   const [bank_no, setBankAccNo] = useState("");
   const [amount, setAmount] = useState("");
 
-  const { usePostRefund, useGetRefund } = useAPIServices();
+  const { usePostRefund } = useAPIServices();
   const { mutateAsync: uploadRefund } = usePostRefund();
-  const { data } = useGetRefund();
+
+  const balance = USER?.credits.find((cr) => cr.credit_id === 0);
 
   const IC = [
     {
@@ -261,7 +263,7 @@ export function Refund() {
         <DynamicDrawer
           btnName="Refund"
           footerBtnTitle="Submit"
-          title={`Available Amount: RM ${data ?? 0}`}
+          title={`Available Amount: RM ${numWithComma(balance?.amount ?? 0)}`}
           widthPx="px-16"
           footerButtonCallback={postRefund}
           footerBtnDisable={!validateRefund()}
@@ -272,7 +274,7 @@ export function Refund() {
               <Input
                 onChange={(e) => setAccHolder(e.target.value)}
                 type="text"
-                placeholder="payment reference"
+                placeholder="Account Holder Name"
               />
             </div>
             <div className="w-full">
@@ -280,7 +282,7 @@ export function Refund() {
               <Input
                 onChange={(e) => setBankName(e.target.value)}
                 type="text"
-                placeholder="amount"
+                placeholder="Bank Name"
               />
             </div>
             <div className="w-full">
@@ -288,7 +290,7 @@ export function Refund() {
               <Input
                 onChange={(e) => setBankAccNo(e.target.value)}
                 type="text"
-                placeholder="amount"
+                placeholder="Bank Account No"
               />
             </div>
             <div className="w-full">
