@@ -8,8 +8,7 @@ import { useAPIServices } from "@/services";
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { LiveDialog, Receipt } from "..";
-
+import { LiveDialog, Receipt, Refund } from "..";
 
 export function Profile() {
   const columns = [
@@ -198,7 +197,17 @@ export function Profile() {
               </div>
             </main>
 
-            <Receipt />
+            <main className="border">
+              <p className="text-center py-3 bg-primary font-bold text-black">
+                User Deposit Info
+              </p>
+              <LiveDialog />
+
+              <div className="p-10 flexcenter-col gap-10">
+                <Receipt />
+                <Refund />
+              </div>
+            </main>
 
             <main className="w-full border sm:col-span-3">
               <p className="text-center py-3 bg-primary font-bold text-black">

@@ -101,6 +101,7 @@ const useGetReceipt = () => {
 
 const usePostReceipt = () => {
   const { USER } = useStoreContext();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: FormData) => {
@@ -111,6 +112,43 @@ const usePostReceipt = () => {
       });
       return response.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries([KEY.receipt]);
+    },
+  });
+};
+
+const useGetRefund = () => {
+  const { USER } = useStoreContext();
+  return useQuery({
+    queryKey: [KEY.refund],
+    enabled: !!USER?.id,
+    queryFn: async () => {
+      const response = await datasource({
+        url: `/profile/${USER?.id}/refunds`,
+        method: "get",
+      });
+      const data = response.data;
+      return data;
+    },
+  });
+};
+
+const usePostRefund = () => {
+  const { USER } = useStoreContext();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: FormData) => {
+      const response = await datasource({
+        method: "post",
+        url: `/profile/${USER?.id}/uploadrefund`,
+        data,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries([KEY.refund]);
+    },
   });
 };
 
@@ -120,4 +158,6 @@ export const ProfileServices = {
   useChangeEmail,
   useGetReceipt,
   usePostReceipt,
+  useGetRefund,
+  usePostRefund,
 };

@@ -20,9 +20,10 @@ export enum KEY {
   credit = "credit",
   auctioneer = "auctioneer",
   reauction = "reauction",
-  receipt = "receipt",
   reauctions_status = "reauctions_status",
   reauctions_holdItem = "reauctions_holdItem",
+  receipt = "receipt",
+  refund = "refund",
 }
 
 /* 
