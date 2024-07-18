@@ -53,6 +53,8 @@ export function Refund() {
 
   const balance = USER?.credits.find((cr) => cr.credit_id === 0);
 
+  let isInsufficient = +amount <= (balance?.amount || 0);
+
   const IC = [
     {
       name: "Front",
@@ -111,7 +113,8 @@ export function Refund() {
         holder_name.length > 0 &&
         bank_no.length > 0 &&
         amount.length > 0 &&
-        bank_name.length > 0
+        bank_name.length > 0 &&
+        isInsufficient
       );
     } else {
       return (
@@ -121,7 +124,8 @@ export function Refund() {
         holder_name.length > 0 &&
         bank_no.length > 0 &&
         amount.length > 0 &&
-        bank_name.length > 0
+        bank_name.length > 0 &&
+        isInsufficient
       );
     }
   };
@@ -304,6 +308,9 @@ export function Refund() {
                 type="text"
                 placeholder="amount"
               />
+              {!isInsufficient && (
+                <p className="text-red-600 text-xs">insufficient balance!</p>
+              )}
             </div>
             <div className="w-full">
               <DropdownMenu>
