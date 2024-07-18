@@ -35,7 +35,6 @@ export function LivePage() {
     setPayload,
     payload,
     publishBid,
-    unsubscribeEvent,
     currentPage,
     setCurrentPage,
     subscribeReauction,
@@ -45,6 +44,7 @@ export function LivePage() {
     bidderIn,
     bidderOut,
     setBidListIndex,
+    socket,
   } = useStoreContext();
 
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
@@ -64,6 +64,40 @@ export function LivePage() {
       getCredit();
     }
   }, [credits]);
+
+  useEffect(() => {
+    return () => {
+      if (!isNotAuctioneer) return;
+
+      socket?.killAllChannels();
+
+      isPlayStart.current = true;
+
+      setPayload({
+        auction_id: "",
+        event_id: "",
+        bid: {
+          current: 0,
+          next: 0,
+          start: 0,
+          up: 0,
+        },
+        countdown: COUNTDOWN.initial,
+        status: "DISPLAY",
+        bidders: {
+          all: [],
+          highest_amount: 0,
+          highest_user_id: 0,
+          highest_user_name: "",
+        },
+        isResume: false,
+        holdItems: [],
+        auction_event_id: "",
+        auction: undefined,
+        bidStatus: 0,
+      });
+    };
+  }, [eventId]);
 
   const testBid = (name: string, user_id: number) => {
     if (!eventId || !USER) return;
@@ -322,11 +356,6 @@ export function LivePage() {
             isPlayStart.current = false;
           }
 
-          if (payload.bidStatus === 3) {
-            // console.log("enter here");
-            // setPayload((prev) => ({ ...prev, countdown: COUNTDOWN.initial }));
-          }
-
           if (isBidding) {
             if (payload.bidders.all.length >= data.bidders.all.length) return;
 
@@ -505,36 +534,6 @@ export function LivePage() {
         }
       },
     });
-
-    return () => {
-      unsubscribeEvent(eventId);
-
-      if (!isNotAuctioneer) return;
-
-      setPayload({
-        auction_id: "",
-        event_id: "",
-        bid: {
-          current: 0,
-          next: 0,
-          start: 0,
-          up: 0,
-        },
-        countdown: COUNTDOWN.initial,
-        status: "DISPLAY",
-        bidders: {
-          all: [],
-          highest_amount: 0,
-          highest_user_id: 0,
-          highest_user_name: "",
-        },
-        isResume: false,
-        holdItems: [],
-        auction_event_id: "",
-        auction: undefined,
-        bidStatus: 0,
-      });
-    };
   }, []);
 
   ///subscribe reauction
