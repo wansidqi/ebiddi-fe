@@ -51,6 +51,12 @@ export function AuctioneerController() {
     });
   }, [auction]);
 
+  useEffect(() => {
+    if (!auction) {
+      refetch();
+    }
+  }, [auction]);
+
   const resetBid = (onReset?: () => any) => {
     if (!auction) return;
     let { current } = payload.bid;
@@ -75,7 +81,7 @@ export function AuctioneerController() {
   const onInitial = () => {
     // setNaviStatus(true);
     if (!eventId || !auctionId) return;
-    refetch();
+    // refetch();
 
     resetBid();
 
@@ -270,7 +276,7 @@ export function AuctioneerController() {
 
   const clickBackToAuction = () => {
     setPayload((prev) => {
-      let data = { ...prev, auction_id: "", status:"DISPLAY" as Status };
+      let data = { ...prev, auction_id: "", status: "DISPLAY" as Status };
       publishEvent({ event_id: eventId!, data });
       return data;
     });
@@ -396,7 +402,12 @@ export function AuctioneerController() {
 
   const goPrev = () => {
     setPayload((prev) => {
-      let data = { ...prev, bidStatus:0, auction_id:auctionId!, status:"DISPLAY" as Status };
+      let data = {
+        ...prev,
+        bidStatus: 0,
+        auction_id: auctionId!,
+        status: "DISPLAY" as Status,
+      };
       publishEvent({ event_id: eventId!, data });
       return data;
     });
@@ -407,7 +418,12 @@ export function AuctioneerController() {
 
   const goNext = () => {
     setPayload((prev) => {
-      let data = { ...prev, bidStatus:0, auction_id:auctionId!, status:"DISPLAY" as Status };
+      let data = {
+        ...prev,
+        bidStatus: 0,
+        auction_id: auctionId!,
+        status: "DISPLAY" as Status,
+      };
       publishEvent({ event_id: eventId!, data });
       return data;
     });
@@ -461,7 +477,7 @@ export function AuctioneerController() {
 
   ///subscribe bid
   useEffect(() => {
-    refetch();
+    // refetch();
 
     if (!eventId || !auctionId) return;
     subscribeBid({
