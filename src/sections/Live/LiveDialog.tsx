@@ -36,7 +36,7 @@ export function LiveDialog() {
           onEscapeKeyDown={(e) => noClose && e.preventDefault()}
           onPointerDown={(e) => noClose && e.preventDefault()}
           onInteractOutside={(e) => noClose && e.preventDefault()}
-          className="w-full sm:max-w-[425px]"
+          className="w-[90%] rounded-md sm:max-w-[425px]"
         >
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
