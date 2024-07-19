@@ -46,6 +46,7 @@ export function ReauctionTimer() {
     socket,
     subscribeReauction,
     publishEvent,
+    publishReauction,
   } = useStoreContext();
 
   const { expiryAt } = UseCountdown();
@@ -76,14 +77,21 @@ export function ReauctionTimer() {
         { isCreate, newExpiryAt },
         {
           onSuccess: () => {
-            publishEvent({
-              event_id: eventId,
+            publishReauction({
+              event_id: eventId!,
               data: {
-                ...payload,
-                event_id: eventId,
+                expiryAt: newExpiryAt,
                 status: "REAUCTIONLISTUPDATETIMER",
               },
             });
+            // publishEvent({
+            //   event_id: eventId,
+            //   data: {
+            //     ...payload,
+            //     event_id: eventId,
+            //     status: "REAUCTIONLISTUPDATETIMER",
+            //   },
+            // });
           },
         }
       );

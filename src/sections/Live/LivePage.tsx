@@ -251,7 +251,7 @@ export function LivePage() {
     postTrail({ data });
   };
 
-  const { expiryAt, countdown: rcd } = UseCountdown();
+  const { countdown: rcd } = UseCountdown();
 
   useEffect(() => {
     bidderIn();
@@ -298,19 +298,6 @@ export function LivePage() {
             hasClose: false,
           });
           setCurrentPage("reauctionlist");
-        }
-
-        if (data.status === "REAUCTIONLISTUPDATETIMER") {
-          // console.log("enter reauct list update timer");
-          setCurrentPage("reauctionlist");
-
-          $swal({
-            title: `Reauction Expiry Updated`,
-            timer: 3000,
-            content: `The new reauction expiry is at ${moment(expiryAt).format("HH:mm:ss")}`,
-            hasClose: false,
-          });
-          reset();
         }
 
         /*if (data.status !== "CLOSE" && dataAuctionId !== subAuctionId) {
@@ -547,12 +534,18 @@ export function LivePage() {
           // console.log("REAUCTIONLISTUPDATE");
           reset();
           setCurrentPage("reauctionlist");
+        }
 
-          // setPayload((prev) => ({
-          //   ...prev,
-          //   holdItems: data.items ?? [],
-          //   expiryAt: data.expiryAt ?? "",
-          // }));
+        if (data.status === "REAUCTIONLISTUPDATETIMER") {
+          setCurrentPage("reauctionlist");
+
+          $swal({
+            title: `Reauction Expiry Updated`,
+            timer: 3000,
+            content: `The new reauction expiry is at ${moment(data.expiryAt).format("HH:mm:ss")}`,
+            hasClose: false,
+          });
+          reset();
         }
 
         if (data.status === "REAUCTIONITEM") {
