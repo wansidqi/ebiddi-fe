@@ -4,12 +4,13 @@ import { useStoreContext } from "@/Context";
 import { KEY, useAPIServices, useGetQueryData } from "@/services";
 import { useParams } from "react-router-dom";
 import { ReauctionList as ReauctionListInterface } from "@/interfaces";
+import { useEffect } from "react";
 
 export function ReauctionList() {
   const { eventId } = useParams();
-  const { USER, $swal, publishReauction } = useStoreContext();
+  const { USER, $swal, publishReauction, subscribeReauction } = useStoreContext();
 
-  const { countdown, expiryAt } = UseCountdown();
+  const { countdown, expiryAt,getReauctionList  } = UseCountdown();
 
   const { usePostReauctionItem } = useAPIServices();
   const { mutateAsync: onReautionItem } = usePostReauctionItem();
@@ -74,6 +75,19 @@ export function ReauctionList() {
       }
     );
   };
+
+  useEffect(() => {
+    if (!eventId) return;
+
+    subscribeReauction({
+      event_id: eventId,
+      onData: (data) => {
+        if (data.status === "REAUCTIONLISTITEM") {
+          getReauctionList();
+        }
+      },
+    });
+  }, []);
 
   return (
     <div className="relative">
