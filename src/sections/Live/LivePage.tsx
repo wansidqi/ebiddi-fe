@@ -54,10 +54,16 @@ export function LivePage() {
 
   const isPlayStart = useRef(true);
 
-  const { useGetCredit, useGetEventById, usePostAuditTrail } = useAPIServices();
+  const {
+    useGetCredit,
+    useGetEventById,
+    usePostAuditTrail,
+    // useGetLiveAuction,
+  } = useAPIServices();
   const { data: event } = useGetEventById(eventId);
   const { data: credits, refetch: getCredit } = useGetCredit( event?.auction_house.id); //prettier-ignore
   const { mutateAsync: postTrail } = usePostAuditTrail();
+  // useGetLiveAuction(payload.auction_id);
 
   useEffect(() => {
     if (!credits) {
@@ -331,6 +337,7 @@ export function LivePage() {
           }
 
           if (isPlayStart.current) {
+            playAudio("start");
             $swal({
               title: `Lot ${data.auction?.lot_no}`,
               content: "Bidding is starting",
@@ -338,7 +345,6 @@ export function LivePage() {
               hasClose: false,
             });
 
-            playAudio("start");
             setPayload((prev) => ({ ...prev, bidStatus: 2 }));
             isPlayStart.current = false;
           }
@@ -479,24 +485,24 @@ export function LivePage() {
 
         if (data.status === "PAUSE") {
           // console.log("enter pause");
+          playAudio("hold");
           $swal({
             title: `Lot ${data.auction?.lot_no}`,
             content: `Auctioneer hold auction`,
             noClose: true,
             hasClose: false,
           });
-          playAudio("hold");
         }
 
         if (data.status === "WITHDRAW") {
           // console.log("enter withdraw");
           setIsBidding(false);
+          playAudio("withdraw");
           $swal({
             title: `Lot ${data.auction?.lot_no}`,
             content: `This auction is withdraw`,
             hasClose: false,
           });
-          playAudio("withdraw");
           isPlayStart.current = true;
           reset();
         }
@@ -505,6 +511,7 @@ export function LivePage() {
           // console.log("enter no bid");
           isPlayStart.current = true;
           setIsBidding(false);
+          playAudio("noBid");
           $swal({
             title: `Lot ${data.auction?.lot_no}`,
             content: `No Bid`,
@@ -512,7 +519,6 @@ export function LivePage() {
             hasClose: false,
             noClose: true,
           });
-          playAudio("noBid");
           reset();
         }
 
