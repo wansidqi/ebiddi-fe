@@ -8,9 +8,10 @@ import { useEffect } from "react";
 
 export function ReauctionList() {
   const { eventId } = useParams();
-  const { USER, $swal, publishReauction, subscribeReauction } = useStoreContext();
+  const { USER, $swal, publishReauction, subscribeReauction } =
+    useStoreContext();
 
-  const { countdown, expiryAt,getReauctionList  } = UseCountdown();
+  const { countdown, expiryAt, getReauctionList } = UseCountdown();
 
   const { usePostReauctionItem } = useAPIServices();
   const { mutateAsync: onReautionItem } = usePostReauctionItem();
@@ -55,12 +56,14 @@ export function ReauctionList() {
               auction_event_id: auctionId as string,
               event_id: eventId,
               status: "REAUCTIONLISTITEM",
+              lot,
+              name: USER?.name,
             },
           });
           $swal({
             title: "Reauction",
-            content: `Lot ${lot} reauction requested`,
-            hasClose: true,
+            content: `You has request lot ${lot} for reauction`,
+            hasClose: false,
             timer: 2000,
           });
         },
@@ -84,6 +87,13 @@ export function ReauctionList() {
       onData: (data) => {
         if (data.status === "REAUCTIONLISTITEM") {
           getReauctionList();
+          if (USER?.username === data.name) return;
+          $swal({
+            title: "Request Reauction",
+            content: `${data.name} has requested a reauction for lot ${data.lot}`,
+            hasClose: false,
+            timer: 2000,
+          });
         }
       },
     });

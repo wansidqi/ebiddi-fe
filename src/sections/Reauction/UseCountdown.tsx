@@ -46,7 +46,7 @@ export function UseCountdown() {
       }
 
       let counter = 0;
-      // getReauctionList();
+      getReauctionList();
       const endTime = moment(expiryAt);
 
       const newTimer = setInterval(() => {

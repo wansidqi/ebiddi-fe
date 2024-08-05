@@ -88,6 +88,12 @@ export function AuctioneerList() {
       event_id: eventId,
       onData: (data) => {
         if (data.status === "REAUCTIONLISTITEM") {
+          $swal({
+            title: "Request Reauction",
+            content: `${data.name} has requested a reauction for lot ${data.lot}`,
+            hasClose: false,
+            timer: 2000,
+          });
           getReauctionList();
         }
       },

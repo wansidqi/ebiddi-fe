@@ -47,6 +47,8 @@ export interface ReauctionData {
   status?: Status;
   event_id?: string;
   items?: ReauctionList[];
+  lot?: string | number;
+  name?: string;
 }
 
 export interface Subscription<T> {
