@@ -42,6 +42,8 @@ export function AuctioneerController() {
   const { mutateAsync: onPostItemSold } = usePostItemSold();
   const { mutateAsync: onWithdraw } = usePostWithdraw();
 
+  const { expiryAt } = UseCountdown();
+
   useEffect(() => {
     if (!eventId) return;
     setPayload((prev) => {
@@ -280,7 +282,9 @@ export function AuctioneerController() {
       publishEvent({ event_id: eventId!, data });
       return data;
     });
-    navigate(`/auctioneer/list/${eventId}`);
+    !expiryAt
+      ? navigate(`/auctioneer/list/${eventId}`)
+      : navigate(`/auctioneer/reauction-list/${eventId}`);
   };
 
   const clickHold = () => {
@@ -431,8 +435,6 @@ export function AuctioneerController() {
       navigate(`/auctioneer/live/${eventId}/${auction?.meta?.next}`);
     }
   };
-
-  UseCountdown();
 
   // useEffect(() => {
   //   if (!isCountdownActive) setPayload((prev) => ({ ...prev, bidStatus: 0 }));

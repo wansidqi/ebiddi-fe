@@ -1,9 +1,9 @@
 import { Container } from "@/components/Container";
-import { InventoryInterface, ReauctionList } from "@/interfaces";
+import { InventoryInterface } from "@/interfaces";
 import { numWithComma } from "@/lib/utils";
-import { KEY, useAPIServices, useGetQueryData } from "@/services";
+import { useAPIServices } from "@/services";
 import { useNavigate, useParams } from "react-router-dom";
-import { ItemDetail, LiveDialog, ReauctionTimer, UseCountdown } from "..";
+import { ItemDetail, LiveDialog, UseCountdown } from "..";
 import { useStoreContext } from "@/Context";
 import { Fragment, useEffect } from "react";
 import { DynamicRenderer } from "@/components";
@@ -23,7 +23,7 @@ export function AuctioneerList() {
   ];
 
   const { eventId } = useParams();
-  const { countdown, isCountdownActive, getReauctionList } = UseCountdown();
+  const { isCountdownActive, getReauctionList } = UseCountdown();
 
   const navigate = useNavigate();
   const { useGetEventById, useCloseAuctionEvent } = useAPIServices();
@@ -39,9 +39,6 @@ export function AuctioneerList() {
   const { data } = useGetEventById(eventId);
   const { mutateAsync: onCloseEventAPI } = useCloseAuctionEvent(eventId);
 
-  const qryKey = [KEY.reauction, eventId];
-  const reauctions = useGetQueryData<ReauctionList[]>(qryKey);
-
   const auctions = data?.inventories;
 
   const getDeposit = (auction: InventoryInterface) => {
@@ -50,6 +47,10 @@ export function AuctioneerList() {
 
   const navigateToLive = (auction_id: any) => {
     navigate(`/auctioneer/live/${eventId}/${auction_id}`);
+  };
+
+  const navigateToReauctionList = () => {
+    navigate(`/auctioneer/reauction-list/${eventId}`);
   };
 
   const closeEvent = () => {
@@ -111,24 +112,15 @@ export function AuctioneerList() {
       <Container className="sm:mx-28 pt-5">
         <div className="my-5  block lg:hidden">
           {/* mobile view */}
+          <p className="text-2xl text-center my-5 text-primary">Auction List</p>
           {(data?.status === "Approve" || data?.status === "Deactive") && (
             <div className="grid grid-cols-2 gap-4 w-full">
-              <div className="flex">
-                <p className="col-span-2 lg:text-xl">Reauction Items</p>
-                <BlinkAnimation />
-              </div>
-              <>
-                <div
-                  className={
-                    countdown === "NaN:NaN:NaN"
-                      ? "text-transparent"
-                      : "flexcenter digital text-4xl font-extrabold"
-                  }
-                >
-                  {countdown}
-                </div>
-                <ReauctionTimer />
-              </>
+              <button
+                onClick={navigateToReauctionList}
+                className="bg-cyan-500 px-3 py-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg"
+              >
+                Reauction List
+              </button>
               <button
                 onClick={confirmationDialog}
                 className="bg-yellow-500 px-3 py-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg"
@@ -140,25 +132,16 @@ export function AuctioneerList() {
         </div>
         {/* desktop view */}
         <div className="my-5 hidden lg:block">
+          <p className="text-5xl text-center my-5 text-primary">Auction List</p>
           {(data?.status === "Approve" || data?.status === "Deactive") && (
-            <div className="flex items-center justify-between w-full">
-              <div className="flex">
-                <p className="lg:text-xl">Reauction Items</p>
-                <BlinkAnimation />
-              </div>
+            <div className="flex items-center justify-end w-full">
               <div className="flex gap-8">
-                <>
-                  <div
-                    className={
-                      countdown === "NaN:NaN:NaN"
-                        ? "hidden"
-                        : "flexcenter digital text-4xl font-extrabold"
-                    }
-                  >
-                    {countdown}
-                  </div>
-                  <ReauctionTimer />
-                </>
+                <button
+                  onClick={navigateToReauctionList}
+                  className="bg-cyan-500 px-3 py-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg"
+                >
+                  Reauction List
+                </button>
                 <button
                   onClick={confirmationDialog}
                   className="bg-yellow-500 px-3 py-2 lg:px-5 text-black lg:py-3 rounded-md lg:text-lg"
@@ -189,9 +172,6 @@ export function AuctioneerList() {
                   <tr key={i}>
                     <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap flexcenter">
                       <ItemDetail {...auction} />
-                      {reauctions?.find(
-                        (item) => item.lot_no === auction.lot_no
-                      ) && <BlinkAnimation />}
                     </td>
                     <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
                       {auction.registration_number || "n/a"}
@@ -235,14 +215,5 @@ export function AuctioneerList() {
         </div>
       </Container>
     </Fragment>
-  );
-}
-
-function BlinkAnimation() {
-  return (
-    <span className="relative flex h-2 w-2">
-      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-      <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
-    </span>
   );
 }

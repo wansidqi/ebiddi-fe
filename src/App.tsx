@@ -19,6 +19,7 @@ import {
   Items,
   Home,
   NewProfile,
+  ReAuctioneerList,
 } from "./sections";
 import {
   RequireVerificationToken,
@@ -64,6 +65,7 @@ function App() {
         {/* prettier-ignore */}
         <Route element={<RequireAuctioneerAuth />}>
           <Route path={"/auctioneer/list/:eventId"} element={<AuctioneerList />} />
+          <Route path={"/auctioneer/reauction-list/:eventId"} element={<ReAuctioneerList />} />
           <Route path={"/contract/event/:eventId"} element={<AuctContract />} />
           <Route path={"/auctioneer/live/:eventId/:auctionId"} element={<LivePage />} />
         </Route>
