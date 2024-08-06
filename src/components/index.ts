@@ -5,3 +5,4 @@ export * from "./DynamicRenderer";
 export * from "./Container";
 export * from "./Loading";
 export * from "./Modal";
+export * from "./ResponsiveTable";

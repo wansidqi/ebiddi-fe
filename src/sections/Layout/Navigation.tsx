@@ -11,9 +11,15 @@ import {
 import { Fragment, useEffect, useRef, useState } from "react";
 import icon from "@/assets/images/e-biddi icon.png";
 import { useStoreContext } from "@/Context";
-import { DynamicRenderer, Hamburger } from "@/components";
+import { DynamicRenderer } from "@/components";
 import { useAPIServices } from "@/services";
 import { ROLE } from "@/enum";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function Navigation() {
   const navigate = useNavigate();
@@ -79,10 +85,10 @@ export function Navigation() {
     },
   ];
 
-  const navigateAndCloseSidebar = (callback: () => void) => {
-    setShowSidebar(false);
-    callback();
-  };
+  // const navigateAndCloseSidebar = (callback: () => void) => {
+  //   setShowSidebar(false);
+  //   callback();
+  // };
 
   useEffect(() => {
     if (showSidebar) {
@@ -107,18 +113,18 @@ export function Navigation() {
         <DynamicRenderer.When cond={USER !== null}>
           <div className="flex justify-between py-3 px-5 sm:px-10 gap-2 sticky top-0 z-50 bg-[#011138] text-primary">
             <div className="flex gap-4">
-              <button
+              {/* <button
                 onClick={() => setShowSidebar(true)}
                 className="sm:hidden"
               >
                 <Hamburger />
-              </button>
+              </button> */}
               <button onClick={() => navigate("/events")}>
                 <img width={"50px"} src={icon} alt="" />
               </button>
             </div>
 
-            <main id="sidebar">
+            {/* <main id="sidebar">
               {showSidebar && (
                 <div className="fixed inset-0 z-50 bg-black bg-opacity-50" />
               )}
@@ -153,21 +159,33 @@ export function Navigation() {
                   </div>
                 </div>
               </div>
-            </main>
-            <main
-              id="navbar"
-              className="sm:flex gap-5 justify-end w-full hidden"
-            >
+            </main> */}
+            <main id="navbar" className="flex gap-5 justify-end w-full">
               {USER &&
                 navMenu
                   .filter((show) => show.role.includes(USER.role))
                   .map((item, i) => (
-                    <button key={i} onClick={item.callback}>
-                      <div className="flexcenter gap-2">
-                        <div>{item.icon}</div>
-                        <p className="mt-2">{item.name}</p>
-                      </div>
-                    </button>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <button
+                            key={i}
+                            className="mt-1"
+                            onClick={item.callback}
+                          >
+                            <div className="flexcenter gap-2">
+                              <div>{item.icon}</div>
+                              <p className="mt-2 hidden md:block">
+                                {item.name}
+                              </p>
+                            </div>
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{item.name}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   ))}
             </main>
 

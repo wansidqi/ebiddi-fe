@@ -14,7 +14,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { numWithComma } from "@/lib/utils";
 
 enum Holder {
   ic = "1",
@@ -267,12 +266,11 @@ export function Refund() {
     <>
       <FullImage state={refundModal} setState={setRefundModal} img={ssmImg} />
       <section className="flex flex-col w-full">
-        <p>Refund</p>
         <DynamicDrawer
-          btnName="Refund"
+          btnName="Refund Credit"
           footerBtnTitle="Submit"
-          title={`Available Amount: RM ${numWithComma(balance?.amount ?? 0)}`}
-          widthPx="px-16"
+          title={`Refund Credit`}
+          widthPx="px-40"
           footerButtonCallback={postRefund}
           footerBtnDisable={!validateRefund()}
         >

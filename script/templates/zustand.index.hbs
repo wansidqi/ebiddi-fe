@@ -1,0 +1,11 @@
+import { create } from "zustand";
+
+type ResetAllSlices = { resetAllSlices: () => void };
+
+type StateType = ResetAllSlices;
+
+export const resetters: (() => void)[] = [];
+
+export const useBoundStore = create<StateType>()((...a) => ({
+  resetAllSlices: () => resetters.forEach((resetter) => resetter()),
+}));

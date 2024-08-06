@@ -1,0 +1,8 @@
+const use{{ toPascalCase service }} = () => {
+  return useMutation({
+    mutationFn: async ({ data }: { data: any }) => {
+    const response = await datasource({ method: "{{method}}", url: `{{ url }}`, data });
+      return response.data;
+    },
+  });
+};

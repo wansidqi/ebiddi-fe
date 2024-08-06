@@ -7,7 +7,7 @@ import { AlertDialog, LoadingPage } from "./components";
 import {
   TAC,
   Login,
-  Profile,
+  // Profile,
   Contract,
   Policies,
   AuctioneerList,
@@ -18,6 +18,7 @@ import {
   EventsPage,
   Items,
   Home,
+  NewProfile,
 } from "./sections";
 import {
   RequireVerificationToken,
@@ -60,13 +61,14 @@ function App() {
           <Route path={"/policy"} element={<Policies />} />
         </Route>
 
+        {/* prettier-ignore */}
         <Route element={<RequireAuctioneerAuth />}>
           <Route path={"/auctioneer/list/:eventId"} element={<AuctioneerList />} />
           <Route path={"/contract/event/:eventId"} element={<AuctContract />} />
           <Route path={"/auctioneer/live/:eventId/:auctionId"} element={<LivePage />} />
         </Route>
 
-        <Route path={"/profile"} element={<Profile />} />
+        <Route path={"/profile"} element={<NewProfile />} />
         <Route path={"/ireportmotor/:vehicle_id"} element={<ReportMotor />} />
         <Route path={"/ireportcar/:vehicle_id"} element={<ReportCar />} />
         <Route path={"/events"} element={<EventsPage />} />

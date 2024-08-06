@@ -267,13 +267,13 @@ export function Profile() {
                       {USER?.companies?.map((item, i) => (
                         <tr key={i}>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            {item.name}
+                            {item.company_name}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            {item.registration_no}
+                            {item.company_reg_no}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            {item.address}
+                            {item.company_address}
                           </td>
                         </tr>
                       ))}

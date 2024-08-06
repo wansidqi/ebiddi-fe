@@ -1,0 +1,14 @@
+//IMPORT
+import { QueryKey, useQueryClient } from "@tanstack/react-query";
+
+export enum QUERY_KEY {
+  //QUERY KEY
+}
+
+export function useGetQueryData<T>(key: QueryKey): T {
+  return useQueryClient().getQueryData(key) as T;
+}
+
+export const useServices = () => ({
+  //SERVICES
+});

@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { Navigation } from "@/sections";
 import React from "react";
 
@@ -13,7 +14,8 @@ export const Container: React.FC<ContainerProps> = ({
   return (
     <>
       <Navigation />
-      <div className={`my-5 mx-4 sm:mx-10  ${className}`}>{children}</div>
+      <div className={cn("my-5 mx-4 sm:mx-10", className)}>{children}</div>
+      {/* <div className={`my-5 mx-4 sm:mx-10  ${className}`}>{children}</div> */}
     </>
   );
 };

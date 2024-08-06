@@ -6,7 +6,7 @@ import {
   getToken,
   setToken,
 } from "@/datasource/sessionStorage.datasource";
-import { Transactions, User } from "@/interfaces";
+import { ReceiptInterface, RefundInterface, Transactions, User } from "@/interfaces";
 import { useStoreContext } from "@/Context";
 
 const useChangeEmail = () => {
@@ -93,8 +93,8 @@ const useGetReceipt = () => {
         url: `/profile/${USER?.id}/receipts`,
         method: "get",
       });
-      const data = response.data;
-      return data;
+      const data = response.data.data;
+      return data as ReceiptInterface[];
     },
   });
 };
@@ -128,8 +128,8 @@ const useGetRefund = () => {
         url: `/profile/${USER?.id}/refunds`,
         method: "get",
       });
-      const data = response.data;
-      return data;
+      const data = response.data.data;
+      return data as RefundInterface[];
     },
   });
 };

@@ -39,5 +39,14 @@ export * from "./Others/Home";
 export * from "./Others/Policies";
 export * from "./Others/Profile";
 export * from "./Others/Term";
-export * from "./Others/Receipt";
-export * from "./Others/Refund";
+export * from "./Profile/Receipt";
+export * from "./Profile/Refund";
+
+export * from "./Profile/NewProfile";
+
+export * from "./Profile/PersonalInformation";
+export * from "./Profile/DepositInformation";
+export * from "./Profile/CompanyInformation";
+export * from "./Profile/BiddiTransactions";
+export * from "./Profile/TopupCredit";
+export * from "./Profile/RefundCredit";

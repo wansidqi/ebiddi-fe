@@ -1,0 +1,44 @@
+import { StateCreator } from "zustand";
+import { resetters } from "..";
+import { produce } from "immer";
+
+export type {{toPascalCase slice}} = {};
+
+const initial{{toPascalCase slice}} = {
+   {{toCamelCase slice}}: {},
+};
+
+export interface {{toPascalCase slice}}Slice {
+  {{toCamelCase slice}}: {{toPascalCase slice}};
+  set{{toPascalCase slice}}State: ({{toCamelCase slice}}: Partial<{{toPascalCase slice}}>) => void;
+  set{{toPascalCase slice}}: (update: (draft: {{toPascalCase slice}}) => void) => void;
+  reset{{toPascalCase slice}}: () => void;
+}
+
+export const create{{toPascalCase slice}}Slice: StateCreator<{{toPascalCase slice}}Slice, [], [], {{toPascalCase slice}}Slice> /* prettier-ignore */ =
+  (set) => {
+    resetters.push(() => set(initial{{toPascalCase slice}}));
+
+    const reset{{toPascalCase slice}} = () => {
+      set({ ...initial{{toPascalCase slice}} });
+    };
+
+    const set{{toPascalCase slice}}State = ({{toCamelCase slice}}: Partial<{{toPascalCase slice}}>) => {
+      set((state) => ({ {{toCamelCase slice}}: { ...state.{{toCamelCase slice}}, ...{{toCamelCase slice}} } }));
+    };
+
+    const set{{toPascalCase slice}} = (update: (draft: {{toPascalCase slice}}) => void) => {
+      set((state) =>
+        produce(state, (draft) => {
+          update(draft.{{toCamelCase slice}});
+        })
+      );
+    };
+
+    return {
+      ...initial{{toPascalCase slice}},
+      set{{toPascalCase slice}}State,
+      set{{toPascalCase slice}},
+      reset{{toPascalCase slice}},
+    };
+  };

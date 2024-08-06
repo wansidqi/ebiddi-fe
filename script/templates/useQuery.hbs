@@ -1,0 +1,10 @@
+const use{{ toPascalCase service }} = () => {
+  return useQuery({
+    queryKey: [QUERY_KEY.{{queryKey}}],
+    queryFn: async () => {
+      const response = await datasource({ method: "{{method}}", url: `{{ url }}` });
+      const data = response.data;
+      return data;
+    },
+  });
+};

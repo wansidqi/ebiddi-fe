@@ -198,9 +198,9 @@ export function Receipt() {
       />
 
       <section className="flex flex-col w-full">
-        <p>Topup your account:</p>
+        {/* <p>Topup your account:</p> */}
         <DynamicDrawer
-          btnName="Topup Now"
+          btnName="Topup Credit"
           footerBtnTitle="Submit"
           title="Deposit your account"
           widthPx="px-16"

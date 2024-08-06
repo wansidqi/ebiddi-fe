@@ -39,9 +39,13 @@ export interface User {
   ]; //TODO
   companies: [
     {
-      name: string;
-      registration_no: string;
-      address: string;
+      id: number;
+      company_name: string;
+      company_reg_no: string;
+      company_address: string;
+      company_post_code: string;
+      company_phone_no: string;
+      company_fax_no: string;
     },
   ];
 }
