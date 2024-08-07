@@ -1,5 +1,5 @@
 import { Container } from "@/components/Container";
-import { NewSingleEvent, EventDetail, Countdown } from "@/sections";
+import { EventDetail, Countdown } from "@/sections";
 import { useAPIServices } from "@/services";
 import { useStoreContext } from "@/Context";
 import { ROLE } from "@/enum";
@@ -99,7 +99,6 @@ export function NewEventsPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <NewSingleEvent />
 
                     <Table className="">
                       <TableHeader className="bg-muted/80">

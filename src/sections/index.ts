@@ -51,5 +51,4 @@ export * from "./Profile/CompanyInformation";
 export * from "./Profile/BiddiTransactions";
 export * from "./Profile/TopupCredit";
 export * from "./Profile/RefundCredit";
-export * from "./Events/NewSingleEvent";
 export * from "./Events/NewEventsPage";
