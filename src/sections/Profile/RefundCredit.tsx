@@ -117,24 +117,22 @@ export const RefundCredit = () => {
         </div>
       </div>
 
-      <div className="absolute left-1/2 bottom-0">
+      <div className="my-10 xl:mt-20 xl:mb-0 left-1/2 bottom-0 text-sm xl:text-lg">
         <div className="flexcenter gap-7">
           <button onClick={prevPage} disabled={currentPage === 1}>
-            <StepBack />
+            <StepBack className="w-4 h-4 xl:w-6 xl:h-6" />
           </button>
           <div className="flexcenter gap-3">
             <span>Page</span>
-            <span className="text-xl">{currentPage}</span>
+            <span>{currentPage}</span>
             <span className="">of</span>
-            <span className="text-xl">
-              {Math.ceil((data?.length as number) / itemsPerPage)}
-            </span>
+            <span>{Math.ceil((data?.length as number) / itemsPerPage)}</span>
           </div>
           <button
             onClick={nextPage}
             disabled={indexOfLastItem >= (data?.length as number)}
           >
-            <StepForward />
+            <StepForward className="w-4 h-4 xl:w-6 xl:h-6" />
           </button>
         </div>
       </div>

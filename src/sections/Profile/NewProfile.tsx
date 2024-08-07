@@ -74,6 +74,11 @@ export function NewProfile() {
   const [select, setSelect] = useState("Personal Information");
   const component = navs.find((item) => item.name === select);
 
+  function selectNav(nav: string) {
+    setSelect(nav);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   useEffect(() => {
     if (!USER) navigate("/");
   }, []);
@@ -94,7 +99,7 @@ export function NewProfile() {
                       const notSelected = "text-muted-foreground";
                       return (
                         <button
-                          onClick={() => setSelect(nav.name)}
+                          onClick={() => selectNav(nav.name)}
                           key={i}
                           className={`${select === nav.name ? selected : notSelected} flex items-center gap-3 rounded-lg transition-all hover:text-primary px-3 py-3`}
                         >

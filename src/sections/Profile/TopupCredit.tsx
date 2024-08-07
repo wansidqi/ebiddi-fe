@@ -8,7 +8,7 @@ import { Receipt } from "..";
 export const TopupCredit = () => {
   const { useGetReceipt } = useAPIServices();
   const { data } = useGetReceipt();
-  
+
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -82,10 +82,10 @@ export const TopupCredit = () => {
         </div>
       </div>
 
-      <div className="absolute left-1/2 bottom-0">
+      <div className="my-10 xl:mt-20 xl:mb-0 left-1/2 bottom-0 text-sm xl:text-lg">
         <div className="flexcenter gap-7">
           <button onClick={prevPage} disabled={currentPage === 1}>
-            <StepBack />
+            <StepBack className="w-4 h-4 xl:w-6 xl:h-6" />
           </button>
           <div className="flexcenter gap-3">
             <span>Page</span>
@@ -99,7 +99,7 @@ export const TopupCredit = () => {
             onClick={nextPage}
             disabled={indexOfLastItem >= (data?.length as number)}
           >
-            <StepForward />
+            <StepForward className="w-4 h-4 xl:w-6 xl:h-6" />
           </button>
         </div>
       </div>
