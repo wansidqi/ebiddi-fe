@@ -40,7 +40,7 @@ export const RefundCredit = () => {
   ];
 
   return (
-    <main className="w-screen md:w-full">
+    <main className="w-[90vw] md:w-full">
       <div className="mx-4 my-6 xl:my-0">
         <div className="text-center sm:mx-10 overflow-y-hidden">
           <p className="text-lg">
@@ -51,7 +51,7 @@ export const RefundCredit = () => {
               <Refund />
             </div>
           </div>
-          <table className="min-w-full divide-y">
+          <table className="min-w-full divide-y lg:w-full">
             <thead className="bg-secondary">
               <tr>
                 {columns.map((col, i) => {

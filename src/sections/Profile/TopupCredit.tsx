@@ -28,7 +28,7 @@ export const TopupCredit = () => {
   const columns = ["Date", "Reference", "Amount", "Attachment", "Status"];
 
   return (
-    <main className="w-screen md:w-full">
+    <main className="w-[90vw] md:w-full">
       <div className="mx-4 my-6 xl:my-0">
         <div className="text-center sm:mx-10 overflow-y-hidden">
           <div className="flex md:justify-end mb-5">

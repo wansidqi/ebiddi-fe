@@ -14,9 +14,9 @@ export const BiddiTransactions = () => {
     "	Deposited Account",
   ];
   return (
-    <div className="">
-      <div className="w-screen md:w-full overflow-auto max-h-[800px] custom-scrollbar text-center my-6 px-4 lg:px-10 sm:my-0">
-      {/* <div className=""> */}
+    <div className="w-full overflow-auto custom-scrollbar">
+      <div className=" max-h-[800px] text-center">
+        {/* <div className=""> */}
         <table className="w-full divide-y">
           <thead className="bg-secondary">
             <tr>

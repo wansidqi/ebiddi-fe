@@ -112,7 +112,7 @@ export function NewProfile() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col w-screen lg:w-full">
           <HeaderNav
             select={select}
             setSelect={setSelect}
