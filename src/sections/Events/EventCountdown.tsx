@@ -50,19 +50,21 @@ export const Countdown = ({
       <DynamicRenderer.When cond={!Boolean(timeLeft)}>
         <button
           onClick={navigateToLive}
-          className="bg-green-500 px-3 py-2 my-3 rounded-md font-bold w-full"
+          className="bg-green-500 px-3 py-2 my-3 rounded-md w-full"
         >
           JOIN BIDDING
         </button>
       </DynamicRenderer.When>
       <DynamicRenderer.Else>
-        <div className="flexcenter gap-4 text-center">
-          {Object.entries(timeLeft).map(([unit, value]) => (
-            <div key={unit} className="flex">
-              <p>{value}</p>
-              <p>{unit}</p>
-            </div>
-          ))}
+        <div className="flexcenter">
+          <div className="flexcenter gap-4 text-center w-32">
+            {Object.entries(timeLeft).map(([unit, value]) => (
+              <div key={unit} className="flex">
+                <p>{value}</p>
+                <p>{unit}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </DynamicRenderer.Else>
     </DynamicRenderer>

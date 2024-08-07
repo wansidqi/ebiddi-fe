@@ -15,11 +15,11 @@ import {
   LivePage,
   ReportMotor,
   ReportCar,
-  EventsPage,
   Items,
   Home,
   NewProfile,
   ReAuctioneerList,
+  NewEventsPage,
 } from "./sections";
 import {
   RequireVerificationToken,
@@ -73,7 +73,7 @@ function App() {
         <Route path={"/profile"} element={<NewProfile />} />
         <Route path={"/ireportmotor/:vehicle_id"} element={<ReportMotor />} />
         <Route path={"/ireportcar/:vehicle_id"} element={<ReportCar />} />
-        <Route path={"/events"} element={<EventsPage />} />
+        <Route path={"/events"} element={<NewEventsPage />} />
         <Route path={"/items/:eventId"} element={<Items />} />
         <Route path={"/live/:eventId"} element={<LivePage />} />
       </Routes>
