@@ -1,6 +1,7 @@
 import { useStoreContext } from "@/Context";
 import { DynamicRenderer } from "@/components";
 import { isCountdown, roleRenderer } from "@/lib/utils";
+import { useAPIServices } from "@/services";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +15,9 @@ export const Countdown = ({
   const navigate = useNavigate();
   // const temp = "2024-05-24T16:05:30+08:00";
   const [timeLeft, setTimeLeft] = useState(isCountdown(targetDate));
-  const { closeDetailModal, USER } = useStoreContext();
+  const { closeDetailModal, USER, setTerm } = useStoreContext();
+  const { usePostVerifyAgreement } = useAPIServices();
+  const { mutateAsync: isVerify } = usePostVerifyAgreement();
 
   const navigateToLive = () => {
     closeDetailModal();
@@ -26,8 +29,14 @@ export const Countdown = ({
         navigate(`/auctioneer/list/${eventId}`);
       },
 
-      bidder: () => {
-        navigate(`/live/${eventId}`);
+      bidder: async () => {
+        if (USER)
+          try {
+            await isVerify({ event_id: eventId, user_id: USER.id });
+            navigate(`/live/${eventId}`);
+          } catch (error) {
+            setTerm({ showTerm: true, eventId: eventId.toString() });
+          }
       },
 
       noRole: () => {
