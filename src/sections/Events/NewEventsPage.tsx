@@ -18,7 +18,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { TableHeader, TableRow, TableHead, Table } from "@/components/ui/table";
+import { Table } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Grid2X2, List, Search } from "lucide-react";
 import { useEffect, useState } from "react";
