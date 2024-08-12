@@ -5,15 +5,13 @@ import { ROLE } from "@/enum";
 import { EventsInterface } from "@/interfaces";
 
 export function EventsPageCard({
-  isLoading,
-  eventAuct,
   data,
+  isLoading,
   auctLoading,
 }: {
+  data: EventsInterface[] | undefined;
   auctLoading: boolean;
   isLoading: boolean;
-  eventAuct: EventsInterface[] | undefined;
-  data: EventsInterface[] | undefined;
 }) {
   const { USER } = useStoreContext();
 
@@ -36,11 +34,7 @@ export function EventsPageCard({
                 <EventLoading />
               </DynamicRenderer.When>
               <DynamicRenderer.Else>
-                {isAuctioneer
-                  ? eventAuct?.map((item, i) => (
-                      <SingleEvent key={i} {...item} />
-                    ))
-                  : data?.map((item, i) => <SingleEvent key={i} {...item} />)}
+                {data?.map((item, i) => <SingleEvent key={i} {...item} />)}
               </DynamicRenderer.Else>
             </DynamicRenderer>
           </div>

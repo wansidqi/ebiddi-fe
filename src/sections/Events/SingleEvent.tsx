@@ -104,7 +104,7 @@ export function SingleEvent(props: EventsInterface) {
         <CardFooter className="flexcenter-col justify-between mt-4">
           <div className="flex justify-between gap-4 w-full">
             <div className="w-full">
-              <EventDetail {...props} eventId={props.id} />
+              <EventDetail show="button" {...props} eventId={props.id} />
             </div>
             <Button
               onClick={viewAuctionItemsOrContract}

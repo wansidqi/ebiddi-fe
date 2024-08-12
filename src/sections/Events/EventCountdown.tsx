@@ -59,9 +59,15 @@ export const Countdown = ({
       <DynamicRenderer.When cond={!Boolean(timeLeft)}>
         <button
           onClick={navigateToLive}
-          className="bg-green-500 px-3 py-2 my-3 rounded-md w-full"
+          className="bg-green-500 px-3 py-2 my-3 rounded-md min-w-full w-32"
         >
-          JOIN BIDDING
+          {roleRenderer({
+            action: "text",
+            role: USER?.role,
+            auctioneer: "Enter Events",
+            bidder: "Join Auction",
+            noRole: "Join Biddings",
+          })}
         </button>
       </DynamicRenderer.When>
       <DynamicRenderer.Else>

@@ -24,11 +24,13 @@ import { useStoreContext } from "@/Context";
 
 interface Props extends EventsInterface {
   eventId?: number;
+  show: "button" | "link";
 }
 
 export function EventDetail(props: Props) {
   const { eventId } = props;
-  const { showDetailById, openDetailModal, closeDetailModal } = useStoreContext();
+  const { showDetailById, openDetailModal, closeDetailModal } =
+    useStoreContext();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const handleOpenChange = (open: boolean) => {
@@ -39,9 +41,15 @@ export function EventDetail(props: Props) {
     return (
       <Dialog open={showDetailById === eventId} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
-          <Button className="w-full" variant="outline">
-            Details
-          </Button>
+          {props.show === "button" ? (
+            <Button className="w-full" variant="outline">
+              Details
+            </Button>
+          ) : (
+            <Button className="underline" variant="link">
+              {props?.name}
+            </Button>
+          )}
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -56,9 +64,15 @@ export function EventDetail(props: Props) {
   return (
     <Drawer open={showDetailById === eventId} onOpenChange={handleOpenChange}>
       <DrawerTrigger asChild>
-        <Button className="w-full" variant="outline">
-          Details
-        </Button>
+        {props.show === "button" ? (
+          <Button className="w-full" variant="outline">
+            Details
+          </Button>
+        ) : (
+          <Button className="underline" variant="link">
+            {props?.name}
+          </Button>
+        )}
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">

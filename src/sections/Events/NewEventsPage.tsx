@@ -115,7 +115,6 @@ export function NewEventsPage() {
                   <TabsContent value={TabType.Card}>
                     <EventsPageCard
                       data={eventList}
-                      eventAuct={eventAuct}
                       isLoading={isLoading}
                       auctLoading={auctLoading}
                     />
@@ -129,7 +128,7 @@ export function NewEventsPage() {
 
                       <EventTableContent
                         event={eventList}
-                        isAuctioneer={!isAuctioneer}
+                        isAuctioneer={isAuctioneer}
                       />
                     </Table>
                   </TabsContent>

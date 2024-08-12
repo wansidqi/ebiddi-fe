@@ -26,10 +26,9 @@ export const EventTableHeader = ({
           <>
           <TableHead className="text-center">Event Name</TableHead>
           <TableHead className="hidden md:table-cell text-center">Host By</TableHead>
-          <TableHead className="hidden md:table-cell text-center">Auctioneer</TableHead>
+          {!isAuctioneer && ( <TableHead className="hidden md:table-cell text-center">Auctioneer</TableHead> )}
           <TableHead className="hidden md:table-cell text-center">Date</TableHead>
           <TableHead className="hidden md:table-cell text-center">Time</TableHead>
-          <TableHead className="md:hidden text-center">Details</TableHead>
           <TableHead className="text-center">{!isAuctioneer ? "Auction Items":"Contract"}</TableHead>
           <TableHead className="text-center">Actions</TableHead>
         </>
@@ -65,13 +64,13 @@ export const EventTableContent = ({
         /* prettier-ignore */
         return (
       <TableRow key={i}>
-        <TableCell className="font-medium">{props.name?.toUpperCase()}</TableCell>
+        <TableCell className="md:hidden"><EventDetail show="link" {...props} eventId={props.id} /></TableCell>
+        <TableCell className="font-medium hidden md:table-cell">{props.name?.toUpperCase()}</TableCell>
         <TableCell className="font-medium hidden md:table-cell">{props.auction_house?.name}</TableCell>
-        <TableCell className="font-medium hidden md:table-cell">{props.auction_house?.auctioneer?.name}</TableCell>
+        {!isAuctioneer && ( <TableCell className="font-medium hidden md:table-cell">{props.auction_house?.auctioneer?.name}</TableCell> )}
         <TableCell className="font-medium hidden md:table-cell">{getDate(props.event_date)}</TableCell>
         <TableCell className="font-medium hidden md:table-cell">{getTime(props.event_date)}</TableCell>
-        <TableCell className="md:hidden"><EventDetail {...props} eventId={props.id} /></TableCell>
-        <TableCell className="font-medium"> <Button variant="link" onClick={() => viewAuctionItemsOrContract(props)}> {!isAuctioneer ? "Contract" : "View"} </Button></TableCell>
+        <TableCell className="font-medium"> <Button variant="link" onClick={() => viewAuctionItemsOrContract(props)}> {isAuctioneer ? "Contract" : "View"} </Button></TableCell>
         <TableCell className=""><Countdown targetDate={props.event_date} eventId={props.id as number} /></TableCell>
       </TableRow>
     );
