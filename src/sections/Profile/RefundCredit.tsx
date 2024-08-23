@@ -105,9 +105,9 @@ export const RefundCredit = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <p
-                      className={`${item.status ? "text-green-500" : "text-yellow-500"}`}
+                      className={`${item.status === 1 ? "text-green-500" : item.status === 2 ? "text-red-500" : "text-yellow-500"}`}
                     >
-                      {item.status ? "Completed" : "Pending"}
+                      {`${item.status === 1 ? "Success" : item.status === 2 ? "Failed" : "Pending"}`}
                     </p>
                   </td>
                 </tr>

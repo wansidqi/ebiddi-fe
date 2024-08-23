@@ -6,5 +6,12 @@ export interface ReceiptInterface {
   user_id: number;
   reference_no: string;
   url: string;
-  status: "pending" | "completed" | "failed";
+  status: Status;
+  // status: "pending" | "completed" | "failed";
+}
+
+enum Status {
+  pending = 0,
+  completed = 1,
+  failed = 2,
 }

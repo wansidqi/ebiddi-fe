@@ -90,10 +90,10 @@ export const EventSkeleton = ({ condition }: { condition: boolean }) => {
                 <Skeleton className="h-4 w-40 rounded-sm" />
               </TableCell>
               <TableCell className="font-medium hidden md:table-cell">
-                <Skeleton className="h-4 w-80 rounded-sm" />
+                <Skeleton className="h-4 w-40 rounded-sm" />
               </TableCell>
               <TableCell className="font-medium hidden md:table-cell">
-                <Skeleton className="h-4 w-80 rounded-sm" />
+                <Skeleton className="h-4 w-40 rounded-sm" />
               </TableCell>
               <TableCell className="font-medium hidden md:table-cell">
                 <Skeleton className="h-4 w-40 rounded-sm" />

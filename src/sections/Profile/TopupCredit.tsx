@@ -70,9 +70,9 @@ export const TopupCredit = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <p
-                      className={`${item.status === "completed" ? "text-green-500" : item.status === "failed" ? "text-red-500" : "text-yellow-500"}`}
+                      className={`${item.status === 1 ? "text-green-500" : item.status === 2 ? "text-red-500" : "text-yellow-500"}`}
                     >
-                      {item.status ?? "Pending"}
+                      {`${item.status === 1 ? "Success" : item.status === 2 ? "Failed" : "Pending"}`}
                     </p>
                   </td>
                 </tr>

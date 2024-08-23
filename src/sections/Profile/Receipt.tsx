@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { useAPIServices } from "@/services";
 import FileTypeChecker from "file-type-checker";
+import { LiveDialog } from "../Live/LiveDialog";
 
 export function Receipt() {
   const { $swal } = useStoreContext();
@@ -191,6 +192,7 @@ export function Receipt() {
 
   return (
     <>
+      <LiveDialog />
       <FullImage
         state={receiptModal}
         setState={setReceiptModal}

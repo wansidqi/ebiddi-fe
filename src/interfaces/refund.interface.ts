@@ -11,6 +11,6 @@ export interface RefundInterface {
   ic_front: string;
   id: number;
   ssm: string;
-  status: boolean;
+  status: number;
   user_id: number;
 }

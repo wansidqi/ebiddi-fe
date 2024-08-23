@@ -2,7 +2,7 @@ import { DynamicDrawer } from "@/components";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEffect, useRef, useState } from "react";
-import { FullImage } from "..";
+import { FullImage, LiveDialog } from "..";
 import DefaultImage from "@/assets/images/upload-receipt/upload-placehodler.jpeg";
 import FileTypeChecker from "file-type-checker";
 import uploading from "@/assets/images/upload-receipt/uploading.gif";
@@ -264,6 +264,7 @@ export function Refund() {
 
   return (
     <>
+    <LiveDialog />
       <FullImage state={refundModal} setState={setRefundModal} img={ssmImg} />
       <section className="flex flex-col w-full">
         <DynamicDrawer
