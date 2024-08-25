@@ -24,7 +24,7 @@ type Ref = React.RefObject<HTMLInputElement>;
 type SetImage = (value: React.SetStateAction<string | undefined>) => void;
 
 export function Refund() {
-  const { $swal, USER } = useStoreContext();
+  const { $swal } = useStoreContext();
 
   const [holder_type, setHolder_type] = useState<Holder>(Holder.ic);
 
