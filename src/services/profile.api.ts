@@ -6,8 +6,33 @@ import {
   getToken,
   setToken,
 } from "@/datasource/sessionStorage.datasource";
-import { ReceiptInterface, RefundInterface, Transactions, User } from "@/interfaces";
+import {
+  ReceiptInterface,
+  RefundInterface,
+  Transactions,
+  User,
+} from "@/interfaces";
 import { useStoreContext } from "@/Context";
+
+const useGetUserDetail = () => {
+  const { USER } = useStoreContext();
+  const queryClient = useQueryClient();
+
+  return useQuery({
+    queryKey: [],
+    queryFn: async () => {
+      const response = await datasource({
+        url: `/profile/${USER?.id}`,
+        method: "get",
+      });
+
+      const data = response.data.data;
+      queryClient.setQueryData([KEY.user], data);
+
+      return data as User;
+    },
+  });
+};
 
 const useChangeEmail = () => {
   const queryClient = useQueryClient();
@@ -160,4 +185,5 @@ export const ProfileServices = {
   usePostReceipt,
   useGetRefund,
   usePostRefund,
+  useGetUserDetail,
 };

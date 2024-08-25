@@ -41,7 +41,7 @@ export function NewProfile() {
       role: [ROLE.BIDDER, ROLE.AUCTIONEER],
     },
     {
-      name: "Biddi Transactions",
+      name: "Transactions",
       icon: <Receipt className="h-4 w-4" />,
       content: <BiddiTransactions />,
       role: [ROLE.BIDDER],

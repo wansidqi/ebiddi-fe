@@ -47,10 +47,11 @@ export function Refund() {
   const [bank_no, setBankAccNo] = useState("");
   const [amount, setAmount] = useState("");
 
-  const { usePostRefund } = useAPIServices();
+  const { usePostRefund, useGetUserDetail } = useAPIServices();
   const { mutateAsync: uploadRefund } = usePostRefund();
 
-  const balance = USER?.credits.find((cr) => cr.credit_id === 0);
+  const { data } = useGetUserDetail();
+  const balance = data?.credits.find((cr) => cr.credit_id === 0);
 
   let isInsufficient = +amount <= (balance?.amount || 0);
 
@@ -264,7 +265,7 @@ export function Refund() {
 
   return (
     <>
-    <LiveDialog />
+      <LiveDialog />
       <FullImage state={refundModal} setState={setRefundModal} img={ssmImg} />
       <section className="flex flex-col w-full">
         <DynamicDrawer

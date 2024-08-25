@@ -1,9 +1,11 @@
-import { useStoreContext } from "@/Context";
 import { numWithComma } from "@/lib/utils";
+import { useAPIServices } from "@/services";
 
 export const DepositInformation = () => {
-  const { USER } = useStoreContext();
-  const depoInfo = USER?.credits;
+  const { useGetUserDetail } = useAPIServices();
+  const { data } = useGetUserDetail();
+
+  const depoInfo = data?.credits;
 
   return (
     <main className="w-full">

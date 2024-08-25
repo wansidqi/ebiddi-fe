@@ -584,7 +584,7 @@ export function LivePage() {
     } else {
       setTimeout(() => {
         setCurrentPage("bidding");
-      }, 1500);
+      }, 2000);
     }
   }, [rcd]);
 

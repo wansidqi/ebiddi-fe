@@ -21,11 +21,13 @@ export function Profile() {
   ];
 
   const { USER } = useStoreContext();
-  const depoInfo = USER?.credits;
+  const { useGetTx, useChangeEmail, useGetUserDetail } = useAPIServices();
+  const { data } = useGetUserDetail();
+
+  const depoInfo = data?.credits;
 
   const navigate = useNavigate();
 
-  const { useGetTx, useChangeEmail } = useAPIServices();
   const { data: txs } = useGetTx();
 
   const { mutateAsync: changeEmail } = useChangeEmail();

@@ -7,11 +7,11 @@ import { Refund } from "..";
 import { useStoreContext } from "@/Context";
 
 export const RefundCredit = () => {
-  const { useGetRefund } = useAPIServices();
+  const { useGetRefund, useGetCredit } = useAPIServices();
   const { data } = useGetRefund();
   const { USER } = useStoreContext();
 
-  const balance = USER?.credits.find((cr) => cr.credit_id === 0);
+  const { data: balance } = useGetCredit(USER?.id);
 
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,7 +44,8 @@ export const RefundCredit = () => {
       <div className="mx-4 my-6 xl:my-0">
         <div className="text-center sm:mx-10 overflow-y-hidden">
           <p className="text-lg">
-            Available Amount: RM ${numWithComma(balance?.amount ?? 0)}
+            Available Amount: RM $
+            {numWithComma(balance ? balance[0]?.amount : 0)}
           </p>
           <div className="flex md:justify-end mb-5">
             <div className="flex">
