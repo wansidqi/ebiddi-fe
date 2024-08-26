@@ -4,6 +4,7 @@ import datasource from "@/datasource/axiosInstance";
 import { ReauctionList, ReauctionStatus } from "@/interfaces";
 import { useParams } from "react-router-dom";
 
+//TODO: add field for userID
 const useGetReauctionList = (eventId: string | undefined) => {
   return useQuery({
     queryKey: [KEY.reauction, eventId],

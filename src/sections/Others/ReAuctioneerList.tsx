@@ -86,6 +86,8 @@ export function ReAuctioneerList() {
     });
   };
 
+  //TODO: add field for userID
+
   useEffect(() => {
     if (!eventId) return;
 

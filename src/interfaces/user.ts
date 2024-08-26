@@ -36,7 +36,7 @@ export interface User {
         name: string;
       };
     },
-  ]; //TODO
+  ];
   companies: [
     {
       id: number;
