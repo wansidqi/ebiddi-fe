@@ -1,5 +1,5 @@
 import { useStoreContext } from "@/Context";
-import { Container } from "@/components";
+import { Container, Pagination } from "@/components";
 import { useAPIServices } from "@/services";
 import { Search } from "lucide-react";
 
@@ -8,6 +8,8 @@ export function Contract() {
   const { useGetContract } = useAPIServices();
 
   const { data } = useGetContract((USER?.id as number)?.toString());
+
+  const { PaginationUI, currData } = Pagination(data, 10);
 
   const columns = [
     "Registration Number",
@@ -41,7 +43,7 @@ export function Contract() {
               </tr>
             </thead>
             <tbody className="divide-y text-center text-xs sm:text-sm">
-              {data?.map((contract, i) => (
+              {currData?.map((contract, i) => (
                 <tr key={i}>
                   <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
                     {contract?.item?.registration_number}
@@ -74,6 +76,7 @@ export function Contract() {
               ))}
             </tbody>
           </table>
+          {PaginationUI}
         </div>
       </div>
     </Container>

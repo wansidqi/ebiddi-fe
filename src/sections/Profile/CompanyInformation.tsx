@@ -1,7 +1,10 @@
+import { Pagination } from "@/components";
 import { useStoreContext } from "@/Context";
 
 export const CompanyInformation = () => {
   const { USER } = useStoreContext();
+  const companies = USER?.companies;
+  const { PaginationUI, currData } = Pagination(companies);
 
   return (
     <main className="w-full">
@@ -22,7 +25,7 @@ export const CompanyInformation = () => {
               </tr>
             </thead>
             <tbody className="divide-y text-center text-xs sm:text-sm">
-              {USER?.companies?.map((item, i) => (
+              {currData?.map((item, i) => (
                 <tr key={i}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {item.company_name}
@@ -39,6 +42,7 @@ export const CompanyInformation = () => {
           </table>
         </div>
       </div>
+      {PaginationUI}
     </main>
   );
 };
