@@ -15,22 +15,28 @@ import {
 import { useStoreContext } from "@/Context";
 
 const useGetUserDetail = () => {
-  const { USER, SET_USER } = useStoreContext();
-  const queryClient = useQueryClient();
+  const { SET_USER } = useStoreContext();
+
+  const token = getToken(TOKEN.user);
+  const id: number | null = token ? JSON.parse(token).id : null;
 
   return useQuery({
-    queryKey: [],
+    queryKey: [KEY.user],
+    enabled: !!id,
     queryFn: async () => {
-      const response = await datasource({
-        url: `/profile/${USER?.id}`,
-        method: "get",
-      });
+      try {
+        const response = await datasource({
+          url: `/profile/${id}`,
+          method: "get",
+        });
 
-      const data = response.data.data;
-      SET_USER(data);
-      queryClient.setQueryData([KEY.user], data);
+        const data = response.data.data;
+        SET_USER(data);
 
-      return data as User;
+        return data as User;
+      } catch (error) {
+        SET_USER(null);
+      }
     },
   });
 };
@@ -140,6 +146,8 @@ const usePostReceipt = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries([KEY.receipt]);
+      queryClient.invalidateQueries([KEY.user]);
+      queryClient.invalidateQueries([KEY.credit]);
     },
   });
 };
@@ -174,6 +182,8 @@ const usePostRefund = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries([KEY.refund]);
+      queryClient.invalidateQueries([KEY.user]);
+      queryClient.invalidateQueries([KEY.credit]);
     },
   });
 };

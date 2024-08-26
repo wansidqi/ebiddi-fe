@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { convertDateTime, numWithComma } from "@/lib/utils";
 import { useAPIServices } from "@/services";
-import { StepBack, StepForward } from "lucide-react";
-import { useState } from "react";
 import { Refund } from "..";
 import { useStoreContext } from "@/Context";
+import { Pagination } from "@/components";
 
 export const RefundCredit = () => {
   const { useGetRefund, useGetCredit } = useAPIServices();
@@ -12,22 +11,6 @@ export const RefundCredit = () => {
   const { USER } = useStoreContext();
 
   const { data: balance } = useGetCredit(USER?.id);
-
-  const itemsPerPage = 5;
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
-  const currentItems = data?.slice(indexOfFirstItem, indexOfLastItem);
-
-  const nextPage = () => {
-    setCurrentPage(currentPage + 1);
-  };
-
-  const prevPage = () => {
-    setCurrentPage(currentPage - 1);
-  };
 
   const columns = [
     "Date",
@@ -38,6 +21,8 @@ export const RefundCredit = () => {
     "Attachment",
     "Status",
   ];
+
+  const { PaginationUI, currData } = Pagination(data);
 
   return (
     <main className="w-[90vw] md:w-full">
@@ -68,7 +53,7 @@ export const RefundCredit = () => {
               </tr>
             </thead>
             <tbody className="divide-y text-center text-xs sm:text-sm">
-              {currentItems?.map((item, i) => (
+              {currData?.map((item, i) => (
                 <tr key={i}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {convertDateTime(item.created_at)}
@@ -118,25 +103,7 @@ export const RefundCredit = () => {
         </div>
       </div>
 
-      <div className="my-10 xl:mt-20 xl:mb-0 left-1/2 bottom-0 text-sm xl:text-lg">
-        <div className="flexcenter gap-7">
-          <button onClick={prevPage} disabled={currentPage === 1}>
-            <StepBack className="w-4 h-4 xl:w-6 xl:h-6" />
-          </button>
-          <div className="flexcenter gap-3">
-            <span>Page</span>
-            <span>{currentPage}</span>
-            <span className="">of</span>
-            <span>{Math.ceil((data?.length as number) / itemsPerPage)}</span>
-          </div>
-          <button
-            onClick={nextPage}
-            disabled={indexOfLastItem >= (data?.length as number)}
-          >
-            <StepForward className="w-4 h-4 xl:w-6 xl:h-6" />
-          </button>
-        </div>
-      </div>
+      <>{PaginationUI}</>
     </main>
   );
 };
