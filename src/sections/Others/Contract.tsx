@@ -1,13 +1,11 @@
-import { useStoreContext } from "@/Context";
 import { Container, Pagination, SearchFilter } from "@/components";
 import { useAPIServices } from "@/services";
 import { Search } from "lucide-react";
 
 export function Contract() {
-  const { USER } = useStoreContext();
   const { useGetContract } = useAPIServices();
 
-  const { data } = useGetContract((USER?.id as number)?.toString());
+  const { data } = useGetContract();
 
   const { SearchFilterUI, dataList } = SearchFilter(data, [
     "item.registration_number",
@@ -67,7 +65,7 @@ export function Contract() {
                     {contract?.contract_owner?.name}
                   </td>
                   <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
-                    {contract?.bidder_company}
+                    {contract?.bidder_company?.name}
                   </td>
                   <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
                     {contract?.event?.event_timestamp}
