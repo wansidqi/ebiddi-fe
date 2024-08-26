@@ -1,8 +1,8 @@
-import { ThemeProvider } from "@/components/ThemeProvider";
 import { useAPIServices } from "@/services";
 import { tickbox } from "./ReportCar";
 import { useParams } from "react-router-dom";
 import { LoaderCircle } from "lucide-react";
+import { LightThemeProvider } from "@/components/LightThemeProvider";
 
 export function ReportMotor() {
   const { vehicle_id } = useParams();
@@ -288,7 +288,7 @@ export function ReportMotor() {
     );
 
   return (
-    <ThemeProvider defaultTheme="light" storageKey="report">
+    <LightThemeProvider defaultTheme="light">
       <div className="report-layout arial text-[#2C3E50] text-[9px] overflow-auto">
         <main className="mt-14 border-b border-[#2C3E50]">
           <p className="text-[15px] font-bold">INSPECTION REPORT --</p>
@@ -443,7 +443,7 @@ export function ReportMotor() {
           </div>
         </main>
       </div>
-    </ThemeProvider>
+    </LightThemeProvider>
   );
 }
 
