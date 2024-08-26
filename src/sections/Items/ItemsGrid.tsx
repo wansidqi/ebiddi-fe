@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { InventoryInterface } from "@/interfaces";
 import { StepBack, StepForward } from "lucide-react";
 import { ItemDetail } from "./ItemDetail";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { VEHICLE_TYPE } from "@/enum";
 
@@ -30,6 +30,10 @@ export function ItemsGrid({
   const prevPage = () => {
     setCurrentPage(currentPage - 1);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [inventories]);
 
   if (inventories && inventories.length < 1)
     return (

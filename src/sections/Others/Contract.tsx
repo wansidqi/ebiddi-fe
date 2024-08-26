@@ -1,5 +1,5 @@
 import { useStoreContext } from "@/Context";
-import { Container, Pagination } from "@/components";
+import { Container, Pagination, SearchFilter } from "@/components";
 import { useAPIServices } from "@/services";
 import { Search } from "lucide-react";
 
@@ -9,7 +9,16 @@ export function Contract() {
 
   const { data } = useGetContract((USER?.id as number)?.toString());
 
-  const { PaginationUI, currData } = Pagination(data, 10);
+  const { SearchFilterUI, dataList } = SearchFilter(data, [
+    "item.registration_number",
+    "item.model",
+    "contract_owner.name",
+    "bidder_company",
+    "event.event_timestamp",
+    "event.auction_house.auctionhouse_name",
+    "contract_owner.name",
+  ]);
+  const { PaginationUI, currData } = Pagination(dataList, 10);
 
   const columns = [
     "Registration Number",
@@ -25,7 +34,10 @@ export function Contract() {
     <Container>
       <div className="text-center">
         <p className="text-5xl sm:text-6xl text-primary my-4">CONTRACTS</p>
-        <p className="my-8 text-xl">List of Contracts</p>
+        <div className="realtive flexcenter">
+          <p className="my-8 text-xl">List of Contracts</p>
+          <div className="absolute right-20">{SearchFilterUI}</div>
+        </div>
       </div>
       <div className="sm:w-full overflow-x-auto text-center py-2 sm:px-5 custom-scrollbar">
         <div className="inline-block min-w-full">

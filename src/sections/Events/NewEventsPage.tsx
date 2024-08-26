@@ -49,18 +49,20 @@ export function NewEventsPage() {
     setEventList(data);
   }, [data]);
 
-  useEffect(() => {
+  const filteration = () => {
     if (!isAuctioneer) {
-      let fitlered = data?.filter((item) =>
+      return data?.filter((item) =>
         item.name.toLowerCase().includes(input.toLowerCase())
       );
-      setEventList(fitlered);
     } else {
-      let fitlered = eventAuct?.filter((item) =>
+      return eventAuct?.filter((item) =>
         item.name.toLowerCase().includes(input.toLowerCase())
       );
-      setEventList(fitlered);
     }
+  };
+
+  useEffect(() => {
+    setEventList(filteration());
   }, [input]);
 
   return (

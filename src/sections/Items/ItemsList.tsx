@@ -1,10 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { EventsInterface } from "@/interfaces";
+import { InventoryInterface } from "@/interfaces";
 import { ItemDetail } from "..";
 import { Link, useNavigate } from "react-router-dom";
 import { VEHICLE_TYPE } from "@/enum";
 
-export function ItemsList({ events }: { events: undefined | EventsInterface }) {
+export function ItemsList({
+  inventories,
+}: {
+  inventories: undefined | InventoryInterface[];
+}) {
   const navigate = useNavigate();
   const columns = [
     "Lot",
@@ -16,7 +20,7 @@ export function ItemsList({ events }: { events: undefined | EventsInterface }) {
     "Report",
   ];
 
-  if (events?.inventories && events.inventories.length < 1)
+  if (inventories && inventories.length < 1)
     return (
       <div className="flexcenter-col mt-20">
         <p className="sm:text-5xl text-4xl">NO ITEM LISTED</p>
@@ -46,7 +50,7 @@ export function ItemsList({ events }: { events: undefined | EventsInterface }) {
           </tr>
         </thead>
         <tbody className="divide-y text-center text-xs sm:text-sm">
-          {events?.inventories.map((item, index) => (
+          {inventories?.map((item, index) => (
             <tr key={index}>
               <td className="px-6 py-4 whitespace-nowrap">
                 <ItemDetail {...item} />

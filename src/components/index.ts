@@ -7,3 +7,4 @@ export * from "./Loading";
 export * from "./Modal";
 export * from "./ResponsiveTable";
 export * from "./PaginationUI";
+export * from "./SearchFilter";
