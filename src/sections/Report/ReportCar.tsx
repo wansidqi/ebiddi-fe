@@ -8,12 +8,13 @@ import {
   Cols3ValueUnderine,
   Cols2Side,
 } from "@/components/ReportCarComponent";
-import { ThemeProvider } from "@/components/ThemeProvider";
+
 import { useAPIServices } from "@/services";
 import { LoaderCircle } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { InvestigationReport } from "@/interfaces";
 import { VehicleInspection } from "..";
+import { LightThemeProvider } from "@/components/LightThemeProvider";
 
 export const tickbox = (checking: any) => {
   return checking ? "☑ " : "☐ ";
@@ -34,7 +35,7 @@ export function ReportCar() {
     );
 
   return (
-    <ThemeProvider defaultTheme="light" storageKey="report">
+    <LightThemeProvider defaultTheme="light">
       <div className="text-[#2C3E50] arial report-layout text-left my-7 overflow-auto">
         <main className="pt-5">
           <p className={`text-[22px] font-bold`}>
@@ -751,6 +752,6 @@ export function ReportCar() {
 
         <br />
       </div>
-    </ThemeProvider>
+    </LightThemeProvider>
   );
 }
