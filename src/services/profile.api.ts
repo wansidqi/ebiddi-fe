@@ -15,7 +15,7 @@ import {
 import { useStoreContext } from "@/Context";
 
 const useGetUserDetail = () => {
-  const { USER } = useStoreContext();
+  const { USER, SET_USER } = useStoreContext();
   const queryClient = useQueryClient();
 
   return useQuery({
@@ -27,6 +27,7 @@ const useGetUserDetail = () => {
       });
 
       const data = response.data.data;
+      SET_USER(data);
       queryClient.setQueryData([KEY.user], data);
 
       return data as User;
