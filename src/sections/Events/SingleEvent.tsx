@@ -129,7 +129,7 @@ export function SingleEvent(props: EventsInterface) {
               role: USER?.role,
               auctioneer: "Enter Events",
               bidder: "Join Auction",
-              noRole: "Live Biddings",
+              noRole: "Live Bidding",
             })}
           </Button>
         </CardFooter>

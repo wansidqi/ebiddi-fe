@@ -66,7 +66,7 @@ export const Countdown = ({
             role: USER?.role,
             auctioneer: "Enter Events",
             bidder: "Join Auction",
-            noRole: "Join Biddings",
+            noRole: "Live Bidding",
           })}
         </button>
       </DynamicRenderer.When>
