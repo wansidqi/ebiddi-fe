@@ -60,7 +60,7 @@ export function ItemsList({ events }: { events: undefined | EventsInterface }) {
               <td className="px-6 py-4 whitespace-nowrap">{item.model}</td>
               <td className="px-6 py-4 whitespace-nowrap">{item.year}</td>
               <td className="px-6 py-4 whitespace-nowrap">
-                RM {item.reserve_price.toLocaleString("en-IN")}
+                RM {item.reserve_price.toLocaleString()}
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <Button className="underline" variant="link">

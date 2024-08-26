@@ -62,7 +62,7 @@ export function ItemsGrid({
               </div>
             </div>
             <div className="bg-primary text-xl p-2 text-center">
-              RM {item.reserve_price.toLocaleString("en-IN")}
+              RM {item.reserve_price.toLocaleString()}
             </div>
             <div className="m-2 flex flex-col gap-2">
               <p>{item.model}</p>
@@ -81,8 +81,8 @@ export function ItemsGrid({
                     target="_blank"
                     to={
                       item.vehicle_type === VEHICLE_TYPE.CAR
-                        ? `${import.meta.env.VITE_URL}/ireportcar/${item.vehicle_id}`
-                        : `${import.meta.env.VITE_URL}/ireportmotor/${item.vehicle_id}`
+                        ? `/ireportcar/${item.vehicle_id}`
+                        : `/ireportmotor/${item.vehicle_id}`
                     }
                   >
                     Report
