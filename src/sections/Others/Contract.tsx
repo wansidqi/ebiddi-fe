@@ -15,6 +15,7 @@ export function Contract() {
     "event.event_timestamp",
     "event.auction_house.auctionhouse_name",
     "contract_owner.name",
+    "bidder_company.name",
   ]);
   const { PaginationUI, currData } = Pagination(dataList, 10);
 

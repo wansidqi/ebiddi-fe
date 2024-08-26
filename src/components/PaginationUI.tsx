@@ -1,5 +1,5 @@
 import { StepBack, StepForward } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function Pagination<T>(data: T[] | undefined, itemsPerPage = 5) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,6 +16,10 @@ export function Pagination<T>(data: T[] | undefined, itemsPerPage = 5) {
   const prevPage = () => {
     setCurrentPage(currentPage - 1);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [data]);
 
   const noData = (
     <div className="my-10 xl:mt-20 xl:mb-0 left-1/2 bottom-0 text-sm xl:text-lg">
