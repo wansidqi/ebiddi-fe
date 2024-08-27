@@ -22,21 +22,21 @@ const useGetUserDetail = () => {
 
   return useQuery({
     queryKey: [KEY.user],
-    enabled: !!id,
     queryFn: async () => {
-      try {
-        const response = await datasource({
-          url: `/profile/${id}`,
-          method: "get",
-        });
-
-        const data = response.data.data;
-        SET_USER(data);
-
-        return data as User;
-      } catch (error) {
+      if (id === null) {
         SET_USER(null);
+        return null;
       }
+
+      const response = await datasource({
+        url: `/profile/${id}`,
+        method: "get",
+      });
+
+      const data = response.data.data;
+      SET_USER(data);
+
+      return data as User;
     },
   });
 };

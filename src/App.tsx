@@ -1,7 +1,6 @@
 import "./custom.css";
 import { Route, Routes } from "react-router-dom";
-import { Fragment, useEffect, useState } from "react";
-import { TOKEN, getToken } from "./datasource/sessionStorage.datasource";
+import { Fragment, useEffect } from "react";
 import { useStoreContext } from "./Context";
 import { AlertDialog, LoadingPage } from "./components";
 import {
@@ -27,18 +26,19 @@ import {
   RequireBidderAuth,
   RequireAuctioneerAuth,
 } from "./routes";
+import { useAPIServices } from "./services";
+import { User } from "./interfaces";
 
 function App() {
   const { SET_USER } = useStoreContext();
-  const [loading, setLoading] = useState(true);
+  const { useGetUserDetail } = useAPIServices();
+  const { data, isLoading } = useGetUserDetail();
 
   useEffect(() => {
-    const userAuth = JSON.parse(getToken(TOKEN.user) as string);
-    SET_USER(userAuth);
-    setLoading(false);
-  }, [SET_USER]);
+    SET_USER(data as User);
+  }, [data]);
 
-  if (loading) {
+  if (isLoading) {
     return <LoadingPage />;
   }
 
