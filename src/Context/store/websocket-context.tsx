@@ -30,6 +30,7 @@ type SocketData = {
   publishReauction: (params: Publication<ReauctionData>) => void;
 
   payload: EventData;
+  initialPayload: EventData;
   setPayload: React.Dispatch<React.SetStateAction<EventData>>;
 
   bidListIndex: number;
@@ -81,6 +82,31 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
     auction: undefined,
     bidStatus: 0,
   });
+
+  const initialPayload: EventData = {
+    auction_id: "",
+    event_id: "",
+    bid: {
+      current: 0,
+      next: 0,
+      start: 0,
+      up: 0,
+    },
+    countdown: COUNTDOWN.initial,
+    status: "DISPLAY",
+    bidders: {
+      all: [],
+      highest_amount: 0,
+      highest_user_id: 0,
+      highest_user_name: "",
+    },
+    // expiryAt: "",
+    isResume: false,
+    holdItems: [],
+    auction_event_id: "",
+    auction: undefined,
+    bidStatus: 0,
+  };
 
   const [viewer, setViewer] = useState({
     connection: 0,
@@ -257,6 +283,7 @@ export function SocketProvider(props: React.PropsWithChildren<{}>) {
     resetBidder,
     bidderIn,
     bidderOut,
+    initialPayload,
   };
 
   return <AppContext.Provider value={contextValue} {...props} />;

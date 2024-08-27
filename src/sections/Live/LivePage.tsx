@@ -45,6 +45,7 @@ export function LivePage() {
     bidderOut,
     setBidListIndex,
     socket,
+    initialPayload,
   } = useStoreContext();
 
   const isNotAuctioneer = USER?.role !== ROLE.AUCTIONEER;
@@ -328,7 +329,6 @@ export function LivePage() {
         } */
 
         if (data.status === "AUCTION") {
-          // console.log("enter auction");
           setIsBidding(true);
 
           if (data.isResume) {
@@ -575,42 +575,18 @@ export function LivePage() {
   }, [payload.auction_id]);
 
   useEffect(() => {
-    if (!isNotAuctioneer) return;
-
-    // setPayload({
-    //   auction_id: "",
-    //   event_id: "",
-    //   bid: {
-    //     current: 0,
-    //     next: 0,
-    //     start: 0,
-    //     up: 0,
-    //   },
-    //   countdown: COUNTDOWN.initial,
-    //   status: "DISPLAY",
-    //   bidders: {
-    //     all: [],
-    //     highest_amount: 0,
-    //     highest_user_id: 0,
-    //     highest_user_name: "",
-    //   },
-    //   isResume: false,
-    //   holdItems: [],
-    //   auction_event_id: "",
-    //   auction: undefined,
-    //   bidStatus: 0,
-    // });
-
     /* 
-      cd == undefined => never do reauction (bidding)
-      cd == "00:00:00" => reauction finish (bidding)
+    cd == undefined => never do reauction (bidding)
+    cd == "00:00:00" => reauction finish (bidding)
     */
 
     if (rcd === "") {
       setCurrentPage("bidding");
     } else if (!rcd) {
+      setPayload(initialPayload);
       setCurrentPage("reauctionlist");
     } else if (rcd !== "00:00:00") {
+      setPayload(initialPayload);
       setCurrentPage("reauctionlist");
     } else {
       setTimeout(() => {
