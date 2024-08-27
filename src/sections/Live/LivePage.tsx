@@ -25,6 +25,7 @@ import { useAPIServices } from "@/services";
 import { playAudio } from "@/assets/audio";
 import { numWithComma } from "@/lib/utils";
 import moment from "moment";
+import { CreditInterface } from "@/interfaces";
 
 export function LivePage() {
   const { eventId } = useParams();
@@ -65,6 +66,14 @@ export function LivePage() {
   const { data: credits, refetch: getCredit } = useGetCredit( event?.auction_house.id); //prettier-ignore
   const { mutateAsync: postTrail } = usePostAuditTrail();
   // useGetLiveAuction(payload.auction_id);
+
+  const [displayCredits, setDisplayCredits] = useState<CreditInterface[]>([]);
+
+  useEffect(() => {
+    if (credits && displayCredits.length === 0) {
+      setDisplayCredits([...credits]); // Initialize displayCredits with the actual credit data
+    }
+  }, [credits]);
 
   useEffect(() => {
     if (!credits) {
@@ -109,6 +118,16 @@ export function LivePage() {
   const testBid = (name: string, user_id: number) => {
     if (!eventId || !USER) return;
 
+    const updatedCredits = [...displayCredits];
+    for (let i = 0; i < updatedCredits.length; i++) {
+      if (updatedCredits[i].amount >= payload.bid.next) {
+        updatedCredits[i].amount -= payload.bid.next;
+        break;
+      }
+    }
+
+    setDisplayCredits(updatedCredits);
+
     let data = {
       amount: payload.bid.next,
       name,
@@ -143,6 +162,17 @@ export function LivePage() {
   const clickBid = () => {
     if (!eventId || !USER) return;
     sendAuditTrail(payload.bid.next);
+
+    const updatedCredits = [...displayCredits];
+    for (let i = 0; i < updatedCredits.length; i++) {
+      if (updatedCredits[i].amount >= payload.bid.next) {
+        updatedCredits[i].amount -= payload.bid.next;
+        break;
+      }
+    }
+
+    setDisplayCredits(updatedCredits);
+
 
     let data = {
       amount: payload.bid.next,
@@ -650,7 +680,7 @@ export function LivePage() {
 
                 {USER?.role === ROLE.BIDDER && (
                   <div>
-                    {credits?.map((cr, i) => {
+                    {displayCredits.map((cr, i) => {
                       return (
                         <Fragment key={i}>
                           {(cr.auction_house.id === 0 ||
