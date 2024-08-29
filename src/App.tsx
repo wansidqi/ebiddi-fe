@@ -1,7 +1,6 @@
 import "./custom.css";
 import { Route, Routes } from "react-router-dom";
-import { Fragment, useEffect } from "react";
-import { useStoreContext } from "./Context";
+import { Fragment } from "react";
 import { AlertDialog, LoadingPage } from "./components";
 import {
   TAC,
@@ -27,16 +26,10 @@ import {
   RequireAuctioneerAuth,
 } from "./routes";
 import { useAPIServices } from "./services";
-import { User } from "./interfaces";
 
 function App() {
-  const { SET_USER } = useStoreContext();
   const { useGetUserDetail } = useAPIServices();
-  const { data, isLoading } = useGetUserDetail();
-
-  useEffect(() => {
-    SET_USER(data as User);
-  }, [data]);
+  const { isLoading } = useGetUserDetail();
 
   if (isLoading) {
     return <LoadingPage />;
