@@ -127,7 +127,7 @@ export function ReauctionList() {
                 </div>
               </div>
               <div className="bg-primary text-xl p-2 text-center">
-                RM {item.reserve_price?.toLocaleString("en-IN")}
+                RM {item.reserve_price?.toLocaleString()}
               </div>
               <div className="m-2 flex flex-col gap-2">
                 <p>{item.model}</p>

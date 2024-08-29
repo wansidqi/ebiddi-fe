@@ -121,7 +121,11 @@ export function LivePage() {
     const updatedCredits = [...displayCredits];
     for (let i = 0; i < updatedCredits.length; i++) {
       if (updatedCredits[i].amount >= payload.bid.next) {
-        updatedCredits[i].amount -= payload.bid.next;
+        if (payload.auction) {
+          /* prettier-ignore */
+          let deduction = payload.bid.next + payload.auction.deposit + payload.auction.buyer_premium;
+          updatedCredits[i].amount -= deduction;
+        }
         break;
       }
     }
@@ -166,13 +170,17 @@ export function LivePage() {
     const updatedCredits = [...displayCredits];
     for (let i = 0; i < updatedCredits.length; i++) {
       if (updatedCredits[i].amount >= payload.bid.next) {
-        updatedCredits[i].amount -= payload.bid.next;
+        if (payload.auction) {
+          /* prettier-ignore */
+          let deduction = payload.bid.next + payload.auction.deposit + payload.auction.buyer_premium;
+          console.log({next:payload.bid.next, depo:payload.auction.deposit, premium:payload.auction.buyer_premium})
+          updatedCredits[i].amount -= deduction;
+        }
         break;
       }
     }
 
     setDisplayCredits(updatedCredits);
-
 
     let data = {
       amount: payload.bid.next,
