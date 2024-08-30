@@ -58,6 +58,7 @@ export function ItemsGrid({
           >
             <div className="relative w-full">
               <Preview
+                key={item.vehicle_id}
                 images={item.images}
                 className="w-full h-full card-img-top rounded-0 object-cover"
               />
@@ -89,27 +90,25 @@ export function ItemsGrid({
               </div>
 
               <div className="flex gap-2">
-                <p className="text-primary">Remarks:</p>
-                <p>{item.remarks || "n/a"}</p>
+                <p className="text-primary">Engine No:</p>
+                <p>{item.engine_number || "-"}</p>
+              </div>
+              <div className="flex gap-2">
+                <p className="text-primary">Chasis No:</p>
+                <p>{item.chasis_number || "-"}</p>
+              </div>
+              <div className="flex gap-2">
+                <p className="text-primary">Registration Card:</p>
+                <p>{item.has_registration_card ? "✅" : "❌"}</p>
+              </div>
+              <div className="flex gap-2">
+                <p className="text-primary">Key:</p>
+                <p>{item.has_key ? "✅" : "❌"}</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <div className="flex gap-2">
-                  <p className="text-primary">Engine No:</p>
-                  <p>{item.engine_number || "-"}</p>
-                </div>
-                <div className="flex gap-2">
-                  <p className="text-primary">Registration Card:</p>
-                  <p>{item.has_registration_card ? "✅" : "❌"}</p>
-                </div>
-                <div className="flex gap-2">
-                  <p className="text-primary">Chasis No:</p>
-                  <p>{item.chasis_number || "-"}</p>
-                </div>
-                <div className="flex gap-2">
-                  <p className="text-primary">Key:</p>
-                  <p>{item.has_key ? "✅" : "❌"}</p>
-                </div>
+              <div className="flex gap-2">
+                <p className="text-primary">Remarks:</p>
+                <p>{item.remarks || "n/a"}</p>
               </div>
 
               <div className="flex justify-end gap-3 my-0">
