@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { InventoryInterface } from "@/interfaces";
-import { ItemDetail } from "..";
 import { Link, useNavigate } from "react-router-dom";
 import { VEHICLE_TYPE } from "@/enum";
+import { PreviewText } from "@/components";
 
 export function ItemsList({
   inventories,
@@ -11,6 +11,7 @@ export function ItemsList({
 }) {
   const navigate = useNavigate();
   const columns = [
+    "Image",
     "Lot",
     "Legal Owner",
     "Registration Number",
@@ -18,6 +19,10 @@ export function ItemsList({
     "Year Manufacture",
     "Reserved Price",
     "Report",
+    "Engine No",
+    "Chasis No",
+    "key",
+    "reg card",
   ];
 
   if (inventories && inventories.length < 1)
@@ -52,18 +57,22 @@ export function ItemsList({
         <tbody className="divide-y text-center text-xs sm:text-sm">
           {inventories?.map((item, index) => (
             <tr key={index}>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <ItemDetail {...item} />
+              <td className="py-4 whitespace-nowrap">
+                <Button variant="link">
+                  <PreviewText images={item.images} />
+                </Button>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {item.legal_owner}
+              <td className="py-4 whitespace-nowrap">
+                {/* <ItemDetail {...item} /> */}
+                {item.lot_no}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="py-4 whitespace-nowrap">{item.legal_owner}</td>
+              <td className="py-4 whitespace-nowrap">
                 {item.registration_number}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">{item.model}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{item.year}</td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="py-4 whitespace-nowrap">{item.model}</td>
+              <td className="py-4 whitespace-nowrap">{item.year}</td>
+              <td className="py-4 whitespace-nowrap">
                 RM {item.reserve_price.toLocaleString()}
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
@@ -79,6 +88,18 @@ export function ItemsList({
                     Report
                   </Link>
                 </Button>
+              </td>
+              <td className="py-4 whitespace-nowrap">
+                {item.engine_number || "-"}
+              </td>
+              <td className="py-4 whitespace-nowrap">
+                {item.chasis_number || "-"}
+              </td>
+              <td className="py-4 whitespace-nowrap">
+                {item.has_key ? "✅" : "❌"}
+              </td>
+              <td className="py-4 whitespace-nowrap">
+                {item.has_registration_card ? "✅" : "❌"}
               </td>
             </tr>
           ))}

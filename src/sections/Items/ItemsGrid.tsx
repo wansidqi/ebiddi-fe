@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { InventoryInterface } from "@/interfaces";
 import { StepBack, StepForward } from "lucide-react";
-import { ItemDetail } from "./ItemDetail";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { VEHICLE_TYPE } from "@/enum";
+import { Preview } from "@/components";
 
 export const gridCSS = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3";
 
@@ -52,10 +52,13 @@ export function ItemsGrid({
     <>
       <div className={gridCSS}>
         {currentItems?.map((item: InventoryInterface, i: number) => (
-          <div key={i} className="border-2 border-secondary rounded-sm pb-4">
-            <div className="relative h-[280px] w-full">
-              <img
-                src={item.images[0]}
+          <div
+            key={i}
+            className="border-2 border-secondary rounded-sm pb-4 text-xs md:text-sm"
+          >
+            <div className="relative w-full">
+              <Preview
+                images={item.images}
                 className="w-full h-full card-img-top rounded-0 object-cover"
               />
               <div className="absolute top-1 bg-cyan-500 left-0 px-2 py-1 rounded-sm">
@@ -68,30 +71,62 @@ export function ItemsGrid({
             <div className="bg-primary text-xl p-2 text-center">
               RM {item.reserve_price.toLocaleString()}
             </div>
-            <div className="m-2 flex flex-col gap-2">
-              <p>{item.model}</p>
-              <div>
+            <div className="m-2 mt-3 flex flex-col gap-2">
+              <div className="flex gap-1 justify-center">
+                <p className="text-sm md:text-lg text-primary">{item.model}</p>
+              </div>
+              <div className="flex gap-2">
                 <p className="text-primary">Year of Make:</p>
                 <p>{item.year}</p>
               </div>
-              <div>
+              <div className="flex gap-2">
                 <p className="text-primary">Legal Owner:</p>
                 <p>{item.legal_owner}</p>
               </div>
-              <div className="flex gap-3 my-0">
-                <ItemDetail {...item} />
-                <Button className="underline" variant="link">
-                  <Link
-                    target="_blank"
-                    to={
-                      item.vehicle_type === VEHICLE_TYPE.CAR
-                        ? `/ireportcar/${item.vehicle_id}`
-                        : `/ireportmotor/${item.vehicle_id}`
-                    }
-                  >
+              <div className="flex gap-2">
+                <p className="text-primary">Transmission type:</p>
+                <p>{item.transmission}</p>
+              </div>
+
+              <div className="flex gap-2">
+                <p className="text-primary">Remarks:</p>
+                <p>{item.remarks || "n/a"}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div className="flex gap-2">
+                  <p className="text-primary">Engine No:</p>
+                  <p>{item.engine_number || "-"}</p>
+                </div>
+                <div className="flex gap-2">
+                  <p className="text-primary">Registration Card:</p>
+                  <p>{item.has_registration_card ? "✅" : "❌"}</p>
+                </div>
+                <div className="flex gap-2">
+                  <p className="text-primary">Chasis No:</p>
+                  <p>{item.chasis_number || "-"}</p>
+                </div>
+                <div className="flex gap-2">
+                  <p className="text-primary">Key:</p>
+                  <p>{item.has_key ? "✅" : "❌"}</p>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 my-0">
+                {/* <ItemDetail {...item} /> */}
+                <Link
+                  className=""
+                  target="_blank"
+                  to={
+                    item.vehicle_type === VEHICLE_TYPE.CAR
+                      ? `/ireportcar/${item.vehicle_id}`
+                      : `/ireportmotor/${item.vehicle_id}`
+                  }
+                >
+                  <Button variant="link" className="w-full underline">
                     Report
-                  </Link>
-                </Button>
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

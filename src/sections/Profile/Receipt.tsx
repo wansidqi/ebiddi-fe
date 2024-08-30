@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 
 import DefaultImage from "@/assets/images/upload-receipt/upload-placehodler.jpeg";
 import uploading from "@/assets/images/upload-receipt/uploading.gif";
-import { DynamicDrawer, Preview } from "@/components";
+import { DynamicDrawer, PreviewAll } from "@/components";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -290,7 +290,7 @@ export const FullImage = ({
           <DialogDescription className="py-3 text-center text-lg">
             <div className="flexcenter">
               {img && (
-                <Preview className="max-w-[70%] max-h-[70%]" images={[img]} />
+                <PreviewAll className="max-w-[70%] max-h-[70%]" images={[img]} />
               )}
               {/* <img src={img} className="max-w-[70%] max-h-[70%]" alt="" /> */}
             </div>
