@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 
 import DefaultImage from "@/assets/images/upload-receipt/upload-placehodler.jpeg";
 import uploading from "@/assets/images/upload-receipt/uploading.gif";
-import { DynamicDrawer } from "@/components";
+import { DynamicDrawer, Preview } from "@/components";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -193,11 +193,13 @@ export function Receipt() {
   return (
     <>
       <LiveDialog />
-      <FullImage
-        state={receiptModal}
-        setState={setReceiptModal}
-        img={receipt}
-      />
+      {receipt && (
+        <FullImage
+          state={receiptModal}
+          setState={setReceiptModal}
+          img={receipt}
+        />
+      )}
 
       <section className="flex flex-col w-full">
         {/* <p>Topup your account:</p> */}
@@ -277,7 +279,7 @@ export const FullImage = ({
 }: {
   state: boolean;
   setState: React.Dispatch<React.SetStateAction<boolean>>;
-  img: string | undefined;
+  img: string;
 }) => {
   // let dk = "blob:http://localhost:5173/02e2c2eb-5165-4480-ad3c-be3f3156bac4";
   return (
@@ -287,7 +289,10 @@ export const FullImage = ({
           <DialogTitle>{"Image"}</DialogTitle>
           <DialogDescription className="py-3 text-center text-lg">
             <div className="flexcenter">
-              <img src={img} className="max-w-[70%] max-h-[70%]" alt="" />
+              {img && (
+                <Preview className="max-w-[70%] max-h-[70%]" images={[img]} />
+              )}
+              {/* <img src={img} className="max-w-[70%] max-h-[70%]" alt="" /> */}
             </div>
           </DialogDescription>
         </DialogHeader>

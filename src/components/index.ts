@@ -8,3 +8,4 @@ export * from "./Modal";
 export * from "./ResponsiveTable";
 export * from "./PaginationUI";
 export * from "./SearchFilter";
+export * from "./Preview";

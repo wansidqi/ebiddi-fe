@@ -51,7 +51,7 @@ export function Refund() {
   const { mutateAsync: uploadRefund } = usePostRefund();
 
   const { data } = useGetUserDetail();
-  const balance = data?.credits.find((cr) => cr.credit_id === 0);
+  const balance = data?.credits?.find((cr) => cr.credit_id === 0);
 
   let isInsufficient = +amount <= (balance?.amount || 0);
 
@@ -266,7 +266,15 @@ export function Refund() {
   return (
     <>
       <LiveDialog />
-      <FullImage state={refundModal} setState={setRefundModal} img={ssmImg} />
+      {ssmImg && (
+        <FullImage state={refundModal} setState={setRefundModal} img={ssmImg} />
+      )}
+      {icFront && (
+        <FullImage state={refundModal} setState={setRefundModal} img={icFront} />
+      )}
+      {icBack && (
+        <FullImage state={refundModal} setState={setRefundModal} img={icBack} />
+      )}
       <section className="flex flex-col w-full">
         <DynamicDrawer
           btnName="Refund Credit"
