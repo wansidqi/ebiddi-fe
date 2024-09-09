@@ -21,4 +21,6 @@ export interface ReauctionList {
   vehicle_type: number;
   deposit: number;
   images: string[];
+  reauction_item_request_by_user_id: number;
+  reauction_item_request_by_user_name: string;
 }

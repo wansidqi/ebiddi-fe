@@ -44,8 +44,7 @@ export function ReauctionList() {
   };
 
   const reauctionItem = (auctionId: string, lot: string) => {
-    //TODO: add field for userID
-    let data = `event_id=${eventId}&auction_event_id=${auctionId}`;
+    let data = `event_id=${eventId}&auction_event_id=${auctionId}&user_id=${USER?.id}`;
 
     onReautionItem(
       { data },

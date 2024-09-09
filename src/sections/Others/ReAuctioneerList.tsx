@@ -20,6 +20,7 @@ export function ReAuctioneerList() {
     "Year Make",
     "Reserved Price",
     "Deposit Required",
+    "Request By",
     "Status",
   ];
 
@@ -86,8 +87,6 @@ export function ReAuctioneerList() {
     });
   };
 
-  //TODO: add field for userID
-
   useEffect(() => {
     if (!eventId) return;
 
@@ -95,13 +94,13 @@ export function ReAuctioneerList() {
       event_id: eventId,
       onData: (data) => {
         if (data.status === "REAUCTIONLISTITEM") {
+          getReauctionList();
           $swal({
             title: "Request Reauction",
             content: `${data.name} has requested a reauction for lot ${data.lot}`,
             hasClose: false,
             timer: 2000,
           });
-          getReauctionList();
         }
       },
     });
@@ -209,6 +208,7 @@ export function ReAuctioneerList() {
                     reauctions?.some((item) => item.lot_no === auction.lot_no)
                   )
                   ?.map((auction, i) => {
+                    const requester = reauctions.find((item) => item.lot_no === auction.lot_no)?.reauction_item_request_by_user_name; /* prettier-ignore */
                     return (
                       <tr key={i}>
                         <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap flexcenter">
@@ -231,6 +231,9 @@ export function ReAuctioneerList() {
                         </td>
                         <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
                           {`RM ${numWithComma(getDeposit(auction))}` || "n/a"}
+                        </td>
+                        <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
+                          {requester}
                         </td>
                         <td className="px-2 sm:px-4 py-2 sm:py-4 whitespace-nowrap">
                           <DynamicRenderer>
